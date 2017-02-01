@@ -1,0 +1,36 @@
+/*h1 { 
+	font-size: 60px; /*tamanho da fonte*/
+	/*background-color: rgb(120, 30, 60); /*cor de fundo*/
+	/*color: rgb(250, 255, 250); /*cor do texto*/
+	/*color: #FAFFFA; /*sintaxe diferente, em hexadecimal para cada uma das cores*/
+	/*os dois tipos de rgb funcionam (rgb e hexadecimal), porém hexadecimal é mais comum
+
+	/*text-align: center; /*alinhar texto (centro)*/
+	/*font-family: "Open Sans", sans-serif; /*tipo da fonte*/
+/*}
+
+h2 { 
+	font-size: 40px; 
+	font-family: "Open Sans", sans-serif; /*se não tem a primeira opção, usa a segunda opção*/
+/*}*/
+
+body {
+    font-family: "Crimson Text", "Times New Roman", serif;
+    background-color: #F2FFFC; /*dois primeiros valores são vermelho, dois seguintes verde e dois últimos azul*/
+}
+
+h1, h2 {
+    font-family: "Open Sans Condensed", "Arial", sans-serif;
+}
+
+h1 {
+    text-align: center;
+    background-color: #851944;
+    color: #FFF;
+}
+
+p {
+    text-align: justify;
+}
+
+

@@ -1,3 +1,7 @@
+<!-- HTML 5 = mais semântica -->
+<!-- semântica = + acessibilidade, + usabilidade -->
+<!-- <div> serve para isolar contéudo, tag genérica -->
+
 <!DOCTYPE html> <!-- versão 5 do html, informa isso para o navegador, utilizando a última versão -->
 <html> <!-- INFORMA PARA O NAVEGADOR QUE ESTAMOS USANDO A LINGUAGEM HTML -->
 	<!-- indentação -->
@@ -5,30 +9,75 @@
 		<title>Biografia - João da Silva</title> <!-- título da aba -->
 		<meta charset="utf-8"> <!-- codificação de texto, utf-8 moderno, funciona em todos idiomas, muda codificação que o navegador usa -->
 		<link rel="icon" href="conteudo/favicon.png"> <!-- adicionando icone (favicon) -->
+
+		<!-- estilo, movido para bio.css -->
+		<!-- <style>
+			h1 { font-size: 60px; } /*seletor do css, seleciona as tags que queremos aplicar (h1)*/
+			h2 { font-size: 40px; /*regras do css*/ }
+		</style> -->
+
+		<link rel="stylesheet" type="text/css" href="site.css"> <!-- carregando folha de estilos (css) -->
+
+		<!-- carrega a fonte Crimson Text nas versões normal, itálico e negrito -->
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400italic,600">
+
+		<!-- carrega a fonte Open Sans Condensed na versão negrito, -->
+		<!-- que é a única necessária para os cabeçalhos -->
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700">
+
 	</head>
 
 	<body> <!-- INFORMAÇÕES PARA MOSTRAR PARA O USUÁRIO (conteúdo) -->
-		<h1 style="font-size: 60px">Sobre mim</h1> <!-- abriu e fechou tag -->
 
-		<p>Moro em São Paulo mas atendo clientes do mundo todo. Sou conhecido por fazer produtos de <em>qualidade</em>, durabilidade e que agregam valor para meus clientes. </p>
+		<!-- semântica = + acessibilidade, + usabilidade -->
+		<!-- <main> agrega semântica, para o navegador e ferramentas de busca. É do html 5 -->
+		<main>
 
-		<p>Trabalho usando a web como plataforma, ou seja, respiro HTML5, CSS3 e JavaScript (ou melhor: ECMASCript). Crio sites para todos, seguindo as principais diretivas de acessibilidade, responsividade e web semântica, sem descuidar da qualidade de código.</p>
+			<h1>Sobre mim</h1> <!-- abriu e fechou tag -->
 
-		<h2 style="font-size: 40px">Como trabalho</h2>
+			<p>Moro em São Paulo mas atendo clientes do mundo todo. Sou conhecido por fazer produtos de <em>qualidade</em>, durabilidade e que agregam valor para meus clientes. </p>
 
-		<p>Satisfazer meus clientes é prioridade. Para isso, garanto um processo de desenvolvimento altamente interativo, baseado em feedback contínuo. <strong>Não trabalho com escopo fechado</strong>: o cliente é que decide quando o produto está pronto.</p>
+			<p>Trabalho usando a web como plataforma, ou seja, respiro HTML5, CSS3 e JavaScript (ou melhor: ECMASCript). Crio sites para todos, seguindo as principais diretivas de acessibilidade, responsividade e web semântica, sem descuidar da qualidade de código.</p>
 
-		<p>Também não trabalho com prazos fechados: <strong>qualidade é importante demais para ser sacrificada</strong>.</p>
+			<h2>Como trabalho</h2>
 
-		<h2>Experiência</h2>
+			<!-- <blockquote> tag para citações -->
+			<blockquote>
+				<p>João é o melhor desenvolvedor front-end com quem já trabalhei. Muito eficiente e muito capaz. Recomendo sem dúvidas!</p>
+				<cite>José Souza, Fiat</cite> <!-- <cite> autor da citação -->
+			</blockquote>
 
-		<p>Já desenvolvi projetos para grandes empresas como BMW, UOL e IBM. Neles, o foco principal era entregar uma experiência imersiva e impactante para o usuário final sem descuidar do desempenho e da acessibilidade da página.</p>
+    		<p>João domina as tecnologias como ninguém. Eu apresentava um problema, ele tinha na ponta da língua a solução mais adequada com as tecnologias mais recentes.</p>
+    		<p>Manoel Santos, Petrobrás</p>
 
-		<p>Também já fui contratado para transformar grandes portais, como Terra e G1, em páginas responsivas. Fui responsável por renovar o layout, reorganizar o conteúdo e re-escrever o código de forma mais reaproveitável.</p>
+			<p>Satisfazer meus clientes é prioridade. Para isso, garanto um processo de desenvolvimento altamente interativo, baseado em feedback contínuo. <strong>Não trabalho com escopo fechado</strong>: o cliente é que decide quando o produto está pronto.</p>
 
-		<h2>Comunidade</h2>
+			<p>Também não trabalho com prazos fechados: <strong>qualidade é importante demais para ser sacrificada</strong>.</p>
 
-		<p>Procuro repassar meu conhecimento para a comunidade. Para isso, já dei diversas palestras e mantenho um blog.</p>
+			<h2>Experiência</h2>
+
+			<!-- tag <a> ancora -->
+			<p>Já desenvolvi projetos para grandes empresas como <a href="http://www.bmw.com">BMW</a>, <a href="http://www.uol.com.br">UOL</a> e <a href="http://www.ibm.com">IBM</a>. Neles, o foco principal era entregar uma experiência imersiva e impactante para o usuário final sem descuidar do desempenho e da acessibilidade da página.</p>
+
+			<p>Também já fui contratado para transformar grandes portais, como Terra e G1, em páginas responsivas. Fui responsável por renovar o layout, reorganizar o conteúdo e re-escrever o código de forma mais reaproveitável.</p>
+
+			<h2>Comunidade</h2>
+
+			<!-- endereço relativo -->
+			<p>Procuro repassar meu conhecimento para a comunidade. Para isso, já dei diversas palestras e mantenho um <a href="blog.html">blog</a>.</p>
+			
+		</main>
+		
+		<img src="conteudo/eu.jpg" alt="Foto de João da Silva"> <!-- alt é pedido pelo orgão W3C, que é quem especifica o HTML, para especificar a imagem. HTML semântico, deixa com a informação descrita -->
+
+		<!-- nav - tag de navegação, agrega semântica para a página, para ferramentas de buscas -->
+		<nav>
+			<!-- ul - lista -->
+			<ul>
+				<li><a href="#">Home</a></li>
+				<li><a href="#">Portfolio</a></li>	
+			</ul>
+		</nav>
+
 	</body>
-
 </html>

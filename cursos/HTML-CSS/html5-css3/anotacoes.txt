@@ -210,4 +210,231 @@ A tag <title> serve para passar para o navegador qual o título da aba/janela em
 
 ############### 2.Introdução a CSS ###############
 
+Introdução a CSS
+Na aula anterior, vimos como criar o conteúdo de uma página usando a linguagem HTML. Porém, nossa página ainda está muito básica. Isso porque o navegador já sabe o quê queremos mostrar, mas não sabe como queremos mostrar, então mostra apenas o conteúdo, sem estilo algum.
+
+Precisamos, então, ensiná-lo como queremos mostrar os elementos da nossa página. Imagine que queremos definir o tamanho da letra (fonte) como 16 pixels. O navegador nos permite especificar isso da seguinte forma:
+
+font-size: 16px;
+Essa forma de declarar como queremos mostrar um elemento é o que chamamos de linguagem CSS. Nessa linguagem, conseguimos configurar diversos aspectos da exibição dos elementos da nossa página.
+
+Repare no formato da declaração: dizemos qual propriedade queremos mudar (font-size) e colocamos dois-pontos para separá-la do valor que lhe queremos dar, no nosso caso o tamanho da fonte (16 pixels). Por fim, colocamos um ponto-e-vírgula no final, para indicar que nossa declaração terminou.
+
+Associando estilos a elementos
+Na declaração que fizemos, dissemos que queríamos mudar o tamanho da fonte. Mas de qual elemento? Precisamos sempre associar estilo a elemento. Uma forma de fazer isso é usar o atributo style das tags do HTML. Por exemplo, podemos mudar a fonte do elemento <h2> da nossa página:
+
+<h2 style="font-size: 16px;">Como trabalho</h2>
+Apesar de funcionar, não é muito prático: se quisermos deixar todos os subtítulos da página com a mesma aparência, teremos que repetir esse código em todas as tags <h2>. Então, melhor que isso, podemos usar a tag <style>, colocando o estilo desejado dentro dela:
+
+<style>
+    font-size: 16px;
+</style>
+E onde colocamos a tag <style>? No lugar onde vão as tags com as informações para o navegador: dentro da tag <head>.
+
+Está faltando algo na declaração acima, não? Anteriormente, dissemos que todo estilo deveria ser associado a um elemento da página. A qual elemento a declaração acima está associada? Precisamos fazer associação selecionando um elemento da página para essa regra. É aí que entram os seletores da linguagem CSS.
+
+<style>
+    h2 {
+        font-size: 16px;
+    }
+</style>
+No exemplo acima, estamos selecionando os elementos <h2> da página e aplicando o estilo que queríamos, o tamanho de fonte. Repare que precisamos abrir chaves logo após o seletor e fechar chaves ao final do estilo. Podemos colocar mais regras dentro das chaves, se quisermos. Por exemplo, podemos alterar a fonte usada no subtitulo para "Arial":
+
+<style>
+    h2 {
+        font-family: "Arial";
+        font-size: 16px;
+   }
+</style>
+Colocando o CSS no seu devido lugar
+Com a tag <style>, conseguimos não só evitar repetição como também deixar nosso código mais organizado: tudo que é relativo à aparência da página fica agrupado num só lugar, facilitando a manutenção da página.
+
+Mas ainda temos um problema: nosso site não vai ter uma página só. Essas outras páginas muito provavelmente terão uma cara parecida com a página que estamos desenvolvendo agora. Então o CSS também será bem parecido, com bastante coisa repetida. Pior: se quisermos alterar alguma característica visual do site inteiro, teremos que fazer a alteração em todas as páginas do site. Muito trabalho com muita chance de erro!
+
+Como podemos evitar essa repetição? Colocando o CSS num arquivo separado! Podemos, então, criar um arquivo chamado site.css com o conteúdo que tínhamos colocado na tag <style>:
+
+h2 {
+    font-family: "Arial";
+    font-size: 16px;
+}
+Agora, no arquivo HTML, precisamos dizer para o navegador que esse arquivo CSS precisa ser carregado. Para isso, usamos a tag <link>. Lembra dela?
+
+<link rel="stylesheet" href="site.css">
+Assim como a tag <link> que criamos para escolher o ícone, essa tag também vai dentro da tag <head>. E agora, quando o navegador encontrar essa tag, ele vai baixar o arquivo site.css e, por causa do atributo rel="stylesheet", ele sabe que esse arquivo tem o estilo da página.
+
+Um pouco de cor
+Agora que sabemos onde escrever o CSS, podemos começar a especificar o estilo que queremos que nossa página tenha, para chegarmos no resultado mostrado na imagem abaixo.
+
+Vamos começar ajustando as cores. O título tem um fundo roxo. Como alterar a cor de fundo? Como queremos mexer na cor de fundo do título, a propriedade que vamos alterar chama-se background-color. Faz sentido, não? A maior parte das propriedades que podemos alterar no CSS tem um nome bem explicativo. Veremos mais exemplos adiante.
+
+Nosso título está dentro de uma tag <h1>. Então precisamos selecioná-lo para alterar a cor de fundo. Teremos algo assim no CSS, então:
+
+h1 {
+    background-color: ????;
+}
+A questão que resta é: como dizer que queremos a cor roxa? Aliás, qual tom de roxo queremos? Existem vários "roxos". E também existem várias formas de identificar uma cor no CSS. A mais popular é especificar uma mistura das cores primárias vermelho, verde e azul para chegar à cor que queremos, dizendo o "quanto" queremos de cada cor numa escala de 0 a 255. Por exemplo, nosso roxo tem 133 de vermelho, 25 de verde e 68 de azul.
+
+Sabendo disso, basta escrever essa mistura no CSS. Existem duas formas para isso. A mais popular e compacta é usar a notação hexadecimal para representar essas quantidades. Nessa notação, "0" continua sendo "0", mas "10" vira "A", "15" vira a letra "F" e "16" vira "10". Seguindo nessa lógica, "133" vira "85", "25" vira "19" e "68" vira "44". Juntando as cores na ordem vermelho, verde e azul chegamos no formato usado no CSS:
+
+h1 {
+    background-color: #851944;
+}
+Repare que colocamos um cerquilha (#) na frente dos números. Ele faz parte desse formato de cor do CSS e serve para deixar claro para quem ler o código que aquela sequência de números e letras é uma cor.
+
+Outra forma de especificar essa mistura é usando a forma abaixo:
+
+h1 {
+    background-color: rgb(133, 25, 68);
+}
+Precisamos mudar também a cor da letra do nosso título para branco. Para isso, usamos a propriedade color. Nosso CSS fica, então:
+
+h1 {
+    background-color: rgb(133, 25, 68);
+    color: rgb(255, 255, 255);
+}
+Ou então, se você preferir a notação hexadecimal:
+
+h1 {
+    background-color: #851944;
+    color: #FFFFFF;
+}
+Algumas cores não precisam de tanta precisão assim (de 0 a 255) para serem especificadas; dezesseis níveis de cor (de 0 a 15) já bastariam, economizando um pouco de código para nós. Pois bem: temos uma notação hexadecimal compacta no CSS também! Podemos escrever a cor branca usando essa sintaxe:
+
+h1 {
+    background-color: #851944;
+    color: #FFF;
+}
+A cor roxa, por ser mais específica, precisa ser especificada na notação hexadecimal normal. Porém, se a cor fosse #882244, poderíamos escrevê-la como #824.
+
+Uma última cor que precisamos ajustar é a cor de fundo da página. É uma cor quase branca: #F2FFFC. Como fazer para mudar a cor da página toda? Mudando a cor da tag que contém a página toda, que é a tag <body>:
+
+body {
+    background-color: #F2FFFC;
+}
+Ajustando o texto
+Uma outra coisa que precisamos ajustar no cabeçalho é o alinhamento do texto. Queremos deixar o título principal centralizado na tela. Para isso, usamos a propriedade text-align com o valor center:
+
+h1 {
+    background-color: #851944;
+    color: #FFF;
+    text-align: center;
+}
+Precisamos ajustar o alinhamento dos parágrafos de texto, também, deixando as linhas todas com a mesma largura. Podemos, então, selecionar os parágrafos e usar novamente a propriedade text-align, dessa vez com o valor justify:
+
+p {
+    text-align: justify;
+}
+Outra coisa que precisamos ajustar no nosso texto é o tipo da fonte usada na página. Dependendo do navegador e do sistema que você está usar, você verá o texto numa fonte diferente.
+
+Fonte no Firefox
+
+Fonte no Chrome
+
+Se você olhar com atenção a imagem que estamos usando como referência para estilizar nossa página, verá que estamos usando duas fontes diferentes: uma para o título e os subtítulos (Arial) e outra para o texto (Times New Roman). Para mudar as fontes para esses elementos da página, podemos usar a propriedade font-family, passando o nome da fonte que queremos usar para aquele elemento:
+
+h1 {
+    background-color: #851944;
+    color: #FFF;
+    text-align: center;
+    font-family: "Arial";
+}
+
+h2 {
+    font-family: "Arial";
+}
+
+p {
+    text-align: justify;
+    font-family: "Times New Roman";
+}
+Podemos melhorar um pouco o código CSS, tirando a repetição do nome da fonte. Para isso, podemos selecionar o título e os subtítulos ao mesmo tempo. Conseguimos fazer isso separando os nomes das tags por vírgula no nosso seletor:
+
+h1, h2 {
+    font-family: "Arial";
+}
+Fazendo isso, podemos retirar a declaração de dentro do seletor h1, e tanto os <h1> como os <h2> da página serão exibidos com a fonte Arial.
+
+Só precisamos tomar cuidado com uma coisa: nossa página será exibida nos mais diversos navegadores e sistemas. Será que todos eles têm essas fontes que escolhemos? Provavelmente não. E, se o navegador não encontra a fonte que pedimos, ele vai exibir nossa página com as fontes que ele quiser, possivelmente deixando nossa página bem estranha.
+
+Felizmente, podemos controlar um pouco qual será a fonte usada caso a fonte que escolhemos não seja encontrada, bastando especificar uma fonte alternativa. Por exemplo:
+
+p {
+    font-family: "Times New Roman", "Baskerville";
+}
+Com essa declaração, dizemos para o navegador usar a fonte Baskerville se a fonte Times New Roman não estiver disponível. Agora, será que especificar outra fonte é suficiente? E se a fonte Baskerville não estiver disponível também? Podemos explorar mais e mais possibilidades, ou então abrir mão do controle total da fonte: em vez de escolher a fonte específica, escolher apenas o tipo da fonte que queremos usar. As fontes Times New Roman e Baskerville, por exemplo, são fontes serifadas. Por outro lado, as fontes Arial e Verdana são fontes sem serifa. A diferença pode ser vista na imagem abaixo: as fontes serifadas possuem traços em algumas pontas.
+
+Então podemos dizer para o navegador: se a fonte Times New Roman não estiver disponível, use uma fonte qualquer, desde que ela seja serifada; fazemos isso passando o valor serif para o font-family. Podemos fazer algo semelhante para os títulos e subtítulos, mas dizendo que queremos uma fonte sem serifa com o valor sans-serif.
+
+h1, h2 {
+    font-family: "Arial", sans-serif;
+}
+
+p {
+    font-family: "Times New Roman", serif;
+}
+
+Nosso texto começa a ter um pouco mais da aparência que queremos no final. No entanto, o espaçamento entre os elementos da página ainda não está legal. Além disso, antes de podermos nos preocupar com a foto e a barra lateral, faltam alguns elementos no próprio texto. No próximo capítulo cuidaremos desses detalhes.
+
+O que acontece com o texto quando não colocamos uma fonte e um tamanho para ele?
+
+O texto é exibido usando a fonte e o tamanho padrões do navegador, que podem ser modificados pelo usuário
+ 
+Quando não há nenhum estilo definido para o texto de uma página, esse texto é exibido seguindo os padrões definidos nas opções do navegador. O usuário do navegador tem o poder de modificar esse padrão nas opções do navegador para, por exemplo, usar uma fonte maior ou uma fonte que ele ache mais bonita.
+
+O que significa a expressão #35AF18?
+
+A expressão representa uma cor usando a sintaxe hexadecimal do CSS. Nessa sintaxe, especificamos uma cor pela mistura das cores primárias vermelho, verde e azul, nessa ordem. Assim, os dois primeiros caracteres correspondem à quantidade de vermelho, os dois seguintes à quantidade de verde e os dois últimos à quantidade de azul.
+Cada dois caracteres representam um número de 0 a 255 na notação hexadecimal:
+A = 10
+B = 11
+C = 12
+D = 13
+E = 14
+F = 15
+10 = 16
+...
+1A = 26
+1B = 27
+...
+20 = 32
+
+Como deve ser a declaração para usar a fonte Merriweather, que é uma fonte serifada? Lembre-se: a fonte pode não estar disponível ou pode não ser carregada, ou seja, deve-se ter uma alternativa que seja o tipo de fonte que deseja-se usar.
+
+font-family: "Merriweather", serif;
+ 
+A resposta correta é:
+font-family: "Merriweather", serif;
+Toda declaração font-family pode ter, além do nome da fonte que se deseja usar, uma alternativa que seja o tipo de fonte que se deseja usar. Assim, se o navegador não encontrar a fonte desejada, pode recorrer a uma fonte parecida.
+Também seria válido especificar mais de uma alternativa como, por exemplo:
+font-family: "Merriweather", "Times New Roman", serif;
+Mas sempre com o tipo de fonte como última opção.
+
+Agora, aumente o tamanho da fonte na página toda. Qual a melhor alternativa para tal tarefa?
+
+Para aumentar a fonte da página toda, precisamos mudar o font-size no body. Podemos tentar, por exemplo:
+body {
+  font-size: 20px;
+}
+O problema é que, se a fonte padrão do usuário tiver tamanho maior ou igual a 20 pixels, estaremos mantendo ou reduzindo o tamanho da fonte padrão!
+Para garantir que estamos aumentando a fonte, precisamos usar a fonte padrão como base para nossos ajustes. No caso do tamanho da fonte, precisamos usar a medida de porcentagem para definir seu valor. Isso porque, quando usamos porcentagem na propriedade font-size, ele usa como base para calcular a porcentagem o valor definido anteriormente. Então a melhor solução seria:
+body {
+  font-size: 120%;
+}
+Isso aumenta em 20% o tamanho original da fonte.
+
+Se nos basearmos apenas nas fontes que o usuário terá instaladas em sua máquina, teremos poucas opções para enriquecer nosso design. Felizmente, é possível usar uma fonte que não está na máquina do usuário! Podemos pedir para o navegador baixar a fonte necessária para nossa página com algumas linhas de CSS.
+A Google disponibiliza um serviço gratuito chamado Google Fonts que tem diversas fontes para baixarmos e usarmos em nossos sites. Esse serviço disponibiliza não apenas o arquivo da fonte em si como também o CSS necessário para o navegador baixar a fonte!
+
+Vamos, então, enriquecer nosso design! No arquivo CSS, use a fonte "Open Sans Condensed" para os títulos (h1 e h2) e a fonte "Crimson Text" para o texto. Já no cabeçalho do arquivo HTML utilize o código abaixo:
+
+<!-- carrega a fonte Crimson Text nas versões normal, itálico e negrito -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400italic,600">
+
+<!-- carrega a fonte Open Sans Condensed na versão negrito, -->
+<!-- que é a única necessária para os cabeçalhos            -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700">
+Em seguida, no arquivo site.css, podemos usá-las em seus respectivos lugares.
+
+
+
 
