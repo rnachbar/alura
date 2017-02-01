@@ -1,6 +1,14 @@
 <!-- HTML 5 = mais semântica -->
 <!-- semântica = + acessibilidade, + usabilidade -->
-<!-- <div> serve para isolar contéudo, tag genérica -->
+<!-- <div> serve para isolar contéudo, tag genérica, criar regiões, divisões na página -->
+
+<!-- SEMÂNTICA -->
+<!-- <main>: conteúdo principal da página
+<header>: cabeçalho da página ou de uma região dela
+<footer>: mesma ideia da tag <header> para o rodapé
+<aside>: conteúdo auxiliar ao conteúdo principal, como links relacionados ao conteúdo
+<article>: conteúdo que, por si só, já tem um sentido completo, como um post de um blog ou uma notícia
+<section>: parte/seção de uma página ou texto -->
 
 <!DOCTYPE html> <!-- versão 5 do html, informa isso para o navegador, utilizando a última versão -->
 <html> <!-- INFORMA PARA O NAVEGADOR QUE ESTAMOS USANDO A LINGUAGEM HTML -->
@@ -47,37 +55,58 @@
 				<cite>José Souza, Fiat</cite> <!-- <cite> autor da citação -->
 			</blockquote>
 
-    		<p>João domina as tecnologias como ninguém. Eu apresentava um problema, ele tinha na ponta da língua a solução mais adequada com as tecnologias mais recentes.</p>
-    		<p>Manoel Santos, Petrobrás</p>
-
 			<p>Satisfazer meus clientes é prioridade. Para isso, garanto um processo de desenvolvimento altamente interativo, baseado em feedback contínuo. <strong>Não trabalho com escopo fechado</strong>: o cliente é que decide quando o produto está pronto.</p>
 
 			<p>Também não trabalho com prazos fechados: <strong>qualidade é importante demais para ser sacrificada</strong>.</p>
 
 			<h2>Experiência</h2>
 
+			<!-- <blockquote> tag para citações -->
+			<blockquote>
+				<p>João domina as tecnologias como ninguém. Eu apresentava um problema, ele tinha na ponta da língua a solução mais adequada com as tecnologias mais recentes.</p>
+    			<cite>Manoel Santos, Petrobrás</cite>
+			</blockquote>
+
 			<!-- tag <a> ancora -->
 			<p>Já desenvolvi projetos para grandes empresas como <a href="http://www.bmw.com">BMW</a>, <a href="http://www.uol.com.br">UOL</a> e <a href="http://www.ibm.com">IBM</a>. Neles, o foco principal era entregar uma experiência imersiva e impactante para o usuário final sem descuidar do desempenho e da acessibilidade da página.</p>
 
-			<p>Também já fui contratado para transformar grandes portais, como Terra e G1, em páginas responsivas. Fui responsável por renovar o layout, reorganizar o conteúdo e re-escrever o código de forma mais reaproveitável.</p>
+			<p>Também já fui contratado para transformar grandes portais, como <a href="http://www.terra.com.br">Terra</a> e <a href="http://www.g1.globo.com">G1</a>, em páginas responsivas. Fui responsável por renovar o layout, reorganizar o conteúdo e re-escrever o código de forma mais reaproveitável.</p>
 
 			<h2>Comunidade</h2>
 
-			<!-- endereço relativo -->
-			<p>Procuro repassar meu conhecimento para a comunidade. Para isso, já dei diversas palestras e mantenho um <a href="blog.html">blog</a>.</p>
+			<!-- endereço relativo, relativo ao endereço que você está visitando no momento -->
+			<p>Procuro repassar meu conhecimento para a comunidade. Para isso, já dei <a href="portfolio.html">diversas palestras</a> e mantenho um <a href="blog.html">blog</a>.</p>
 			
 		</main>
 		
 		<img src="conteudo/eu.jpg" alt="Foto de João da Silva"> <!-- alt é pedido pelo orgão W3C, que é quem especifica o HTML, para especificar a imagem. HTML semântico, deixa com a informação descrita -->
 
-		<!-- nav - tag de navegação, agrega semântica para a página, para ferramentas de buscas -->
-		<nav>
-			<!-- ul - lista -->
-			<ul>
-				<li><a href="#">Home</a></li>
-				<li><a href="#">Portfolio</a></li>	
-			</ul>
-		</nav>
+		<!-- ENTIDADES -->
+		<!-- &euro;: €
+		&yen;: ¥
+		&pound;: £
+		&reg;: ® -->
+
+		<aside>
+			<h1>João da Silva</h1>
+			<!-- nav - tag de navegação, agrega semântica para a página, para ferramentas de buscas -->
+			<nav>
+				<!-- ul - lista -->
+				<ul>
+					<li><a href="index.html">Home</a></li>
+			        <li><a href="portfolio.html">Portfolio</a></li>
+			        <li><a href="bio.html">Sobre mim</a></li>
+			        <li><a href="blog.html">Blog</a></li>
+			        <li><a href="contato.html">Contato</a></li>
+				</ul>
+			</nav>
+		</aside>
+
+		<!-- rodapé -->
+		<footer>
+			<!-- entidades HTML = &, permite colocar símbolos diversos (&copy = símbolo de copyright) -->
+			&copy; João da Silva 2016
+		</footer>
 
 	</body>
 </html>

@@ -17,13 +17,15 @@ h2 {
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
     background-color: #F2FFFC; /*dois primeiros valores são vermelho, dois seguintes verde e dois últimos azul*/
+    font-size: 120%;
 }
 
+/*espaço = dentro, main espaço h1 significa que quero pegar o h1 q esta dentro main*/
 h1, h2 {
     font-family: "Open Sans Condensed", "Arial", sans-serif;
 }
 
-h1 {
+main h1 {
     text-align: center;
     background-color: #851944;
     color: #FFF;
@@ -31,6 +33,34 @@ h1 {
 
 p {
     text-align: justify;
+}
+
+blockquote {
+	background-color: #D9E5E3;
+}
+
+aside {
+	background-color: #3C1D3D;
+    color: #F2FFFC;
+}
+
+footer {
+    background-color: #000;
+    color: #F2FFFC;
+}
+
+nav a {
+    color: #F2FFFC;
+}
+
+main a {
+    color: #851944;
+}
+
+/*inherit assume o valor que foi definido em seu pai (ou ancestral, de um modo geral) em vez de assumir um outro valor*/
+aside a {
+    color: inherit;
+    font-family: "Open Sans Condensed", sans-serif;
 }
 
 
