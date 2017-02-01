@@ -1,0 +1,38 @@
+<canvas id="tela" width="600" height="400"></canvas>
+
+<script type="text/javascript">
+	
+	var desenhoQuadradoVerde = function(x,y){
+
+		var tela = document.getElementById("tela"); 
+		var c = tela.getContext("2d");
+
+		c.fillStyle = "green";
+		c.fillRect(x,y,50,50);
+
+		c.strokeStyle = "black";
+		c.strokeRect(x,y,50,50);
+
+	}
+
+	var desenhoQuadradoVermelho = function(x,y){
+
+		var tela = document.getElementById("tela"); 
+		var c = tela.getContext("2d");
+
+		c.fillStyle = "red";
+		c.fillRect(x,y,50,50);
+
+		c.strokeStyle = "black";
+		c.strokeRect(x,y,50,50);
+
+	}
+
+	for(var x = 0; x < 600; x = x + 50){
+		desenhoQuadradoVerde(x,0);
+		desenhoQuadradoVermelho(x,50);
+	}
+
+
+</script>
+

@@ -1,0 +1,49 @@
+<!-- <meta charset="utf-8"> --> <!-- utf-8 pode ser escrito em maiusculo ou minisculo, como vamos desenhar com o canvas, ñ precisa -->
+<!-- mundo html -->
+
+<!-- tag html, uma área para se desenhar, uma área em branco. Canvas é uma área da tela que podemos desenhar -->
+<canvas width="600" height="400"> <!-- informando o quanto de espaço o canvas vai ocupar na tela. 600 de largura x 400 de altura -->
+	<!-- canvas é branco por padrão -->
+</canvas>
+
+<script type="text/javascript">
+	// mundo javascript
+
+	// operador ponto (.) pede algo, nesse caso pede para a função document escrever algo (write)
+	// document.write("<h1>Oi</h1>");
+
+	// manipulando o html no mundo javascript. Document é minha página, o document tem o canvas, fizemos o querySelector para pegar o canvas
+	// The querySelector() method returns the first element that matches a specified CSS selector(s) in the document.
+	var tela = document.querySelector('canvas'); // pode se usar aspas duplas ou simples em javascript
+	var pincel = tela.getContext('2d');
+
+	// fillStyle não é uma função, ela recebe um valor, é uma propriedade
+	pincel.fillStyle = 'lightgrey'; // estilo de preenchimento
+	// desenhar um retangulo (fillRect). Passando os pontos onde começa o desenho, coordenada X(0) e Y(0), preencher 600 de largura por 400 de altura
+	pincel.fillRect(0,0,600,400); // coordenada X(0), coordenada Y(0), largura(600), altura(400)
+
+	// para trocar o style é só atribiur um valor a fillStyle novamente
+	pincel.fillStyle = 'green';
+	pincel.fillRect(0,0,200,400); // Os dois primeiros são a posição X,Y. Os outros dois são a largura e a altura do retângulo
+
+	pincel.fillStyle = 'red';
+	pincel.fillRect(400,0,200,400);
+
+	// triangulo, desenhar um caminho, começa em uma posição e vamos movendo para formar um triangulo
+	pincel.fillStyle = 'yellow';
+	pincel.beginPath(); // começa o caminho
+	pincel.moveTo(300,200); // move o cursos para os pontos X(300) e Y(200)
+	pincel.lineTo(200,400); // desenha linha até os pontos X(200) e Y(400)
+	pincel.lineTo(400,400); // desenha linha até os pontos X(400) e Y(400)
+	pincel.fill(); // preenche a área desenhada
+
+	// circulo
+	pincel.fillStyle = 'blue';
+	pincel.beginPath(); // comecar um novo caminho para não continuar o anterior
+	pincel.arc(300, 200, 50, 0, 2 * 3.14); // centro do circulo, X(300), Y(200), raio(50) angulo inicial em radianos(0), angulo final em radianos(360)
+	pincel.fill();
+
+	// Todas as funções escritas e utilizadas é a API (bibliotecas)
+
+</script>
+

@@ -1,0 +1,941 @@
+biblioteca = API
+
+############### 1.Desenhando gráficos com Canvas ###############
+
+Ter uma resposta visual ao nosso trabalho pode ser bastante recompensador. Vamos aprender a usar algumas funções do JavaScript para desenhar numa tela (num canvas) do HTML, para praticar o que aprendemos e ir além. Impressione seus amigos com imagens interessantes e mostre pra gente o que conseguiu fazer! Lembre-se de participar da nossa lista de discussão.
+Haverá um pouco de matemática, mas não se assuste. Será bem simples e você não precisa se preocupar com detalhes. O importante é sempre enxergar como as funções, variáveis, ifs e fors estão trabalhando juntos.
+
+Desenhe linhas e figuras
+Vamos definir uma área da nossa página para que possamos desenhar nela via JavaScript. Crie o arquivo programa.html e declare a área que utilizaremos para pintar da seguinte maneira:
+
+<canvas id="tela" width="600" height="400"></canvas>
+
+Isso mesmo, apenas uma única linha, sem a tag script. Abra seu HTML no Chrome, qual foi o resultado? Isso mesmo, uma tela de 600x400 branca num fundo... também branco! Não dá para perceber nada. Vamos desenhar um retângulo verde (green) à esquerda, no ponto 0,0 (canto superior esquerdo) de tamanho 200,400 (indo até o ponto inferior, um terço do valor máximo possível, que é 600). Aqui estamos trabalhando em um plano de duas dimensões, onde a vírgula separa a posição X da posição Y.
+
+Pra fazer isso, teremos de usar funções do JavaScript que ainda não conhecemos muito. Não se preocupe, você vai aprender bastante sobre elas mais pra frente. É natural (apesar de não ser o ideal) testar novas funções e comandos que ainda não dominamos.
+Adicione as seguintes linhas logo abaixo à declaração do seu canvas.
+
+<script>
+    var tela = document.querySelector("#tela");
+    var pincel = tela.getContext("2d");
+
+    pincel.fillStyle="green";
+    pincel.fillRect(0, 0, 200, 400);
+</script>
+
+As duas primeiras não nos importam por enquanto. Você pode imaginar que a variável pincel é como se fosse um pincel. Podemos trocar o estilo do pincel (através da variável fillStyle) e desenhar diversas formas (no caso, um retângulo, chamando a função fillRect).
+
+A função fillRect recebe quatro números para pintar um retângulo. Os dois primeiros são a posição X,Y. Os outros dois são a largura e a altura do retângulo. Nesse caso, estamos pintando um retângulo na posição 0,0 de 200 de largura por 400 de altura.
+
+Como ter uma ideia melhor de onde isso vai parar na tela? O ponto 0,0 é o canto superior esquerdo. O ponto 600,400 é o inferior direito.
+
+Vamos adicionar mais um retângulo, agora em vermelho, começando na posição 400,0. Adicione logo após o seu retângulo verde:
+pincel.fillStyle="red";
+pincel.fillRect(400, 0, 200, 400);
+O resultado acaba em pizza! Temos a bandeira da Itália.
+
+Experimente trocar as cores, como gray, red, green, blue, black etc.
+
+A função fillRect é simples e direta. Recebe a coordenada de início, além da altura e largura. Desenhar outras figuras dá um pouco mais de trabalho. Você precisa ir traçando o caminho, para depois chamar a função que preenche o que foi traçado.
+
+Por exemplo, queremos fazer um triângulo no meio da bandeira, em cinza (gray).
+
+Para isso, precisamos começar a traçar três lados. Pegamos nosso pincel começando do ponto 300,200, que representa o meio da bandeira. Traçamos desse ponto até o inferior esquerdo, que é 200,400. Depois traçamos a base do triângulo, movendo o pincel até o ponto 400,400. Por último, fechamos o nosso polígono (no caso um triângulo), retornando ao ponto inicial do traçado. Além disso, pedimos para que todo o polígono seja preenchido. O código fica dessa forma:
+
+pincel.fillStyle="gray";
+pincel.beginPath();
+pincel.moveTo(300, 200);
+pincel.lineTo(200, 400);
+pincel.lineTo(400, 400);
+pincel.fill();
+O código segue fielmente nossa descrição. Primeiro movemos o pincel para o centro da imagem, para depois traçar os dois lados. O terceiro lado fica implícito quando fazemos a chamada ao fill.
+
+Podemos fazer qualquer figura que tenha lados usando essa fórmula, não apenas triângulos. Mas e se precisarmos de algo arredondado? Vamos colocar uma circunferência azul no meio da nossa imagem.
+
+Existe a função arc, que precisa de muitas informações. São 5: as coordenadas X e Y, o raio, o ângulo inicial e o ângulo final, ambos em radianos. Nada simples. Ele precisa dos ângulos iniciais e finais porque ele também serve para desenhar apenas um pedaço do círculos. Vamos usar de 0 até duas vezes 3.14, que é o valor do PI, representando a circunferência inteira:
+
+pincel.fillStyle="blue";
+pincel.beginPath();
+pincel.arc(300, 200, 50, 0, 2*3.14);
+pincel.fill();
+O valor de 3.14 é o PI. Estamos usando apenas duas casas decimais. Esse valor de PI pode ser substituído por Math.PI, que é uma variável já existente no JavaScript. Faça essa substituição. Valores fixos em variáveis como essa são frequentemente referenciadas como constantes.
+
+Vimos muitas funções nesse capítulo. Como seria possível se lembrar de todas elas? Ou saber qual é a ordem que devo passar os parâmetros? A linha pincel.arc(300, 200, 50, 0, 2*3.14) parece bastante complicada.
+
+Não vou conseguir lembrar de tudo isso! APIs e bibliotecas
+O nosso código não parece tão difícil, mas como é que vamos saber a existência dessas funções de desenhar no canvas? Se você reparar, vimos mais de 5 funções diferentes, entre elas fillRect, beginPath, moveTo, lineTo e fill. Além disso usamos a variável fillStyle. É muita coisa para memorizar!
+
+E você nem deve se preocupar tanto em memorizá-las. Claro, se você utilizá-las com frequência, isso se tornará fácil. Pense no nosso document.write, no alert e outras funções que não apareceram apenas uma vez durante nosso aprendizado. Mas e essas do canvas? E esse tal "contexto 2d", que apareceu no tela.getContext("2d"); e mal falamos dele?
+
+Acontece que sempre temos uma documentação das principais funções do JavaScript. Isso também aparece em diversas outras linguagens. Por exemplo, todas as funções e variáveis que usamos para trabalhar com o canvas podem ser encontradas aqui, bem documentadas:
+
+https://developer.mozilla.org/en-US/docs/DOM/CanvasRenderingContext2D
+
+O site da Mozilla, responsável pelo navegador FireFox, possui uma das documentações mais completas e fáceis de ler. Nesse site você pode ver uma documentação como da imagem abaixo.
+
+Repare que ele dá uma breve descrição e depois parte para cada função, cada variável relacionadas ao assunto. Sim, você vai precisar encarar o inglês técnico, mesmo que básico. Em português, documentações desse tipo, que chamamos de referência, são bastante escassas.
+
+A documentação da Mozilla pode conter informações específicas que só funcionam no navegador deles. Para uma documentação oficial, que deveria funcionar em todos os navegadores, porém menos completa, há este site:
+
+http://docs.webplatform.org/wiki/javascript
+
+Muitas vezes temos um conjunto de funções que trabalham com um objetivo em comum. Chamamos esse conjunto de biblioteca. É frequente alguém se referenciar à biblioteca do JavaScript que trabalha com gráficos, biblioteca para validação de CPF, biblioteca para fazer drag and drop. Veremos mais à frente que há casos em que isso pode aparecer com outros nomes mais estranhos ainda, como API ou ainda de objeto.
+
+Procure você mesmo a documentação da função fillRect nessa página. Clique sobre ela e você terá mais detalhes.
+
+Também podemos encontrar formatos mais simpáticos dessas documentações, criados por outros desenvolvedores. Este é um bom exemplo de post que um blogueiro criou para divulgar seu PDF que contém uma documentação alternativa:
+
+https://simon.html5.org/dump/html5-canvas-cheat-sheet.html
+
+Ele apresenta um resumo das funções que trabalham com o canvas. Segue um pedaço dessa documentação onde podemos ver algumas das que já conhecemos, bem resumidas, explicando quais são os parâmetros que elas trabalham.
+
+Vamos conhecer outras funções relacionadas ao canvas ainda neste capítulo. Lembre-se que você pode e deve explorar novas opções através da documentação. O inglês não deve ser barreira: ele exigirá pouco, mas é fundamental conhecer o mínimo.
+
+Vamos praticar mais o conhecimento das coordenadas e testar outros desenhos e formas através das bandeiras.
+
+############### 2.Extraindo funções ###############
+
+Vamos desenhar vários quadrados no nosso canvas e aprimorar nossas figuras. Mas será que precisaremos ficar repetindo tantas vezes os códigos complicados com arcos, quadrados, estilos e cores?
+Podemos usar o que já aprendemos e criar uma função para evitar a repetição de código. Faremos isso num novo arquivo, o programa2.html. Dentro dele, vamos declarar o canvas e preparar nosso código para que possamos começar a desenhar os quadrados de 50 por 50. Precisamos de uma função que recebe a posição x e y onde ele vai ser desenhado. Ela se chamará desenhaQuadradoVerde:
+
+<canvas id="tela" width="600" height="400"></canvas>
+
+<script>
+    function desenhaQuadradoVerde(x,y) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.fillStyle = 'green';
+        pincel.fillRect(x, y, 50, 50);
+    };
+
+    desenhaQuadradoVerde(0,0);
+</script>
+Na última linha estamos chamando a função para testar o que programamos.
+
+Salve o arquivo e abra-o com o Chrome. O resultado é apenas um pequeno quadrado verde.
+
+Vamos desenhar um quadrado ao lado do outro, mas para que possamos distingir um do outro, adicionaremos uma borda com strokeRect:
+function desenhaQuadradoVerde(x,y) {
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = 'green';
+    pincel.fillRect(x, y, 50, 50);
+
+    pincel.strokeStyle = 'black';
+    pincel.strokeRect(x, y, 50, 50);
+}
+
+desenhaQuadradoVerde(0, 0);
+desenhaQuadradoVerde(50, 0);
+desenhaQuadradoVerde(100, 0);
+
+Mas se quisermos desenhar um quarado de outra cor? Vamos criar a função desenhaQuadradoVermelho, por exemplo? Não, vamos apenas alterar a função que criamos para receber a cor como parâmetro. Aliás, ela passará a se chamar `desenhaQuadrado, sem fazer menção à cor:
+
+function desenhaQuadrado(x,y,cor) {
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = cor;
+    pincel.fillRect(x, y, 50, 50);
+
+    pincel.strokeStyle = 'black';
+    pincel.strokeRect(x, y, 50, 50);
+}
+
+desenhaQuadrado(0 , 0, 'green');
+desenhaQuadrado(50, 0, 'red');
+desenhaQuadrado(100, 0, 'blue');
+
+Veja que para desenhar cada quadrado tivemos que chamar inúmeras vezes a função desenhaQuadrado passando seus parâmetros. Mas sabemos que podemos automatizar esse processo através de um loop while ou for.
+Com while fazemos:
+
+var x = 0;
+while(x < 600) {
+
+    desenhaQuadrado(x, 0, 'green');
+    desenhaQuadrado(x, 50, 'red');
+    desenhaQuadrado(x, 100, 'blue');
+    x = x + 50;
+
+}
+Vejamos a mesma coisa usando um loop for:
+
+for (var x = 0; x < 600; x = x + 50) {
+
+    desenhaQuadrado(x, 0, 'green');
+    desenhaQuadrado(x, 50, 'red');
+    desenhaQuadrado(x, 100, 'blue');
+}
+Percebe como ele fica mais curto? A variável x não precisa mais ser declarada antes. E o incremento de 50 em 50 fica definido dentro do próprio comando.
+
+Temos o seguinte esboço de código que declara a função desenhaCirculo. Essa função permite desenhar na tela um círculo no eixo X e Y, inclusive permite ainda definir a sua cor:
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'lightgray';
+    pincel.fillRect(0, 0, 600, 400);
+
+    function desenhaCirculo(x, y, raio, cor) {
+
+        pincel.fillStyle = cor;
+        pincel.beginPath();
+        pincel.arc(x, y, raio, 0, 2*3.14);
+        pincel.fill();
+    }
+</script>
+
+Utilize como ponto de referência para o centro da flor (círculo vermelho) as coordenadas 300 (x) e 200 (y).
+
+Uma solução é chamar a desenhaCirculo cinco vezes passando coordenadas e cores diferentes, como no exemplo abaixo:
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'lightgray';
+    pincel.fillRect(0, 0, 600, 400);
+
+    function desenhaCirculo(x, y, raio, cor) {
+
+        pincel.fillStyle = cor;
+        pincel.beginPath();
+        pincel.arc(x, y, raio, 0, 2*3.14);
+        pincel.fill();
+    }
+
+    desenhaCirculo(300, 180, 10, 'blue');
+    desenhaCirculo(300, 200, 10, 'red');
+    desenhaCirculo(300, 220, 10, 'yellow');
+
+    desenhaCirculo(280, 200, 10, 'orange');
+    desenhaCirculo(320, 200, 10, 'black');
+
+</script>
+É algo que funciona, mas a ideia não é desenharmos uma flor? Vamos deixar isso claro isolando as cinco chamadas de desenhaCirculo na função desenhaFlor:
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'lightgray';
+    pincel.fillRect(0, 0, 600, 400);
+
+    function desenhaCirculo(x, y, raio, cor) {
+
+        pincel.fillStyle = cor;
+        pincel.beginPath();
+        pincel.arc(x, y, raio, 0, 2 * Math.PI);
+        pincel.fill();
+    }
+
+    function desenhaFlor() {
+
+        desenhaCirculo(300, 180, 10, 'blue');
+        desenhaCirculo(300, 200, 10, 'red');
+        desenhaCirculo(300, 220, 10, 'yellow');
+
+        desenhaCirculo(280, 200, 10, 'orange');
+        desenhaCirculo(320, 200, 10, 'black');
+
+    }
+
+    desenhaFlor();
+
+</script>
+Nosso código melhorou, mas pode ficar ainda melhor. Se quisermos agora desenhar a flor mais para a direita? Veja que teremos que mudar os valores passados em desenhaCirculo em vários lugares. Contudo, perceba que o circulo vermelho é o centro da nossa flor e ele está posicionado em 300 (x), 200 (y). Veja que os demais círculos se posicionam 20 pixels do círculo vermelho, tanto acima/abaixo ou direita/esquerda, a distância é sempre a mesma. Sendo assim, podemos indicar a posição x e y de onde o centro da flor será plotado/desenhado e dentro da função ajustar esse valor somando/subtraindo 20 pixels:
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'lightgray';
+    pincel.fillRect(0, 0, 600, 400);
+
+    function desenhaCirculo(x, y, raio, cor) {
+
+        pincel.fillStyle = cor;
+        pincel.beginPath();
+        pincel.arc(x, y, raio, 0, 2 * Math.PI);
+        pincel.fill();
+    }
+
+    function desenhaFlor(x, y) {
+
+        desenhaCirculo(x, y+20, 10, 'blue');
+        desenhaCirculo(x, y, 10, 'red');
+        desenhaCirculo(x, y-20, 10, 'yellow');
+        desenhaCirculo(x-20, y, 10, 'orange');
+        desenhaCirculo(x+20, y, 10, 'black');
+    }
+
+    desenhaFlor(300, 200);
+
+</script>
+Você pode brincar e passar outras coordenadas para a função desenhaFlor. Inclusive pode desenhar mais de uma flor chamando mais uma vez a função desenhaFlor.
+
+Acabei de conversar com uma professora de matemática do ensino fundamental. Ela me disse que os alunos estão com dificuldades de aprender frações, por falta de exercícios. 
+
+Vamos ajudar a professora?
+
+Escreva uma função desenhaQuadrado, que recebe x, y, o tamanho e a cor. Cada quadrado desenhado deve utilizar um stroke.
+
+function desenhaQuadrado(x, y, tamanho, cor) {
+    // aqui precisamos usar fillRect, strokeRect, etc 
+}
+Baseado nessa função, tente reproduzir a imagem acima! Escreva o programa, depois disso clique em Continuar para ver a resposta do instrutor.
+
+<!-- fracao.html -->
+
+<canvas width="700" height="500"></canvas>
+
+<script>
+
+    function desenhaQuadrado(x, y, tamanho, cor) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.fillStyle=cor;
+        pincel.fillRect(x,y, tamanho, tamanho);
+        pincel.strokeStyle='black';
+        pincel.strokeRect(x,y, tamanho, tamanho);
+    }
+
+    desenhaQuadrado(50, 50, 100, 'green');
+    desenhaQuadrado(150, 50, 100, 'green');
+    desenhaQuadrado(250, 50, 100, 'green');
+    desenhaQuadrado(350, 50, 100, 'white');
+
+</script>
+Ah, não custa nada explicar rapidamente como desenhar um texto. Para tal existe a função fillText, que recebe o texto e as coordenadas onde deve aparecer:
+
+pincel.font='20px Georgia';
+pincel.fillStyle='black';
+pincel.fillText("Qual é a fração?", 50, 30);
+Assim até podemos criar uma segunda função para desenhar o texto:
+
+function desenhaTexto(texto, x , y) {
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.font='20px Georgia';
+    pincel.fillStyle='black';
+    pincel.fillText(texto, x, y);    
+}
+
+desenhaTexto("Qual é a fração?", 50, 30);
+Juntando tudo chegamos a um código muito mais elegante:
+
+<!-- fracao.html -->
+
+<canvas width="700" height="500"></canvas>
+
+<script>
+
+    function desenhaQuadrado(x, y, tamanho, cor) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.fillStyle=cor;
+        pincel.fillRect(x,y, tamanho, tamanho);
+        pincel.strokeStyle='black';
+        pincel.strokeRect(x,y, tamanho, tamanho);
+    }
+
+    function desenhaTexto(texto, x , y) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.font='20px Georgia';
+        pincel.fillStyle='black';
+        pincel.fillText(texto, x, y);    
+    }
+
+
+    desenhaTexto("Qual é a fração?", 50, 30);
+
+    var y = 50;
+    desenhaQuadrado(50, y, 100, 'green');
+    desenhaQuadrado(150, y, 100, 'green');
+    desenhaQuadrado(250, y, 100, 'green');
+    desenhaQuadrado(350, y, 100, 'white');
+
+</script>
+
+Através de gráficos podemos expressar visualmente dados ou valores numéricos, e assim facilitar a nossa compreensão. Gráficos ajudam a entender o relacionamento entre valores e facilitam tirar conclusões.
+Existem vários gráficos, entre os mais famosos está o gráfico de barras, que é o objeto de estudo desse exercício. Procuramos em alguns relatórios da Alura quais navegadores os nossos alunos utilizavam em 2015 e 2016. Separamos os dados:
+
+Em 2015: 50% Chrome, 25% Firefox, 20% Safari, 5% Outros (Opera, IE, etc).
+Em 2016: 65% Chrome, 20% Firefox, 13% Safari, 2% Outros (Opera, IE, Edge, etc).
+Ou seja, em 2015 50% dos nossos alunos usarem o navegador Chrome, 25% Firefox e assim para frente. Já em 2016 65% usavam Chrome e apenas 20% Firefox.
+
+Esse gráfico ainda está incompleto, pois falta uma legenda que mostraria que a cor azul representa Chrome, verde é Firefox, amarelo Safari e vermelho Outros. Mesmo assim já é algo interessante para praticar.
+
+Você já aprendeu a desenhar um retângulo e até criamos uma função com esse propósito. Desenhar um texto também já sabemos, mas segue o código para relembrar:
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    function desenhaRetangulo(x, y, largura, altura, cor) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.fillStyle=cor;
+        pincel.fillRect(x,y, largura, altura);
+        pincel.strokeStyle='black';
+        pincel.strokeRect(x,y, largura, altura);
+    }
+
+    function desenhaTexto(x, y, texto) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.font='15px Georgia';
+        pincel.fillStyle='black';
+        pincel.fillText(texto, x, y);    
+    }
+
+    // aqui vem mais
+
+</script>
+Também já vimos como representar vários valores dentro de um array. Assim podemos guardar as percentagens de cada ano. No mundo de gráficos os valores são chamados de serie:
+
+var serie2015 = [50, 25, 20, 5];
+var serie2016 = [65, 20, 13, 2];
+Cada valor no array representa a %. No ano 2016 (ou melhor na serie 2016) 65% dos alunos usavam Chrome, 20% Safari etc
+
+Igualmente podemos apresentar todas as cores utilizadas na gráfico de barras. Repare que que o nosso gráfico possui 4 cores:
+
+var cores = ['blue', 'green', 'yellow', 'red'];
+Tendo isso em mãos vem agora a sua tarefa: Escreva uma função desenhaBarra que cria uma barra (4 retângulos - o primeiro azul, segundo verde, etc como apresentado na imagem em cima).
+
+A chamada da função deve ser:
+
+desenhaBarra(50, 50, serie2015, cores, '2015');
+desenhaBarra(150, 50, serie2016, cores, '2016');
+A primeira barra começa com x=50 e y=50, recebe a serie de 2015, as cores e o texto '2015'. Baseado nisso já podemos escrever a função:
+
+function desenhaBarra(x, y, serie, cores, texto) {
+    // aqui precisamos desenhar vários retângulos!
+}
+
+Vamos implementar a função passo a passo. Primeiro vamos desenhar o texto, que fica 10 pixels acima da barra:
+
+function desenhaBarra(x, y, serie, cores, texto) {        
+    desenhaTexto(x, y - 10, texto);
+}
+Agora vamos criar um laço usando a serie. O truque aqui é que declaramos antes uma variável para somar as alturas:
+
+function desenhaBarra(x, y, serie, cores, texto) {
+
+    desenhaTexto(x, y - 10, texto);
+
+    var somaAltura = 0; // variável auxiliar
+
+    for (var i = 0; i < serie.length; i++) {
+
+    }
+}
+Dentro do laço, vamos recuperar um valor da serie pelo índice. Esse valor representa a altura de um retângulo:
+
+function desenhaBarra(x, y, serie, cores, texto) {
+
+    desenhaTexto(x, y - 10, texto);
+
+    var somaAltura = 0; // variável auxiliar
+
+    for (var i = 0; i < serie.length; i++) {
+        var altura = serie[i];
+    }
+}
+E agora podemos desenhar um retângulo usando a nossa função desenhaRetangulo:
+
+function desenhaBarra(x, y, serie, cores, texto) {
+
+    desenhaTexto(x, y - 10, texto);
+
+    var somaAltura = 0; // variável auxiliar
+
+    for (var i = 0; i < serie.length; i++) {
+        var altura = serie[i];
+        desenhaRetangulo(x, y + somaAltura, 50, altura, cores[i]);
+    }
+}
+Repare que usamos as variáveis somaAltura e altura. Por fim, ainda no laço, não podemos esquecer de somar as alturas:
+
+function desenhaBarra(x, y, serie, cores, texto) {
+
+    desenhaTexto(x, y - 10, texto);
+
+    var somaAltura = 0;
+    for (var i = 0; i < serie.length; i++) {
+        var altura = serie[i];
+        desenhaRetangulo(x, y + somaAltura, 50, altura, cores[i]);
+        somaAltura = somaAltura + altura;
+    }
+}
+Isso já é tudo para desenhar uma barra! Agora basta chamar a função passando as coordenadas inicias, a serie e cores, além do texto:
+
+var cores = ['blue','green','yellow', 'red'];
+var serie2015 = [50,25,20,5];
+var serie2016 = [65,20,13,2];
+
+desenhaBarra(50, 50, serie2015, cores, '2015');
+desenhaBarra(150, 50, serie2016, cores, '2016');
+Como sempre, também estou passando o código completo para comparar! Lembre-se, não há uma implementação perfeita. O importante é que a implementação da sua função desenhaBarra atinja o objetivo:
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    function desenhaRetangulo(x, y, largura, altura, cor) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.fillStyle=cor;
+        pincel.fillRect(x,y, largura, altura);
+        pincel.strokeStyle='black';
+        pincel.strokeRect(x,y, largura, altura);
+    }
+
+    function desenhaTexto(x , y, texto) {
+        var tela = document.querySelector('canvas');
+        var pincel = tela.getContext('2d');
+
+        pincel.font='15px Georgia';
+        pincel.fillStyle='black';
+        pincel.fillText(texto, x, y);    
+    }
+
+    function desenhaBarra(x, y, serie, cores, texto) {
+
+        desenhaTexto(x, y - 10, texto);
+
+        var somaAltura = 0;
+        for (var i = 0; i < serie.length; i++) {
+            var altura = serie[i];
+            desenhaRetangulo(x, y + somaAltura, 50, altura, cores[i]);
+            somaAltura = somaAltura + altura;
+        }
+    }
+
+    var cores = ['blue','green','yellow', 'red'];
+    var serie2015 = [50,25,20,5];
+    var serie2016 = [65,20,13,2];
+
+    desenhaBarra(50, 50, serie2015, cores, '2015');
+    desenhaBarra(150, 50, serie2016, cores, '2016');
+
+</script>
+
+No primeiro capitulo vimos como desenhar linhas para, por exemplo, criar um esquadro. Vimos que é preciso chamar a função beginPath e definir cada ponto do triângulo. Isso dá bastante trabalho e para quem não conhece tão bem a API até pode ser complicado!
+Repare que é muito mais fácil criar um retângulo, basta chamar fillRect. Que tal criar uma função desenhaTriangulo que recebe as coordenadas dos 3 pontos? Seria muito mais fácil, não?
+
+Aliás, podemos ir além, pois um esquadro é mais simples ainda! Para deixar mais claro, vamos analisar a imagem abaixo:
+
+Nesse tipo de triângulo, basta saber os pontos A e C para descobrir o B! Repare que o X do A também é o X do B, e o Y do C também é o Y do B. Ficou confuso? Veja essa outra imagem:
+
+Sabendo disso, podemos criar uma função mais simples ainda, que recebe as coordenadas do ponto A e C, além da cor, para desenhar um esquadro! Algo assim:
+
+function desenhaEsquadro(xa, ya, xc, yc, cor) {
+    //a implementacao fica com vc :)
+}
+Será que você consegue melhorar o código abaixo e criar a função desenhaEsquadro completa?
+
+<!-- esquadro.html -->
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle="black";
+    pincel.beginPath();
+    pincel.moveTo(50, 50);
+    pincel.lineTo(50, 400);
+    pincel.lineTo(400, 400);
+    pincel.fill();
+
+    pincel.fillStyle="white";
+    pincel.beginPath();
+    pincel.moveTo(100, 175);
+    pincel.lineTo(100, 350);
+    pincel.lineTo(275, 350);
+    pincel.fill();
+
+</script>
+
+Essa melhoria realmente valeu a pena, pois simplificou muito o nosso código! E não só isso, também deixou o código mais expressivo, mais fácil de entender:
+<!-- esquadro.html -->
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    function desenhaEsquadro(xa, ya, xc, yc, cor) {
+        pincel.fillStyle=cor;
+        pincel.beginPath();
+        pincel.moveTo(xa, ya);
+        pincel.lineTo(xa, yc);
+        pincel.lineTo(xc, yc);
+        pincel.fill();
+    }
+
+    desenhaEsquadro(50, 50, 400, 400, 'black');
+    desenhaEsquadro(100, 175, 275, 350, 'white');
+
+</script>
+
+############### 3.Interagindo com o usuário ###############
+
+Já temos condições de fazer muita coisa com o que aprendemos. Vamos nesse capítulo aprender mais de eventos e da API do canvas para criar até mesmo um simples joguinho. Aproveite para testar sua imaginação!
+Crie uma lousa capturando o movimento do mouse
+É muito fácil saber o que o usuário está fazendo no nosso programa, para depois tomar decisões. Por exemplo: onde o usuário está clicando na tela? Vamos criar um novo arquivo, o programa3.html e desenhar um canvas cinza, que será a nossa tela de teste.
+
+O começo do programa3.html é muito semelhante ao que já conhecemos:
+
+<canvas id="tela" width="600" height="400"></canvas>
+<script>
+    var tela = document.querySelector("#tela");
+    var pincel = tela.getContext("2d");
+
+    pincel.fillStyle="gray";
+    pincel.fillRect(0, 0, 600, 400);
+</script>
+Abra o programa3.html no seu navegador. Apenas um retângulo cinza aparece, conforme imaginado.
+
+Queremos saber se o usuário clicou dentro da nossa tela, do nosso canvas. Podemos fazer isso definindo uma função para ser chamada toda vez que um clique for feito. Basta atribuirmos uma função para tela.onclick. Adicione as seguintes linhas antes do </script>:
+
+<canvas id="tela" width="600" height="400"></canvas>
+<script>
+
+    var tela = document.querySelector("canvas");
+    var pincel = tela.getContext("2d");
+
+    pincel.fillStyle="gray";
+    pincel.fillRect(0, 0, 600, 400);
+
+    function exibeAlerta() {
+        alert("alguém clicou no canvas!");
+    }
+
+    tela.onclick = exibeAlerta;
+
+</script>
+Pronto! Rode seu programa novamente e clique na área do canvas cinza e veja o resultado.
+
+O que fizemos aqui foi definir uma função que será chamada quando um determinado evento ocorrer. Já vimos isso antes no curso anterior, quando pegamos o clique do mouse em um botão do nosso HTML! Esse tipo de função é o que chamamos de callback. No nosso caso, definimos que, quando alguém clicar na tela (tela.onclick), vamos chamar uma função que por sua vez chama o alert.
+Podemos descobrir a coordenada em que o usuário clicou. Muitas vezes, quando uma função de callback é chamada, são passados argumentos descrevendo o evento que acabou de acontecer. Neste caso é passado um evento chamado MouseEvent, com o qual podemos descobrir a posição x,y do clique através de variáveis de dentro desse evento. Altere seu código da seguinte forma:
+
+// código anterior omitido 
+
+function exibeAlerta(evento) {
+    var x = evento.pageX;
+    var y = evento.pageY;
+    alert("posição do clique : " + x + ", " + y);
+}
+
+// código posterior omitido
+Repare que agora estamos recebendo como parâmetro uma variável a que demos o nome de evento. É comum dar o nome a ela de mouseEvent ou até mesmo um simples e. Abra o seu HTML e clique em algum lugar da tela, qual é o resultado?
+
+Isso mesmo! Ele te dá a posição do seu clique. Mesmo assim, perceba que há algo estranho. Tente, por exemplo, clicar no canto superior esquerdo da sua imagem. 
+
+No nosso caso, mesmo clicando bem no canto superior esquerdo do nosso canvas cinza, obtivemos 11, 11. Algumas vezes, com mais precisão, obtivemos 10,10. Por que o resultado não foi 0,0? Isso ocorre pois, como as próprias variáveis evento.pageX. evento.pageY nos dizem, essa é a posição do clique em relação à página! Se quisermos as coordenadas relativas ao canvas, basta subtrairmos a posição em que o canvas (nossa tela) foi desenhado na página:
+
+// código anterior omitido 
+
+function exibeAlerta(evento) {
+    var x = evento.pageX - tela.offsetLeft;
+    var y = evento.pageY - tela.offsetTop;
+    alert("posição do clique : " + x + ", " + y);
+}
+
+// código posterior omitido
+Ler apenas essa informação não é tão interessante. Que tal desenhar um círculo azul em cada ponto que o usuário clicar? Basta, dentro dessa função, fazer uso aquela função arc, que já conhecemos:
+
+// código anterior omitido
+
+function exibeAlerta(evento) {
+    var x = evento.pageX - tela.offsetLeft;
+    var y = evento.pageY - tela.offsetTop;
+
+    pincel.fillStyle="blue";
+    pincel.beginPath();
+    pincel.arc(x, y, 10, 0, 2*3.14);
+    pincel.fill();
+
+    console.log("posição do clique : " + x + ", " + y);
+}
+// código posterior omitido
+Recarregue seu arquivo no navegador. Clique em alguns pontos na tela e veja o resultado que obtemos!
+
+Veja que, além de desenhar o círculo onde você clica, estamos colocando a informação das coordenadas no console do navegador. Vimos esse recurso no começo. É muito mais prático utilizá-lo do que imprimir valores com document.write ou o inoportuno alert. Para ver as posições onde estamos clicando, basta abrir o Console JavaScript do Chrome. Relembrando: clique no ícone de menus/ferramentas, depois acesse o menu Ferramentas (Tools) e por último Console JavaScript.
+
+Já podemos fazer um software parecido com o Paint, não? Ou como o Photoshop, para os mais ousados!
+
+Veja que o nome da função não reflete mais sua funcionalidade. Ela não exibe mais um alerta, pelo contário, ela agora desenha um círculo. Sendo assim, para que nosso código fiquei mais fácil de ler, vamos trocar o nome da função para desenhaCirculo. Só não podemos esquecer de mudar também na linha que atribui essa função ao evento tela.onclick:
+
+// código anterior omitido
+
+function desenhaCirculo(evento) {
+    var x = evento.pageX - tela.offsetLeft;
+    var y = evento.pageY - tela.offsetTop;
+
+    pincel.fillStyle="blue";
+    pincel.beginPath();
+    pincel.arc(x, y, 10, 0, 2*3.14);
+    pincel.fill();
+
+    console.log("posição do clique : " + x + ", " + y);
+}
+
+// não esqueça de mudar aqui
+tela.onclick = desenhaCirculo;
+
+Temos o seguinte código:
+<script>
+
+    var aprendi = true;
+
+    if(aprendi == true) {
+
+        alert('O instrutor fica muito contente');
+    } else {
+
+        alert('O instrutor não vai desistir até você virar um cangaceiro!');
+    }
+</script>
+
+Não há nenhuma novidade, aliás lidamos com códigos como esse no curso anterior. Nossa condição if testa se o valor da variável aprendi é verdadeira, ou seja, se é true. Usamos inclusive o operador ==.
+
+No entanto, podemos simplificar esse código para:
+
+<script>
+
+    var aprendi = true;
+
+    if(aprendi) {
+
+        alert('O instrutor fica muito contente');
+    } else {
+
+        alert('O instrutor não vai desistir até você virar um cangaceiro!');
+    }
+</script>
+
+Veja que não usei mais o operador ==. Você deve estar intrigado por ter funcionado. Primeiro, lembre-se que o if() espera receber true ou false para saber se executa o código do seu bloco ou o código do bloco do else. Se aprendi já é true, é redundante realizarmos o teste aprendi == true.
+
+Se uma variável já guarda true ou false podemos usá-la diretamente no if poupando alguns caracteres. No entanto, se você se sente mais seguro com a forma anterior, continue com ela. O importante é você ir sentindo o que prefere e o que não prefere em programação. Até porque, não desejo que meus alunos sejam "carbonos" de mim.
+
+Programar é uma arte e como toda arte começamos a enxergar beleza onde não havia.
+
+Aprendemos no capítulo a interagir com o usuário, por exemplo, desenhando uma bolinha azul toda vez que ele clicar no canvas, nossa tela!
+<canvas width="600" height="400"></canvas>
+
+<script>
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'grey';
+    pincel.fillRect(0, 0, 600, 400);
+
+    function desenhaCirculo(evento) {
+
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+        pincel.fillStyle = 'blue';
+        pincel.beginPath();
+        pincel.arc(x, y, 10, 0, 2 * 3.14);
+        pincel.fill();
+        console.log(x + ',' + y);
+
+    }
+
+    tela.onclick = desenhaCirculo;
+
+</script>
+
+Para isso, foi necessário associar a função desenhaCirculo ao evento onclick da nossa tela. Aprendemos também que será o navegador que chamará a nossa função, pois ele sabe identificar cliques no canvas. Além de chamar a função, ele passará sempre um parâmetro para ela. Graças a esse parâmetro, temos acesso a várias informações sobre o evento disparado e, no caso, podemos descobrir a posição do eixo x e y da tela que o usuário clicou.
+
+Exercício
+Agora que já recapitulamos o que fizemos neste capítulo, tenho uma proposta de mudança do código acima bem interessante e quero que você quebre a cabeça para implementá-la. Fique tranquilo, pois clicando em Continuar você terá acesso a uma solução explicada do início ao fim. Sua solução pode ser idêntica ou parecida ou quem sabe revolucionária. Preparado?
+
+Vamos permitir que o usuário altere a cor da bolinha que é desenhada na tela. As cores serão obrigatoriamente blue, red e green. Veja que temos uma lista de cores e isso deve remetê-lo à aula de array do primeiro módulo do curso.
+
+Como essa escolha será feita? A cada clique do botão DIREITO do mouse, a cor padrão, que é blue, deverá se tornar red. Se o usuário clicar mais uma vez com o botão DIREITO, a cor escolhida deverá ser green, nessa ordem. Por fim, se clicarmos novamente, voltamos para a cor blue e repetirmos a ordem de seleção de cores.
+
+É claro que lhe darei uma dica, pois não ensinei a você a associar a execução de uma função ao clique do botão direito do mouse. O evento responsável por isso é o oncontextmenu. Para você começar bem, crie um programa com o código anterior e faça um teste desse evento conforme meu exemplo:
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+    pincel.fillStyle = 'grey';
+    pincel.fillRect(0, 0, 600, 400);
+
+    function desenhaCirculo(evento) {
+
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+        pincel.fillStyle = 'blue';
+        pincel.beginPath();
+        pincel.arc(x, y, 10, 0, 2 * 3.14);
+        pincel.fill();
+        console.log(x + ',' + y);
+    }
+
+    tela.onclick = desenhaCirculo;
+
+    function mudaCor() {
+
+        alert('Funcionou!');
+        return false;
+    }
+
+    tela.oncontextmenu = mudaCor;
+
+</script>
+Recarregue o programa e experimente clicar com o botão direito na tela. A mensagem "Funcionou!" será exibida. Não estranhe a última linha com a instrução return false. Ela é importante para que o menu contextual padrão do canvas não seja exibido, ou seja, queremos apenas trocar de cor com o clique do botão e não exibir um menu para o usuário.
+
+Vale a pena quebrar a cabeça com esse exercício. Não estou preocupado que você escreva o código mais lindo do universo, mas que combine diversas coisas que aprendeu até agora nesse exercício.
+
+O primeiro passo será criarmos duas variáveis. A primeira um array de cores, a segunda o índice da cor atual selecionada:
+<canvas width="600" height="400"></canvas>
+
+<script>
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = 'grey';
+    pincel.fillRect(0, 0, 600, 400);
+
+    var cores = ['blue', 'red', 'green']
+    var indiceCorAtual = 0; // começa com blue
+
+    function desenhaCirculo(evento) {
+
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+        pincel.fillStyle = cores[indiceCorAtual];
+        pincel.beginPath();
+        pincel.arc(x, y, 10, 0, 2 * 3.14);
+        pincel.fill();
+        console.log(x + ',' + y);
+
+    }
+
+    tela.onclick = desenhaCirculo;
+
+    function mudaCor() {
+
+        alert('Funcionou!');
+        return false; 
+    }
+
+    tela.oncontextmenu = mudaCor;
+
+</script>
+Repare que dentro da função desenhaCirculo definimos a cor passada para pincel.fillStyle, pegando-a do array de cores. Veja que para obtermos um valor do array, precisamos de seu índice e na primeira vez que o usuário abre a nossa aplicação, o valor de indiceCorAtual é 0, ou seja, o índice para a cor blue.
+
+Podemos até recarregar a aplicação e clicarmos várias vezes. No entanto, só temos bolinhas azuis. Precisamos agora implementar a troca de cor através do clique do botão direito. Para isso, vamos alterar a função mudaCor, aquela que foi associada ao evento oncontextmenu da nossa tela. Lembre-se que é esse o evento que responde ao clique do botão direito do mouse.
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = 'grey';
+    pincel.fillRect(0, 0, 600, 400);
+
+    var cores = ['blue', 'red', 'green']
+    var indiceCorAtual = 0; // começa com blue
+
+    function desenhaCirculo(evento) {
+
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+        pincel.fillStyle = cores[indiceCorAtual];
+        pincel.beginPath();
+        pincel.arc(x, y, 10, 0, 2 * 3.14);
+        pincel.fill();
+        console.log(x + ',' + y);
+
+    }
+
+    tela.onclick = desenhaCirculo;
+
+    function mudaCor() {
+
+        indiceCorAtual++;
+        alert(indiceCorAtual);
+
+        return false; // para não exibir o menu padrão do canvas
+    }
+
+    tela.oncontextmenu = mudaCor;
+
+</script>
+Veja que a cada clique do botão direito, incrementamos a variável indiceCorAtual, contudo, se clicarmos 10 vezes, seu valor final será 9! Isso não está correto, porque seu valor mínimo é 0 e seu valor máximo não pode passar de 2, pois 2 é o índice para acessar o último elemento do array. Precisamos fazer um teste toda vez que mudaCor for chamado e verificar se o indiceCorAtual é maior ou igual à cores.length. Se for, alteramos o índice para 0.
+
+A solução final fica assim:
+
+<canvas width="600" height="400"></canvas>
+
+<script>
+    var tela = document.querySelector('canvas');
+    var pincel = tela.getContext('2d');
+
+    pincel.fillStyle = 'grey';
+    pincel.fillRect(0, 0, 600, 400);
+
+    var cores = ['blue', 'red', 'green']
+    var indiceCorAtual = 0; // começa com blue
+
+    function desenhaCirculo(evento) {
+
+        var x = evento.pageX - tela.offsetLeft;
+        var y = evento.pageY - tela.offsetTop;
+        pincel.fillStyle = cores[indiceCorAtual];
+        pincel.beginPath();
+        pincel.arc(x, y, 10, 0, 2 * 3.14);
+        pincel.fill();
+        console.log(x + ',' + y);
+
+    }
+
+    tela.onclick = desenhaCirculo;
+
+    function mudaCor() {
+
+        indiceCorAtual++;
+
+        if(indiceCorAtual >= cores.length) {
+            indiceCorAtual = 0; // volta para a primeira cor, azul
+        }
+
+        return false; // para não exibir o menu padrão do canvas
+    }
+
+    tela.oncontextmenu = mudaCor;
+
+</script>
+
+
+
+
