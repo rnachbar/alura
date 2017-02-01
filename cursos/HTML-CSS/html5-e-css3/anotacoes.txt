@@ -717,3 +717,64 @@ A página de uma padaria tem o seguinte HTML:
 E você deseja estilizar os links do menu de navegação. Qual dos seletores abaixo seria o mais adequado?
 
 nav a
+
+
+############### 4.O navegador trabalha a nosso favor ###############
+
+O navegador trabalhando a nosso favor
+Quando estamos desenvolvendo uma página, muito frequentemente fazemos uma alteração no código para tentar chegar a um design final ou simplesmente testar como fica, tentar melhorar o layout ou ver se nosso código funciona. Em todos esses casos, precisamos alterar um arquivo, salvá-lo e, depois, recarregar a página no navegador. Esse é um ciclo que se repete bastante e que pode ser desgastante, sobretudo quando algum ou alguns dos passos não são instantâneos, como quando estamos mexendo em arquivos de outra máquina.
+
+Desenvolver uma página também pode ser bem desgastante quando o comportamento apresentado no navegador não corresponde às nossas expectativas e não conseguimos entender o porquê. Um elemento não aparece na posição desejada ou aparece com as dimensões erradas. Às vezes gastamos horas até encontrar o motivo.
+
+Felizmente, os navegadores mais modernos vêm com ferramentas para nos auxiliar nessas situações. Podemos acessá-las apertando a tecla F12, normalmente. Dentre elas, temos visualização e edição de HTML, CSS e JavaScript, análise do desempenho de rede e inspeção do estado do navegador.
+
+Ferramentas para desenvolvedores no Firefox
+Ferramentas para desenvolvedores no Chrome
+Ferramentas para desenvolvedores no Internet Explorer
+Explorar todas essas ferramentas foge do escopo do curso mas, agora, saber lidar com o Inspetor vai nos ajudar bastante!
+
+Ao abrir a aba do Inspetor, vemos uma região com o código HTML da página aberta no momento e, à direita, temos um painel com código CSS. No painel do HTML, podemos explorar a estrutura da página: o navegador nos mostra quais tags estão dentro de quais. Podemos esconder ou mostrar o conteúdo de uma tag para melhor visualização.
+
+Painel com algumas tags fechadas e outras abertas
+
+Agora, experimente clicar numa tag da página; você verá o painel à direita mudar. Nele, o navegador mostra as regras do CSS que o navegador está aplicando naquele elemento que você clicou.
+
+Painel com uma citação selecionada e CSS correspondente mostrado à direita
+
+No painel com o HTML da página, o navegador não mostra exatamente o código que digitamos, mas sim como ele interpreta o que digitamos. Se esquecermos de fechar uma tag <p>, por exemplo, veremos que o navegador é capaz de "adivinhar" onde ela seria fechada.
+
+O navegador fecha a tag P e mostra isso no inspetor
+
+Por outro lado, se esquecemos de fechar uma tag <em> dentro de um parágrafo, vemos que o navegador fica perdido, e tenta fechá-la e abri-la em diversos lugares.
+
+O navegador fecha e abre a tag EM repetidas vezes
+
+Usando essa ferramenta, somos capazes de identificar erros de digitação mais facilmente, tanto no HTML como no CSS! Se, por exemplo, errarmos a digitação da propriedade width dentro do seletor blockquote, veremos que o navegador, além de não aplicar a largura, vai omitir ou riscar a declaração no painel do CSS.
+
+Propriedade width ignorada no Firefox
+
+Propriedade width ignorada no Chrome
+
+Alterando a página pelo próprio navegador
+O Inspetor do navegador permite não apenas visualizar o código mas também alterá-lo. Experimente selecionar a tag <body> e clicar no valor da propriedade background-color. Quando você fizer isso, o navegador permitirá que você altere o valor da propriedade. Digite uma nova cor para o fundo da página, por exemplo #FFA; você verá a página mudar de cor instantaneamente.
+
+Alterando a propriedade background-color no inspetor
+
+Depois de digitar o novo valor, você pode apertar a tecla Enter para o navegador memorizar sua alteração. Assim, você passará à edição da próxima linha do CSS. Note que o navegador não vai alterar seu arquivo original, vai apenas guardar suas alterações temporariamente. Se você recarregar a página (apertando F5, por exemplo), as alterações feitas no Inspetor não estarão mais lá. Assim, essa ferramenta é muito prática para realizar pequenos testes no CSS.
+
+Na edição do CSS, você não está limitado a alterar as propriedades já declaradas; você pode fazer novas declarações. Basta clicar no valor da última propriedade declarada e apertar Enter: o navegador abrirá uma nova linha onde você poderá digitar uma nova propriedade.
+
+Inserindo a propriedade color no body
+
+Também não estamos limitados à edição de CSS. Podemos alterar o código HTML também! Experimente dar um clique duplo na tag <h1>; você poderá trocar o tipo de tag para <h2>, por exemplo.
+
+Título principal alterado para H2
+
+Você também pode remover uma tag da página completamente. Para isso, basta clicar nela com o botão direito e selecionar a opção "Deletar Nó".
+
+Apagando o título principal da página
+
+A edição do código HTML é temporária como a do CSS; se recarregarmos a página, veremos o código como deixamos no arquivo.
+
+O Inspetor é uma ferramenta bem poderosa do navegador. Vale lembrar que é apenas uma das ferramentas que o navegador oferece para facilitar nossas vidas como desenvolvedores.
+
