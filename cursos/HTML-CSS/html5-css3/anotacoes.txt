@@ -1,6 +1,5 @@
 ﻿Os principais conteudos da internet são HTML, CSS e JAVASCRIPT
 
-
 Começo de tudo: conteúdo
 
 TAG é um código
