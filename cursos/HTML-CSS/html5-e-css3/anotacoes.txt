@@ -1362,3 +1362,164 @@ p {
 
 Fonte de 30 pixels, negrita, texto centralizado
 
+
+############### 9.Nem tudo é o que parece ###############
+
+Nem tudo é o que parece
+Como já discutimos antes, quando desenvolvemos uma página, precisamos levar sempre em conta não só a aparência dos elementos da página, mas também o que eles significam, ou seja, a semântica deles.
+
+Quando começamos a levá-la em conta, percebemos que nem sempre o mapeamento entre a aparência de um elemento e o HTML é direto. Considere, por exemplo, o título da página. Atualmente, ele está assim: com letras maiúsculas e minúsculas.
+
+Imagem do título da página: sobre mim
+
+Porém, se olharmos no layout original, aquele que queremos implementar, o título é feito apenas de letras maiúsculas:
+
+Imagem do título com letras maiúsculas
+
+A primeira solução que podemos pensar é mudar o HTML para deixar o texto com letras maiúsculas:
+
+<h1>SOBRE MIM</h1>
+Para quem entende português, o significado não muda, pois ainda é possível identificar as palavras "sobre" e "mim". Mas, para alguém que não entende português, o que é isso? Quando usamos apenas letras maiúsculas, não estamos escrevendo uma palavra, mas sim uma sigla. Então, quem não entende português vai achar que isso é uma sigla.
+
+Dentre aqueles que não entendem português, podemos citar, além das pessoas que não falam português, as máquinas. Isto é, programas como os leitores de tela e as ferramentas de busca não entendem o que nosso texto quer dizer. Isso significa, então, que os programas leitores de tela e as ferramentas de busca não entendem o que nossa página significa; para eles, tudo são apenas símbolos.
+
+Então como podemos fazer para manter o significado original, de palavra, e deixar o visual com letras maiúsculas? A própria pergunta já traz a resposta: o HTML é onde definimos o significado e o CSS é onde definimos a aparência. Então, no HTML, mantemos o texto com palavras:
+
+<h1>Sobre mim</h1>
+E, no CSS, mudamos a aparência do texto usando a propriedade text-transform, dizendo que queremos que esse texto seja exibido com letras maiúsculas:
+
+h1 {
+    text-transform: uppercase;
+}
+Nem toda imagem é uma imagem
+Anteriormente, colocamos os ícones das redes sociais na barra lateral usando uma lista para representá-las. Conseguimos o resultado esperado, mas será que a semântica está correta?
+
+Quando pensamos em colocar imagens na página, a primeira ideia que vem à mente é colocar uma tag <img>. Porém, precisamos pensar, como sempre, na sêmantica. Por que essas imagens estão lá? Elas estão lá para representar uma informação visual? Ou estão lá apenas para representar visualmente o nome de uma rede social? Se estão lá apenas porque representam visualmente o nome da rede social correspondente, deveríamos deixar o lado visual para o CSS, e deixar no HTML o nome da rede social, que é o que queremos passar de significado. Ou seja, nosso HTML ficaria assim:
+
+<ul class="icones-sociais">
+    <li>
+        <a href="https://github.com/joaodasilva">
+            Github
+        </a>
+    </li>
+    <li>
+        <a href="https://twitter.com/joaodasilva">
+            Twitter
+        </a>
+    </li>
+    <li>
+        <a href="https://br.linkedin.com/pub/joão-da-silva/32/4/508">
+            LinkedIn
+        </a>
+    </li>
+</ul>
+Agora, precisamos fazer a imagem aparecer via CSS e, além disso, fazer o texto sumir. Colocar a imagem via CSS é possível graças à propriedade background-image.
+
+.icones-sociais a {
+    background-image: url(github.png);
+}
+Fazendo isso, veremos a imagem do Github atrás do texto dos links.
+
+Logo do Github cortado atrás dos textos dos links
+
+Repare que o logo do Github está cortado. Precisamos, então, definir um tamanho para o link, de modo que a imagem inteira apareça no fundo do elemento. Para isso, usamos as propriedades width e height. Porém, para que essas propriedades funcionem com nossos links, é necessário que eles tenham um display que seja inline-block ou block. Vamos usar o valor block, mas poderia ser inline-block também.
+
+.icones-sociais a {
+    background-image: url(github.png);
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+Com isso, já conseguimos ver a imagem inteira, mas o texto continua em cima dela.
+
+Logo do Github completo, mas atrás do texto
+
+Como remover o texto? No CSS, existe a propriedade text-indent, que permite regular o recuo da primeira linha de um parágrafo.
+
+Efeito da propriedade text-indent
+
+Quando colocamos um tamanho maior que zero para essa propriedade, a primeira linha começa um pouco depois das linhas seguintes. Se colocamos um tamanho menor que zero, a primeira linha começa um pouco antes.
+
+text-indent positivo e negativo
+
+Se aumentamos muito o valor do text-indent, o texto pode começar fora da página.
+
+text-indent muito grande joga o texto para fora da página
+
+Mas, se o texto tiver mais de uma palavra, apenas a primeira palavra ficará para fora da página. Então podemos tentar com um tamanho bem menor que zero. No nosso caso, nosso CSS vai ficar parecido com:
+
+.icones-redes-sociais a {
+    background-image: url(github.png);
+    width: 40px;
+    height: 40px;
+    display: block;
+    text-indent: -99999px;
+}
+Com isso, conseguimos o efeito desejado.
+
+Logotipo do Github sem o texto por cima
+
+Conseguimos, assim, substituir um texto do HTML por uma imagem carregada via CSS. Essa é uma prática comum, tão comum que até tem um nome popular: image replacement.
+
+Só falta arrumar um problema: todos os links estão com a imagem do Github. Isso acontece porque, no CSS, estamos selecionando todos os links de uma vez. Para selecionar cada link de uma vez, podemos colocar uma classe para cada um:
+
+<ul class="icones-sociais">
+    <li>
+        <a href="https://github.com/joaodasilva" class="github">
+            Github
+        </a>
+    </li>
+    <li>
+        <a href="https://twitter.com/joaodasilva" class="twitter">
+            Twitter
+        </a>
+    </li>
+    <li>
+        <a href="https://br.linkedin.com/pub/joão-da-silva/32/4/508" class="linkedin">
+            LinkedIn
+        </a>
+    </li>
+</ul>
+No CSS, podemos manter boa parte das regras no seletor .icones-sociais a. Apenas a imagem de fundo muda, então apenas essa declaração precisa ficar na classe específica do link:
+
+.icones-sociais a {
+    width: 40px;
+    height: 40px;
+    display: block;
+    text-indent: -99999px;
+}
+
+.github {
+    background-image: url(github.png);
+}
+
+.twitter {
+     background-image: url(twitter.png);
+}
+
+.linkedin {
+    background-image: url(linkedin.png);
+}
+
+Ferramentas de busca, ao examinarem nossos sites, levam em conta apenas o HTML. Que implicações isso traz quando usamos a técnica image replacement?
+
+Por não examinarem o CSS, as ferramentas de busca não encontrarão e, portanto, não indexarão as imagens referenciadas no CSS. Isso pode ser ou não interessante. Se usamos corretamente a técnica image replacement, apenas imagens secundárias, supérfluas para o conteúdo, serão ignoradas; as imagens mais importantes ficam no HTML e, portanto, são indexadas.
+
+Em sites que usam um logotipo, como o exemplo do cabeçalho da "Minha Empresa":
+Cabeçalho do site da empresa fictícia
+
+Esse logotipo deve ou não ser inserido usando a técnica image replacement?
+
+Não deve, pois o logotipo da empresa é um conteúdo importante e queremos que as ferramentas de busca tenham acesso a ele
+
+Fizemos o image replacement usando, entre outras, a propriedade text-indent com um valor negativo bem grande. Contudo, essa é apenas uma forma possível de aplicar essa técnica.
+Experimente, por exemplo, trocar a declaração text-indent: -9999px por font-size: 0. Funciona também, não?
+
+Então qual desses métodos usar? Discuta vantagens e desvantagens que você enxerga em cada método.
+
+A propriedade text-indent tem um comportamento que depende da língua usada na página. Em algumas línguas, como o árabe, escrevemos da direita para a esquerda. Então, se nossa página está escrita nessa direção, o text-indent tem seu comportamento invertido: um valor positivo joga o texto para a esquerda e, por outro lado, um valor negativo joga o texto para a direita. Assim, se usamos um text-indent bem negativo e sua página está escrita nessa direção, o texto do elemento com image replacement ficará bastante para a direita e, portanto, fará aparecer no navegador uma barra de rolagem horizontal.
+Um outro problema com o valor muito grande e negativo da propriedade text-indent é que esse valor muito grande pode fazer com que o navegador gaste muita memória para exibir a página, pois agora ele precisa levar em consideração um elemento muito grande nos cálculos para a exibição da página.
+
+Por outro lado, usar o font-size com valor zero não é bem interpretado por todos os navegadores. Alguns simplesmente ignoram uma declaração desse tipo; outros, mesmo com o tamanho zerado, mostram o texto numa fonte pequena. Ou seja, há um problema de compatibilidade com essa técnica, que a propriedade text-indent não tem.
+
+

@@ -45,6 +45,7 @@ body {
     margin: 0;
     border-bottom: 10px solid black;
     font-size: 60px;
+    text-transform: uppercase; /*transformar em letras maiusculas*/
 }
 
 main a { color: #851944; }
@@ -96,9 +97,24 @@ aside h1 {
 /* # = seletor de id*/
 /* . (ponto) = seletor de classe*/
 /*classes = flexibilidade*/
+
+.icones-sociais a {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-indent: -9999px; /*image replacement - tira o texto da tela, substituir texto por imagem*/
+}
+
 .icones-sociais li { display: inline-block; /*inline-block permite definir o tamanho do elemento*/ }
 
-nav a { color: #F2FFFC; }
+.github { background-image: url(conteudo/github.png); }
+.twitter { background-image: url(conteudo/twitter.png); }
+.linkedin { background-image: url(conteudo/linkedin.png); }
+
+nav a { 
+    color: #F2FFFC; 
+    text-transform: lowercase;
+}
 
 .footer-blog {
     background-color: #000;
