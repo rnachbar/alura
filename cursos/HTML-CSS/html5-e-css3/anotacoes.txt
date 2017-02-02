@@ -1041,3 +1041,108 @@ Devemos usar um reset nos nossos projetos para eliminar diferenças de layout en
 
 No momento, estamos usando o reset do Eric Meyer, mas existem várias alternativas. Uma também bastante famosa é o Normalize, criado por Nicolas Gallagher e Jonathan Neal.
 
+############### 7.Um pouquinho de posicionamento ###############
+
+Um pouquinho de posicionamento
+Na barra lateral, ainda estão faltando os ícones que servirão de links para os nossos perfis nas redes sociais.
+
+Ícones na barra lateral
+
+Podemos representar esses ícones como uma lista de links dentro do nosso <aside>. Dentro de cada tag <a>, podemos colocar, em vez de texto, a imagem com o logotipo da rede social:
+
+<ul>
+    <li>
+        <a href="https://github.com/joaodasilva">
+            <img src="github.png" alt="Github">
+        </a>
+    </li>
+    <li>
+        <a href="https://twitter.com/joaodasilva">
+            <img src="twitter.png" alt="Twitter">
+        </a>
+    </li>
+    <li>
+        <a href="https://br.linkedin.com/pub/joão-da-silva/32/4/508">
+            <img src="linkedin.png" alt="LinkedIn">
+        </a>
+    </li>
+</ul>
+Isso já nos dá um resultado próximo do esperado: as imagens aparecem, são clicáveis mas ainda estão uma em cima da outra. Por que isso acontece e como resolver isso?
+
+Imagens das redes sociais na vertical
+
+Se olharmos nosso layout atual e compararmos com o nosso HTML, veremos que, de modo geral, as tags que criamos – <p>, <header>, <aside>, <footer> – ficam uma embaixo da outra. Ou seja, esse é o comportamento padrão do navegador: empilhar as tags como caixas, uma em cima da outra.
+
+Tags empilhadas no layout
+
+Mas nem toda tag tem esse comportamento. Repare, por exemplo, nas tags <a>, <strong> e <em>. Elas ficam no meio do texto, não empilhadas.
+
+Tags no meio do texto no layout
+
+Então, na verdade, temos esses dois comportamentos possíveis: empilhar ou ficar no meio do texto. Ou, em outras palavras, temos tags que são block, que empilham, e tags que são inline, que ficam no meio do texto.
+
+No caso da nossa lista de ícones, as tags <li> têm o comportamento de empilhar, são block, por isso os ícones aparecem um abaixo do outro. Se as removermos, deixando apenas os links com as imagens, conseguiremos o resultado desejado. Mas será que faz sentido mexer no HTML por uma questão visual? Faz sentido alterar a semântica da nossa página por isso?
+
+Como é uma questão visual, devemos resolver usando a linguagem responsável por esse aspecto da nossa página: a linguagem CSS. No CSS, conseguimos controlar esse aspecto de um elemento por meio da propriedade display. Se quisermos fazer com que os <strong> tenham comportamento block, podemos escrever no CSS:
+
+strong {
+    display: block;
+}
+Resultado do display: block na tag strong: quebra linha
+
+No nosso caso, como queremos deixar os ícones das redes sociais em linha, como se fossem texto, podemos mudar o comportamento padrão do <li>, tornando-o inline:
+
+li {
+    display: inline;
+}
+Com isso, conseguimos o efeito desejado. Ou quase; aparecem uns sublinhados estranhos do lado das imagens:
+
+Ícones em linha, mas com sublinhados estranhos
+
+Se olharmos como o navegador "enxerga" nossos elementos, veremos que há algo estranho: os itens da lista estão menores que as imagens dentro deles:
+
+Inspetor mostrando tamanho dos li's
+
+O problema é que não podemos mudar a altura de um elemento inline, e é isso que a imagem tenta fazer com o <li>. O elemento inline sempre terá a altura da fonte. Ou seja, se quisermos que a imagem fique dentro do <li>, precisamos definir um font-size para ele igual à altura da imagem. Isso não é muito prático e, ainda por cima, não resolve o problema do sublinhado.
+
+O que precisávamos, nesse caso, é que o <li> tivesse a altura e a largura correta automaticamente sem perder o comportamento do inline, de ficar em linha. Para resolver esse cenário, temos o inline-block, mais um valor da propriedade display. Usando-o nos <li>, conseguimos o resultado que queríamos.
+
+Resultado final conforme desejado
+
+Acabamos alterando o layout do menu logo acima das redes sociais, também. Resolveremos esse problema na próxima aula.
+
+Qual a diferença entre elementos inline e inline-block?
+
+Elementos inline não podem ter altura definida
+ 
+O valor inline-block para a propriedade display surgiu para podermos definir altura e largura em elementos inline. Fora isso, ambos os elementos podem ter um padding definido, ambos ficam em linha e ambos são suportados por todos os navegadores modernos.
+
+Vimos nesta aula os valores inline, block e inline-block para a propriedade display. Esses são apenas alguns valores possíveis para essa propriedade.
+Experimente o valor none. O que ele faz?
+
+O valor none faz com que um elemento desapareça completamente da página. É como se ele não existisse na página. É um valor muito útil para quando queremos esconder e mostrar informações interativamente, com uma passada de mouse do usuário por exemplo.
+
+Você tem um menu vertical que gostaria que ficasse lado a lado com o logotipo da sua empresa, no topo da página:
+Logotipo com menu vertical ao lado
+
+Uma marcação HTML válida para esse cenário seria
+
+<header>
+    <img src="logo.png" alt="Minha empresa">
+    <nav>
+        <ul>
+            <li><a href="/sobre">Sobre</a></li>
+            <li><a href="/produtos">Produtos</a></li>
+            <li><a href="/consultoria">Consultoria</a></li>
+            <li><a href="/contato">Contato</a></li>
+        </ul>
+    </nav>
+</header>
+Para deixar imagem e menu lado a lado, qual o valor da propriedade display que devemos dar a cada um deles?
+
+inline-block em ambos
+ 
+Queremos definir tamanhos para ambos, então ambos precisam ser inline-block. Além disso, o <nav> contém elementos do tipo block (cada um dos <li>). Assim, para um comportamento correto do <nav>, é necessário usar o valor inline-block nele.
+
+
+

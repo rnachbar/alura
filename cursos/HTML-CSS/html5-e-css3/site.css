@@ -19,6 +19,7 @@ h2 {
 /*padding controla espaço internos do elemento, controla o espaço entre a borda dele e o conteúdo*/
 /*box model - interpretação do navegador a margens, bordas, paddings*/
 /*arquivo reset - zerar estilo padrão do navegador*/
+/*display block - empilha / display inline - na linha, um do lado do outro*/
 
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
@@ -27,9 +28,12 @@ body {
     line-height: 1.5;
 }
 
-/*espaço = dentro, main espaço h1 significa que quero pegar o h1 q esta dentro main*/
-h1, h2 {
-    font-family: "Open Sans Condensed", "Arial", sans-serif;
+/*centralizar o elemento*/
+main div {
+    width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 30px 0;
 }
 
 main h1 {
@@ -42,10 +46,21 @@ main h1 {
     font-size: 60px;
 }
 
+main a { color: #851944; }
+
+/*espaço = dentro, main espaço h1 significa que quero pegar o h1 q esta dentro main*/
+h1, h2 { font-family: "Open Sans Condensed", "Arial", sans-serif; }
+
+h2 { font-size: 30px }
+
 p {
     text-align: justify;
     margin: 20px 0; /*removendo espaçamentos padrões do navegador*/
 }
+
+strong { font-weight: bold; }
+
+em { font-style: italic; }
 
 blockquote {
 	background-color: #D9E5E3;
@@ -61,21 +76,9 @@ blockquote {
 aside {
 	background-color: #3C1D3D;
     color: #F2FFFC;
+    text-align: center;
     padding: 20px;
-}
-
-footer {
-    background-color: #000;
-    color: #F2FFFC;
-    padding: 20px;
-}
-
-nav a {
-    color: #F2FFFC;
-}
-
-main a {
-    color: #851944;
+    font-family: "Open Sans Condensed", sans-serif;
 }
 
 /*inherit assume o valor que foi definido em seu pai (ou ancestral, de um modo geral) em vez de assumir um outro valor*/
@@ -84,27 +87,17 @@ aside a {
     font-family: "Open Sans Condensed", sans-serif;
 }
 
-/*centralizar o elemento*/
-main div {
-    width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 30px 0;
-}
-
 aside h1 {
     font-size: 30px;
     margin-bottom: 25px;
 }
 
-strong {
-    font-weight: bold;
-}
+aside li { display: inline-block; /*inline-block permite definir o tamanho do elemento*/ }
 
-em {
-    font-style: italic;
-}
+nav a { color: #F2FFFC; }
 
-h2 {
-    font-size: 30px
+footer {
+    background-color: #000;
+    color: #F2FFFC;
+    padding: 20px;
 }
