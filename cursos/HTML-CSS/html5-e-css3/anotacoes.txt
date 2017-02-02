@@ -1796,3 +1796,21 @@ Em que lugar da tela ele vai aparecer?
 
 Na mesma posição em que aparecia sem essas declarações
 
+############### 12.Desafios finais ###############
+
+Desafios finais
+Durante o curso, desenvolvemos duas páginas: bio.html e blog.html. Com elas, exploramos as linguagens HTML e CSS. Agora que temos esse conhecimento em mãos, podemos nos preocupar com alguns detalhes além da tecnologia e aproveitar para amadurecer nossos conhecimentos.
+
+Organização do projeto
+Um primeiro detalhe com o qual podemos nos preocupar é a organização do código no projeto. Até agora, estávamos colocando todos os arquivos juntos no mesmo diretório. Ainda não temos muitos arquivos, mas já começa a ficar meio complicado de encontrar o que queremos. Num projeto maior, isso pode ser bem complicado!
+
+A ideia, então, é separar os arquivos em diretórios de acordo com o tipo deles. Ou seja, um diretório para imagens, um para arquivos CSS... Os arquivos HTML podem ficar no diretório principal, já que são a base do projeto.
+
+Organização do CSS
+Outra coisa que podemos notar é que nosso código CSS está ficando grande. Conforme o projeto vai crescendo, fica cada vez mais complicado manter todo o estilo num único arquivo.
+
+Para facilitar a manutenção desse código, podemos quebrá-lo em vários arquivos de acordo com os critérios que acharmos mais interessantes. Um critério bastante comum é a página à qual aquele código se aplica. Ou seja, criamos um arquivo CSS para cada página. Nesse critério, é importante observar que parte do código é aplicado a todas as páginas (pense no cabeçalho ou na barra de navegação, por exemplo)! Assim, acabamos com a divisão: um arquivo para o estilo genérico de todas as páginas e um arquivo específico para cada página.
+
+Consolidando o conhecimento
+Para consolidar o que vimos durante o curso, deixaremos para você o desafio de criar mais uma página para o site do João da Silva: o portfólio. Essa página terá a lista dos projetos feitos por ele e quais responsabilidades ele teve em cada um. Veremos mais detalhes nos exercícios.
+
