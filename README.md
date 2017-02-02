@@ -7,7 +7,7 @@ Desenvolvimento de estudos da plataforma Alura
 
 * Na raíz do projeto, clicar com o botão direito do mouse e abrir o GIT BASH
 * `$ git pull`
-
+* `$ logout`
 
 ## Rotina de push
 *Passos que devem ser executados antes do desenvolvimento (diario ou a cada push)*
@@ -16,3 +16,4 @@ Desenvolvimento de estudos da plataforma Alura
 * Comitar os arquivos alterados e sempre descrever o que foi feito
 * Após o comite, clicar com o botão direito e abrir o GIT BASH
 * `$ git push`
+* `$ logout`
