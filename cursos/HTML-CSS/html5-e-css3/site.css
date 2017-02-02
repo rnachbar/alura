@@ -20,6 +20,7 @@ h2 {
 /*box model - interpretação do navegador a margens, bordas, paddings*/
 /*arquivo reset - zerar estilo padrão do navegador*/
 /*display block - empilha / display inline - na linha, um do lado do outro*/
+/*pode se colocar mais de uma classe em um elemento*/
 
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
@@ -29,14 +30,14 @@ body {
 }
 
 /*centralizar o elemento*/
-main div {
+.conteudo-principal {
     width: 720px;
     margin-left: auto;
     margin-right: auto;
     padding: 30px 0;
 }
 
-main h1 {
+.titulo-principal {
     text-align: center;
     background-color: #851944;
     color: #FFF;
@@ -92,12 +93,31 @@ aside h1 {
     margin-bottom: 25px;
 }
 
-aside li { display: inline-block; /*inline-block permite definir o tamanho do elemento*/ }
+/* # = seletor de id*/
+/* . (ponto) = seletor de classe*/
+/*classes = flexibilidade*/
+.icones-sociais li { display: inline-block; /*inline-block permite definir o tamanho do elemento*/ }
 
 nav a { color: #F2FFFC; }
 
-footer {
+.footer-blog {
     background-color: #000;
     color: #F2FFFC;
     padding: 20px;
 }
+
+article {
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ccc; /*linha*/
+    margin-bottom: 20px;
+}
+
+.leia-mais {
+    padding: 8px;
+    margin: 16px;
+    display: block;
+    font-size: 24px;
+    text-align: center;
+    background-color: #E6E7E8;
+}
+

@@ -1144,5 +1144,221 @@ inline-block em ambos
  
 Queremos definir tamanhos para ambos, então ambos precisam ser inline-block. Além disso, o <nav> contém elementos do tipo block (cada um dos <li>). Assim, para um comportamento correto do <nav>, é necessário usar o valor inline-block nele.
 
+############### 8.Mais seletores ###############
 
+Mais seletores
+Na aula passada, vimos como deixar os ícones das redes sociais lado a lado usando a propriedade display:
+
+li {
+    display: inline-block;
+}
+Mas acabamos alterando também o estilo do menu logo acima desses ícones:
+
+Menu e ícones na horizontal
+
+Por que isso aconteceu e como resolver? Vamos analisar o seletor: li. Quais elementos da página estamos selecionando? Todos os <li>, estejam eles no <aside>, no <header>, no <footer> ou em qualquer outro lugar da página.
+
+LIs selecionados
+
+Mesmo se tentarmos usar o seletor de descendente – o espaço – não conseguiremos selecionar apenas os <li> das redes sociais. O código abaixo seleciona todos os <li> dentro de <aside>, estando eles dentro do <nav> ou não.
+
+aside li {
+    display: inline-block;
+}
+Precisamos, então, de uma forma mais poderosa de selecionar elementos, que não seja apenas pelas tags HTML. Se pudermos, de alguma forma, dar um nome para a lista dos ícones das redes sociais, conseguimos fazer algo do tipo:
+
+icones-sociais li {
+    display: inline-block;
+}
+Assim, selecionamos os <li> somente dentro dessa lista. Para isso, temos o atributo id do HTML:
+
+<ul id="icones-sociais">
+    <!-- LIs continuam idênticos aqui dentro -->
+</ul>
+Qualquer elemento pode ter um id e, com ele, podemos selecioná-lo facilmente no CSS: basta usar, no lugar da tag, o próprio id, precedido por cerquilha (#):
+
+#icones-sociais {
+    /* estilo exclusivo da lista de ícones */
+}
+Então, para pegar os <li> dentro dessa lista específica, basta combinar o seletor de id com o seletor de descendência:
+
+#icones-sociais li {
+    display: inline-block;
+}
+Fazendo essas alterações, conseguimos deixar apenas os ícones das redes sociais na horizontal.
+
+Menu na vertical e ícones na horizontal
+
+Pensando no futuro
+O seletor de id já resolve nosso problema agora. Mas imagine que precisamos colocar os ícones das redes sociais no rodapé, também. Podemos repetir o HTML?
+
+<aside>
+    <nav>
+        <!-- links -->
+    </nav>
+    <ul id="icones-sociais">
+        <!-- icones -->
+    </ul>
+</aside>
+<footer>
+    &copy; João da Silva 2014
+    <ul id="icones-sociais">
+        <!-- icones -->
+    </ul>
+</footer>
+Como o id é um identificador, um nome para um elemento, ele não pode se repetir na página. Quer dizer, se repetirmos um id na página, o CSS e o JavaScript podem deixar de funcionar corretamente. Poderíamos dar um outro nome id para os ícones do rodapé, mas isso nos obrigaria a colocar esse outro nome no CSS também, o que geraria mais código desnecessariamente.
+
+Quando criamos uma página, frequentemente temos um componente visual que se repete, como as citações no nosso caso.
+
+Citações com mesma aparência
+
+No caso das citações, podemos agrupá-las todas pois todas usam a tag <blockquote>. Agora, no caso dos ícones das redes sociais, usamos a tag <ul>, que também é usada em outros contextos. Precisamos, então, de uma forma de agrupar componentes da página sem ser pela tag. É aí que entra o atributo class do HTML.
+
+Enquanto o id não pode ser repetido, o class é feito para ser repetido. Podemos sem nenhum problema usá-lo para agrupar os ícones das redes sociais no <aside> e no <footer>:
+
+<aside>
+    <nav>
+        <!-- links -->
+    </nav>
+    <ul class="icones-sociais">
+        <!-- icones -->
+    </ul>
+</aside>
+<footer>
+    &copy; João da Silva 2014
+    <ul class="icones-sociais">
+        <!-- icones -->
+    </ul>
+</footer>
+No CSS, podemos selecionar elementos pelo atributo class usando a classe precedida por um ponto (.):
+
+.icones-sociais li {
+    display: inline-block;
+}
+É difícil dizermos que um determinado componente visual nunca será repetido. Por isso, mesmo quando queremos identificar um componente único na página para estilizá-lo, é recomendável usar classes para essa estilização.
+
+Na página blog.html, temos um problema atualmente: como estamos aplicando um estilo ao <footer> e usamos a mesma tag no restante do post e para o rodapé da página. As tags acabaram ficando com fundo preto, mas nós não queremos isso!
+Qual seria a melhor maneira para aplicar o fundo apenas no rodapé da página?
+
+Colocar uma classe no rodapé da página e aplicar o estilo apenas nela
+
+No HTML, podemos dar mais de uma classe para um elemento: basta separar os nomes das classes por espaços.
+<header class="pagina-inicial cabecalho-principal">
+O que acontece, então, se, no CSS, tivermos as seguintes declarações?
+
+.pagina-inicial {
+    font-size: 60px;
+}
+
+.cabecalho-principal {
+    color: white;
+    background-color: purple;
+}
+
+O navegador aplica os estilos de ambas as classes
+
+Podemos agora, no nosso código, ter seletores diferentes para o mesmo elemento. Por exemplo, o elemento <div class="texto"> pode ser selecionado tanto pelo seletor div como pelo seletor .texto. Isso pode levar a alguns conflitos. Por exemplo:
+div {
+    color: red;
+}
+
+.texto {
+    color: black;
+}
+Quando acontece um conflito desse tipo, o navegador escolhe o estilo declarado no seletor mais específico. No exemplo acima, o texto aparecerá preto, pois selecionar por uma classe é mais específico que selecionar por uma tag.
+
+Sendo assim, qual será o estilo final do elemento <div class="principal centralizado"> no exemplo abaixo?
+
+div {
+    border: 1px solid blue;
+    color: orange;
+}
+
+.principal {
+    background-color: red;
+    color: white;
+}
+
+.centralizado {
+    width: 700px;
+    margin: 0 auto;
+}
+
+borda azul, fundo vermelho, texto branco, centralizado com 700px de largura
+ 
+Muito bem !! Como explicado no enunciado, o navegador escolhe o estilo dos seletores mais específicos quando há conflito. Se não há conflito entre o estilo definido em dois seletores diferentes, ou seja, se a mesma propriedade não tem valores diferentes em cada seletor, tanto propriedades do seletor menos específico como do mais específico serão utilizadas.
+No exemplo dado, a única propriedade que aparece em dois seletores diferentes é a propriedade color. Para ela, o navegador usará o valor declarado no seletor mais específico, no caso a classe; ou seja, o texto será branco.
+As outras propriedades não apresentam conflito entre si. Sendo assim, o navegador aplicará todas elas. O resultado final, então, é um elemento com borda azul, fundo vermelho, texto branco e centralizado com 700 pixels de largura.
+
+centralizado é um bom nome para uma classe? Por quê?
+
+Não, pois é ligada à aparência do elemento
+ 
+Esse não é um bom nome para uma classe, pois remete à posição do elemento na tela. Se o elemento deixar de ser centralizado, esse nome de classe não faz mais sentido.
+
+Além de selecionar por classes, vimos como selecionar elementos pelo id deles. Vimos que não é uma boa ideia usar id para estilizar pois o estilo definido dessa forma não é reaproveitável. Mas existe um outro problema com o id. Se tivermos um elemento <div id="mensagem" class="centralizado"> e o seguinte CSS:
+#mensagem {
+    margin: 0;
+    height: 200px;
+}
+
+.centralizado {
+    width: 700px;
+    margin: 0 auto;
+}
+
+div {
+    width: 350px;
+    height: 100px;
+}
+Que estilo terá o elemento?
+
+Dica: lembre da questão da especificidade.
+
+200px de altura, 700px de largura e não centralizado
+ 
+O seletor de id é muito mais específico que o seletor de classe ou de tag. Por isso, o estilo dele prevalece. Sendo assim, o elemento aparecerá com 200 pixels de altura e não centralizado.
+O segundo mais específico no exemplo é o seletor de classe. Ele define a largura de 700 pixels, mas não define a margem automática, pois prevalece a margem definida no id.
+Por fim, o seletor de tag, que define altura e largura, tem suas declarações sobrescritas pelos seletores de id e classe.
+Então o estilo final do elemento é 700 pixels de largura, 200 pixels de altura e não centralizado.
+
+Como podemos colocar mais de uma classe em um elemento, é possível que haja conflito entre regras declaradas nas duas classes. Por exemplo:
+<div class="destaque titulo-principal">
+
+.destaque {
+    font-size: 40px;
+    color: red;
+}
+.titulo-principal {
+    background-color: purple;
+    color: white;
+}
+Se fizermos um elemento com ambas as classes, o navegador precisa decidir quais propriedades de cada classe usar! O critério de desempate é qual das classes aparece por último no arquivo CSS. Então, no exemplo acima, o elemento com as duas classes terá a fonte com 40 pixels, o fundo roxo e o texto branco.
+
+O mesmo vale para quaisquer seletores empatados. Se tivermos:
+
+div {
+    background-color: red;
+}
+div {
+    background-color: blue;
+}
+Todos os elementos <div> terão fundo azul.
+
+Com isso em mente, qual o estilo do elemento <p class="importante primeiro"> com o CSS abaixo?
+
+.primeiro {
+    font-size: 40px;
+    text-align: center;
+}
+.importante {
+    font-size: 30px;
+    font-weight: bold;
+}
+p {
+    font-size: 16px;
+    text-align: left;
+}
+
+Fonte de 30 pixels, negrita, texto centralizado
 

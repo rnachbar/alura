@@ -43,9 +43,9 @@
 		<!-- <main> agrega semântica, para o navegador e ferramentas de busca. É do html 5 -->
 		<main>
 
-			<h1>Sobre mim</h1> <!-- abriu e fechou tag -->
+			<h1 class="titulo-principal">Sobre mim</h1> <!-- abriu e fechou tag -->
 
-			<div>
+			<div class="conteudo-principal">
 
 				<p>Moro em São Paulo mas atendo clientes do mundo todo. Sou conhecido por fazer produtos de <em>qualidade</em>, durabilidade e que agregam valor para meus clientes. </p>
 
@@ -109,7 +109,10 @@
 				</ul>
 			</nav>
 
-			<ul>
+			<!-- id = nome do elemento -->
+			<!-- id não pode repetir, id é para ser nome único de um elemento, por questões de semântica -->
+			<!-- se elemento se repetir, usar class invés de id -->
+			<ul class="icones-sociais">
 				<li>
 					<a href="http://github.com/joaodasilva">
 						<img src="conteudo/github.png" alt="Github">
@@ -132,7 +135,7 @@
 		</aside>
 
 		<!-- rodapé -->
-		<footer>
+		<footer class="footer-blog">
 			<!-- entidades HTML = &, permite colocar símbolos diversos (&copy = símbolo de copyright) -->
 			&copy; João da Silva 2016
 		</footer>
