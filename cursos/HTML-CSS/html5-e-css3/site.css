@@ -21,6 +21,7 @@ h2 {
 /*arquivo reset - zerar estilo padrão do navegador*/
 /*display block - empilha / display inline - na linha, um do lado do outro*/
 /*pode se colocar mais de uma classe em um elemento*/
+/*float faz o elemento flutuar*/
 
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
@@ -30,7 +31,7 @@ body {
 }
 
 /*centralizar o elemento*/
-.conteudo-principal {
+.container {
     width: 720px;
     margin-left: auto;
     margin-right: auto;
@@ -53,7 +54,11 @@ main a { color: #851944; }
 /*espaço = dentro, main espaço h1 significa que quero pegar o h1 q esta dentro main*/
 h1, h2 { font-family: "Open Sans Condensed", "Arial", sans-serif; }
 
-h2 { font-size: 30px }
+h2 { 
+    font-size: 30px;
+    /*clear: right; nenhum h2 pode ter um float a direita*/
+    clear: both; /*nenhum h2 vai ter float de ambos os lados*/
+}
 
 p {
     text-align: justify;
@@ -75,12 +80,32 @@ blockquote {
     margin: 20px 40px;
 }
 
+.fiat {
+    float: right;
+}
+
+.petrobras {
+    float: left;
+}
+
 aside {
 	background-color: #3C1D3D;
     color: #F2FFFC;
     text-align: center;
-    padding: 20px;
+    /*padding: 20px;*/
     font-family: "Open Sans Condensed", sans-serif;
+}
+
+aside, img { 
+    float: right;
+    width: 15%;
+}
+
+aside { 
+    clear: right;
+    padding: 20px;
+    box-sizing: border-box;
+
 }
 
 /*inherit assume o valor que foi definido em seu pai (ou ancestral, de um modo geral) em vez de assumir um outro valor*/
@@ -135,5 +160,19 @@ article {
     font-size: 24px;
     text-align: center;
     background-color: #E6E7E8;
+}
+
+main {
+    float: left;
+    width: 85%;
+}
+
+footer {
+    clear: both; /*clearfix*/
+}
+
+cite {
+    font-style: italic;
+    float: right;
 }
 

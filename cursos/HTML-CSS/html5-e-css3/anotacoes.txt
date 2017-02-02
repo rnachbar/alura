@@ -1522,4 +1522,155 @@ Um outro problema com o valor muito grande e negativo da propriedade text-indent
 
 Por outro lado, usar o font-size com valor zero não é bem interpretado por todos os navegadores. Alguns simplesmente ignoram uma declaração desse tipo; outros, mesmo com o tamanho zerado, mostram o texto numa fonte pequena. Ou seja, há um problema de compatibilidade com essa técnica, que a propriedade text-indent não tem.
 
+############### 10.Posicionanmento mais a fundo ###############
+
+Posicionamento mais a fundo
+Nossa página está quase pronta. Resta apenas colocar a barra lateral, a foto e as citações nos seus devidos lugares.
+
+Página no estado atual
+
+Resultado desejado
+
+Vamos começar pelas citações. Repare que, no final, cada uma deve ficar de um lado do texto. Vimos que a propriedade display permite colocar um elemento ao lado do outro. Porém, ela não permite mudar a ordem de exibição dos elementos: o que vem primeiro no HTML, vem primeiro no visual.
+
+Para conseguirmos o resultado desejado, precisamos "quebrar" essa relação de ordem entre o HTML e o visual final, que podemos chamar de fluxo do documento.
+
+Uma das propriedades que nos permite fazer essa "quebra" é a propriedade float. Há dois valores possíveis para ela (além do none, que é o padrão): left e right. Quando colocamos float: left na citação, a caixa da citação permanece no mesmo lugar, mas o texto, que estava abaixo, passa a ficar ao lado da citação, como se tivéssemos definido tanto a citação como o texto como elementos inline.
+
+Citação com float: left
+
+Mas repare que não é exatamente o mesmo comportamento de um elemento inline: o subtítulo seguinte, depois do parágrafo, também vai parar do lado da citação! O que aconteceu, na verdade, é que o resto do conteúdo da página "subiu", e a citação ficou flutuando do lado esquerdo do conteúdo.
+
+Se usarmos o valor right, veremos que a citação permanece na mesma altura do fluxo, mas do lado direito do conteúdo.
+
+Citação com float: right
+
+É importante notar que os elementos flutuados permanecem na mesma altura de antes. Isso nos permite prever qual comportamento teremos ao usar a propriedade.
+
+Elemento flutuado permanece na mesma altura do fluxo de antes
+
+Para conseguir o resultado desejado no layout final, com cada citação de um lado, precisamos ser capazes de selecionar apenas uma delas individualmente. Para isso, podemos usar um id para cada uma delas mas, como vimos nas aulas anteriores, o ideal é sempre usar classes. Então podemos colocar mais uma classe nas citações:
+
+<h2>Como trabalho</h2>
+<blockquote class="citacao-bio fiat">
+    <p>João é o melhor...</p>
+    <cite>José Souza, Fiat</cite>
+</blockquote>
+<!-- ... -->
+<h2>Experiência</h2>
+<blockquote class="citacao-bio petrobras">
+    <p>João domina as tecnologias...</p>
+    <cite>Manoel Santos, Petrobrás</cite>
+</blockquote>
+Agora, nas classes recém-criadas, colocamos a declaração da propriedade float:
+
+.fiat {
+    float: right;
+}
+
+.petrobras {
+    float: left;
+}
+E temos quase o resultado esperado.
+
+Citações flutuando à esquerda e à direita
+
+Repare que os subtítulos também acabam ficando do lado das citações; não queremos isso. Felizmente, podemos controlar o fluxo do documento com relação aos floats da página. Para isso, usamos a propriedade clear, que permite dizer que não queremos floats do lado de um determinado elemento. Por exemplo, se não queremos floats à esquerda dos nossos subtítulos, podemos fazer:
+
+h2 {
+    clear: left;
+}
+Comunidade com clear:left
+
+Repare que o subtítulo "Comunidade" é "empurrado" para baixo, para não ficar ao lado da citação com float: left. Mas o subtítulo "Experiência" continua ao lado da citação com float: right. Então, na verdade, queremos que não haja floats em nenhum dos lados dos <h2>. Para isso, usamos o valor both na propriedade clear:
+
+h2 {
+    clear: both;
+}
+Assim, chegamos no resultado esperado, bastando apenas alguns pequenos ajustes nas margens das citações para que elas fiquem alinhadas com o texto.
+
+Subtítulos com clear:both
+
+Floats e mais floats
+Podemos aproveitar a ideia de floats para posicionar a foto e a barra lateral também. Para entender como isso é possível, precisamos entender o que acontece quando temos vários floats seguidos no HTML.
+
+Como o float faz com que o elemento saia do fluxo, o resto do conteúdo da página sobe. Assim, se outro float vem logo em seguida no fluxo, esse outro float acabará na mesma altura do primeiro float, independente do lado em que ele vai ficar.
+
+Floats seguidos sendo aplicados pelo navegador
+
+Agora, e se esse segundo float tem a propriedade clear definida justamente com o lado em que o primeiro float está?
+
+.primeiro {
+    float: left;
+}
+
+.segundo {
+    float: left;
+    clear: left;
+}
+Neste caso, o segundo float será "empurrado" para baixo, da mesma forma que qualquer outro conteúdo. Porém, o conteúdo sem float continuará ao lado dos dois floats.
+
+Floats com clear no segundo e conteúdo ao lado
+
+Se olharmos para o resultado do cenário descrito acima, veremos que ele é bem parecido com o resultado que desejamos, apenas espelhado. Então podemos tentar aplicar essa lógica no nosso layout, definindo também as larguras para o conteúdo, de forma que a parte do texto fique com 80% da largura da tela e a foto e a barra lateral com 20%.
+
+main {
+    width: 80%;
+}
+
+img,
+aside {
+    width: 20%;
+    float: right;
+}
+
+aside {
+    clear: right;
+}
+Porém, se fizermos isso, o resultado não será o esperado: a foto e a barra lateral ficam na mesma altura do rodapé. Além disso, a barra lateral fica mais larga que a foto.
+
+Resultado do float: right na imagem e no aside
+
+Esse segundo problema ocorre devido ao box model padrão do navegador. Como a barra lateral tem padding e o padding não entra no cálculo da largura do elemento por padrão, ela acaba ficando mais larga. Para resolver esse problema, basta dizermos ao navegador que queremos que ele calcule a largura do elemento levando o padding em conta (e a borda, que colocaremos mais adiante) usando a propriedade box-sizing com o valor border-box:
+
+aside {
+    box-sizing: border-box;
+}
+Isso resolve o problema da largura, mas não o fato de a imagem e a barra lateral estarem na altura do rodapé. Porém, na verdade, isso deveria acontecer, pois os elementos flutuados permanecem na altura em que estavam e a imagem, de fato, estava abaixo do texto, como está agora.
+
+Como fazer, então, para que ela fique no topo da página? A solução é lembrar que floats seguidos formam uma linha. Se o <main> também for um float, a imagem ficará em linha com ele. Ou seja, basta adicionar a declaração:
+
+main {
+    float: left;
+}
+Ao fazermos isso, a imagem e a barra lateral ficarão no lugar certo, ao lado do cabeçalho. Mas, estranhamente, o rodapé da página também sobe. Por que?
+
+Resultado após aplicar float: left no main
+
+Cuidado com tantos floats!
+Precisamos lembrar que, sempre que transformamos um elemento em float, ele sai do fluxo da página, o que faz com que o resto do conteúdo suba. Neste caso, o rodapé subiu para ocupar o espaço entre os floats que criamos.
+
+Para resolver esse problema, basta lembrarmos da propriedade clear. Não queremos nenhum float em nenhum dos lados do nosso rodapé, então podemos declarar:
+
+footer {
+    clear: both;
+}
+Com isso, chegamos num resultado bem mais próximo do desejado.
+
+Resultado após aplicar o clear:both no rodapé
+
+Frequentemente, quando usamos floats para posicionar os elementos do nosso layout, precisamos "limpar" a sequência de floats, como no nosso caso agora. Assim, é comum encontrarmos declarações clear: both nesse tipo de layout. Essa é uma solução tão comum que até ganhou um nome popular: clearfix. Frequentemente, projetos incluem em seus arquivos CSS uma classe cujo único propósito é fazer essa "limpeza" de floats:
+
+.clearfix {
+    clear: both;
+}
+Se tivéssemos essa classe no nosso arquivo CSS, bastaria aplicá-la no nosso rodapé:
+
+<footer class="clearfix">
+    &copy; João da Silva 2014
+</footer>
+Aumentando a imagem
+Falta apenas fazer com que a imagem fique maior do que a barra lateral, sobrepondo um pouco do <main> também. Para conseguir esse resultado, precisamos entender mais uma propriedade, que veremos na próxima aula.
+
+
 
