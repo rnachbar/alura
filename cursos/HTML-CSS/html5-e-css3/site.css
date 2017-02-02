@@ -14,13 +14,16 @@ h2 {
 	font-family: "Open Sans", sans-serif; /*se não tem a primeira opção, usa a segunda opção*/
 /*}*/
 
+/*O espaço dentro dos elementos é conhecido como padding*/
 /*margin controla os espaços externos do elemento*/
-/*padding controla espaço internos do elemento*/
+/*padding controla espaço internos do elemento, controla o espaço entre a borda dele e o conteúdo*/
+/*box model - interpretação do navegador a margens, bordas, paddings*/
 
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
     background-color: #F2FFFC; /*dois primeiros valores são vermelho, dois seguintes verde e dois últimos azul*/
     font-size: 120%;
+    line-height: 1.5;
 }
 
 /*espaço = dentro, main espaço h1 significa que quero pegar o h1 q esta dentro main*/
@@ -32,8 +35,9 @@ main h1 {
     text-align: center;
     background-color: #851944;
     color: #FFF;
-    padding: 20px;
+    padding: 25px;
     margin: 0;
+    border-bottom: 10px solid black;
 }
 
 p {
@@ -42,20 +46,24 @@ p {
 
 blockquote {
 	background-color: #D9E5E3;
-	padding: 16px; /*espaçamento*/
 	border: 10px solid #C2CCCA; /*borda*/
+    padding: 20px; /*espaçamento interno*/
 	width: 250px; /*largura*/
 	margin: 0; /*para eliminar a margem que o navegar define*/
+    /*para ter 250px reais de largura é necessário somar as bordas e paddins dos dois lados e subtrair do width para a caixa toda ter 250, nesse caso o conteúdo esta com 250px de largura*/
+    box-sizing: border-box; /*mede a partir das bordas para a caixa toda ter 250 pixels de largura de verdade*/
 }
 
 aside {
 	background-color: #3C1D3D;
     color: #F2FFFC;
+    padding: 20px;
 }
 
 footer {
     background-color: #000;
     color: #F2FFFC;
+    padding: 20px;
 }
 
 nav a {
@@ -70,6 +78,13 @@ main a {
 aside a {
     color: inherit;
     font-family: "Open Sans Condensed", sans-serif;
+}
+
+/*centralizar o elemento*/
+main div {
+    width: 720px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 

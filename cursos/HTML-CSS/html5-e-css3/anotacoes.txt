@@ -778,3 +778,158 @@ A edição do código HTML é temporária como a do CSS; se recarregarmos a pág
 
 O Inspetor é uma ferramenta bem poderosa do navegador. Vale lembrar que é apenas uma das ferramentas que o navegador oferece para facilitar nossas vidas como desenvolvedores.
 
+############### 5.Aprimorando o Layout ###############
+
+Aprimorando o layout
+A estrutura da página já está praticamente completa, mas o visual ainda está longe do que queremos.
+
+Layout desejado
+
+Espaçamentos
+Um primeiro aspecto do qual precisamos cuidar são os espaços em branco na página. Alguns lugares que deveriam ter espaço não têm e vice-versa.
+
+Espaços indevidos
+
+Felizmente, conseguimos controlar esses espaços com CSS. Mas repare, temos dois tipos de espaços: dentro e fora dos elementos!
+
+Espaço dentro e fora do elemento
+
+O espaço dentro dos elementos é conhecido como padding. Então, se queremos aumentar o tamanho da caixa roxa do título ou, em outras palavras, se queremos mais espaço entre o texto do título e as bordas da caixa, vamos usar a propriedade padding:
+
+h1 {
+    padding: 24px;
+}
+Repare no efeito causado pelo padding: antes, a caixa roxa tinha praticamente o mesmo tamanho do texto; agora, ela ficou maior, com 24 pixels a mais em cima e abaixo do título.
+
+Título sem padding
+
+Título com padding
+
+Com isso, já podemos arrumar também as citações:
+
+blockquote {
+    padding: 16px;
+}
+Podemos arrumar um outro detalhe das citações, também. No layout desejado, temos uma borda mais escura ao redor da caixa.
+
+Borda escura ao redor da citação
+
+Podemos colocar bordas nos elementos com a propriedade border. Mas repare que podemos fazer bordas de vários jeitos: podemos fazer bordas claras e escuras (cor), podemos fazer bordas finas ou grossas (espessura) e podemos fazer bordas de estilos diferentes (tracejadas, pontilhadas etc.). A figura abaixo dá alguns exemplos de bordas possíveis no navegador.
+
+Estilos de borda possíveis
+
+Então, na propriedade border, precisamos passar esses 3 valores que identificamos, na ordem: espessura, estilo e cor. No nosso caso, queremos uma borda com 10 pixels de espessura, sólida (uma linha contínua) e da cor #C2CCCA, um cinza levemente azulado. No código CSS:
+
+blockquote {
+    padding: 16px;
+    border: 10px solid #C2CCCA;
+}
+Repare que essas 3 propriedades da borda são separadas por espaço e precisam estar nessa ordem.
+
+Por fim, repare que a citação está um pouco mais para a direita que o texto normal, isto é, há um espaço entre ela e a borda da página. Também há um espaço entre a própria página e as bordas da janela do navegador. Esse espaço entre elementos é o que chamamos no CSS de margin! Então, se quisermos deixar a citação alinhada com o texto, como na figura abaixo, podemos usar essa propriedade.
+
+blockquote {
+    padding: 16px;
+    margin: 0;
+    border: 10px solid #C2CCCA;
+}
+Citação alinhada com o texto
+
+Essas três propriedades que acabamos de conhecer -- padding, border e margin -- nos permitem controlar como as caixinhas que os elementos formam se comportam. Elas não são as únicas: podemos controlar também a largura com a propriedade width e a altura com a propriedade height. Podemos, por exemplo, definir uma largura menor para as nossas citações:
+
+blockquote {
+    padding: 16px;
+    margin: 0;
+    border: 10px solid #C2CCCA;
+    width: 250px;
+}
+Todas essas regras juntas formam o que chamamos box model ou, em português, "modelo de caixa", do CSS.
+
+Box model
+
+Um fato interessante para notar nesse desenho é que a largura e a altura são referentes ao conteúdo apenas. Ou seja, no nosso exemplo do blockquote, apesar de termos definido a largura como 250 pixels, por ter 16 pixels de padding e 10 pixels de borda, terá, na verdade, 302 pixels.
+
+Citação com 250 pixels de largura ocupando, na verdade, 302 pixels
+
+Então, se você quiser que a caixa tenha realmente 250 pixels de largura, o que você faz? Uma solução é fazer a conta de quanto tem que ser o valor da propriedade width para chegar nesse resultado, neste caso 198 pixels. Ruim, não?
+
+Felizmente, podemos dizer para o navegador mudar esse box model por meio da propriedade box-sizing. Por exemplo, se queremos que a largura seja medida pelas bordas:
+
+blockquote {
+    padding: 16px;
+    margin: 0;
+    border: 10px solid #C2CCCA;
+    width: 250px;
+    box-sizing: border-box;
+}
+Fazendo isso, nossa citação terá 250 pixels de largura de verdade. Vale notar que essa propriedade só começou a ser suportada recentemente pelos navegadores, então você pode ter alguns problemas ao tentar usá-la. Discutimos sobre as propriedades mais recentes do CSS no curso avançado de HTML e CSS.
+
+Agora, repare como o CSS é poderoso: conseguimos controlar praticamente todos os aspectos da exibição da nossa página, inclusive alguns mais abstratos, como o box model.
+
+Se quisermos centralizar o conteúdo da seção de navegação (que contém links para outras páginas do site), mantendo-a com a mesma largura que temos agora (página inteira), qual das opções abaixo devemos usar? Aplique essa mudança no seu projeto.
+
+text-align: center no aside
+
+Aplique uma largura de 250 pixels para os elementos <blockquote> da página bio.html. Em seguida, aplique a propriedade box-sizing com o valor border-box nesses. O que acontece? Por quê?
+
+Quando aplicamos o valor border-box para a propriedade box-sizing nos elementos <blockquote>, vemos que o tamanho deles aparentemente diminui. Isso acontece porque estamos mudando a forma como o navegador mede a largura dos elementos.
+Por padrão, o navegador mede a largura ignorando padding e bordas. No momento em que colocamos border-box, dizemos ao navegador que ele deve considerar padding e bordas nesse cálculo. Então o elemento diminui pois agora os 250 pixels que definimos de largura incluem os paddings e bordas do elemento.
+
+É possível fazer desenhos e formas bem interessantes apenas usando CSS. Por exemplo, o símbolo universal de pausar (duas barras verticais) pode ser feito com um elemento <div> vazio (ou qualquer outro elemento como <p> ou <header>) com duas bordas grossas, uma à esquerda e outra à direita, e um espaço entre elas, que pode ser a largura do elemento:
+div {
+    border-left: 10px solid red;
+    border-right: 10px solid red;
+    width: 5px;
+    height: 30px;
+}
+Também é possível desenhar um triângulo apenas usando CSS e bordas. Basta fazer a borda inferior ter uma cor e as bordas vizinhas serem transparentes; a mudança de cor entre as bordas ocorre nas diagonais do elemento, então a borda inferior vai ficar com a aparência de um triângulo, desde que o elemento tenha zero pixels de largura (senão vai parecer um trapézio):
+
+div {
+    border-bottom: 30px solid red;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    width: 0;
+}
+Tente fazer um elemento que se parece com uma gravata borboleta e um que seja um triângulo com um ângulo reto.
+
+O código para a gravata borboleta deve ficar parecido com:
+div {
+    border-left: 30px solid red;
+    border-bottom: 30px solid transparent;
+    border-top: 30px solid transparent;
+    border-right: 30px solid red;
+    width: 0;
+}
+Basta usar o código do triângulo como base e adicionar uma borda oposta à borda colorida que já tínhamos antes.
+
+O código para o triângulo reto deve ficar parecido com:
+
+div {
+    border-left: 30px solid red;
+    border-bottom: 30px solid red;
+    border-top: 30px solid transparent;
+    border-right: 30px solid transparent;
+    width: 0;
+}
+Também usando o triângulo do enunciado como base, basta mudar uma das bordas laterais para que tenha a mesma cor da borda inferior.
+
+É possível desenhar bordas com cores diferentes. Em nossos elementos <blockquote>, por exemplo, que já têm um tamanho e um estilo de borda definidos, podemos mudar as cores individualmente:
+blockquote {
+    border: 10px solid #C2CCCA;
+    border-bottom-color: #333;
+    border-right-color: #FFF;
+}
+Experimente fazer essas alterações. Onde, no elemento, ocorre a mudança de cor entre a borda inferior e a borda da direita? E o que acontece se usarmos a cor transparent na borda?
+
+Quando as bordas têm cores diferentes, o navegador realiza a mudança de cor na diagonal em que as bordas se encontram.
+Se deixamos uma borda com a cor transparent, ela é desenhada com a cor de fundo do elemento. Ou, em outras palavras, a borda ocupa espaço, mas fica invisível.
+
+padding - A propriedade padding controla o espaço entre o conteúdo de um elemento e sua borda.
+width - As propriedades width e height controlam apenas o tamanho de um elemento, e não afetam o espaçamento entre esse elemento e seus vizinhos.
+line-height - A propriedade line-height controla apenas a altura entre as linhas de texto da página, não afetando a distância entre elementos.
+box-sizing - A propriedade box-sizing controla apenas como a largura e a altura de um elemento deve ser calculada.
+height - As propriedades width e height controlam apenas o tamanho de um elemento, e não afetam o espaçamento entre esse elemento e seus vizinhos.
+
+Qual das propriedades abaixo controla o espaço entre elementos?
+
+margin
