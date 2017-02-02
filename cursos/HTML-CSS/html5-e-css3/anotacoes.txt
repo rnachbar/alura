@@ -1672,5 +1672,127 @@ Se tivéssemos essa classe no nosso arquivo CSS, bastaria aplicá-la no nosso ro
 Aumentando a imagem
 Falta apenas fazer com que a imagem fique maior do que a barra lateral, sobrepondo um pouco do <main> também. Para conseguir esse resultado, precisamos entender mais uma propriedade, que veremos na próxima aula.
 
+############### 11.Elementos onde quisermos ###############
 
+Elementos onde quisermos
+Nossa página já está quase com o layout que queremos. Falta apenas deixar a foto do João da Silva maior, cobrindo ligeiramente o resto da página.
+
+Se aumentarmos a foto, nosso layout quebra completamente: a foto e a barra lateral descem para baixo do conteúdo principal. Isso porque estamos usando a propriedade float para posicionar esses dois elementos. Essa propriedade nos permite posicionar elementos, porém de uma forma limitada, respeitando o fluxo do documento.
+
+Layout quebrado por causa da foto um pouco maior
+
+Para posicionarmos elementos com controle total, precisamos da propriedade position e suas parceiras top, left, bottom e right. O comportamento dessas quatro últimas propriedades muda bastante de acordo com o valor passado à propriedade position. Vamos estudar cada um desses valores em detalhe.
+
+Posicionamento relativo
+Quando passamos o valor relative para a propriedade position, conseguimos mudar a posição do elemento de acordo com a posição original dele. Por exemplo, podemos deslocar a foto de sua posição original para tentar aumentá-la depois.
+
+Foto ligeiramente deslocada para baixo e para a esquerda
+
+Para conseguir esse efeito, usamos o position: relative em conjunto com top e right, inserindo espaço no topo e na direita:
+
+img {
+    position: relative;
+    top: 30px;
+    right: 30px;
+}
+Repare que o resto da página continua intacto! Apenas a foto é deslocada, cobrindo um pouco da barra lateral e do cabeçalho.
+
+Agora podemos tentar aumentá-la. Colocamos uma largura de 300 pixels, por exemplo e... o resultado não é o esperado: a foto e a barra lateral descem.
+
+Foto aumentada, fazendo o conteúdo descer
+
+Por que isso acontece? Precisamos lembrar que a foto e a barra lateral estão posicionados com o uso da propriedade float. Quando aumentamos a foto, ela deixa de caber do lado do nosso conteúdo principal (tag <main>).
+
+O position: relative tem vários usos interessantes. Mas nossa ideia de usar o position: relative e, depois, aumentar a imagem não vai funcionar porque nossa foto não pode influenciar os outros elementos.
+
+Posicionamento absoluto
+Quando falamos de posicionar elementos na página independentemente do resto do conteúdo, estamos falando de usar o valor absolute da propriedade position. Com ele, podemos colocar um elemento onde quisermos na página. Podemos pegar nossa foto grande, que não está cabendo ao lado do cabeçalho, e transformar seu posicionamento em absoluto:
+
+img {
+    width: 300px;
+    position: absolute;
+}
+Isso vai nos dar um resultado um tanto interessante. Primeiro, veremos que a barra lateral aparentemente desaparece. Segundo, veremos que a foto permanece ao lado do cabeçalho, só que um pouco para fora da página.
+
+Foto com position:absolute
+
+Podemos mover a foto para uma outra posição qualquer da página como, por exemplo, o canto superior esquerdo. Para isso, dizemos que queremos zero de distância entre o topo da página e a foto e entre a borda esquerda da página e a foto:
+
+img {
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+A foto vai para o canto esquerdo da tela e vemos que a barra lateral não desapareceu, apenas estava escondida atrás da foto.
+
+Foto no canto superior esquerdo da página com position:absolute
+
+Como queremos que a foto fique no canto superior direito, vamos usar right: 0 no lugar de left: 0. Mas ainda precisamos fazer com que a barra lateral apareça! Podemos fazer isso de algumas maneiras como, por exemplo, usando o position: relative. Deslocamos a barra lateral para baixo, 300 pixels da altura da foto mais os 10 pixels de borda que ela tem.
+
+img {
+    width: 300px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+aside {
+    position: relative;
+    top: 310px;
+}
+E, assim, chegamos no resultado final desejado.
+
+Página como desejávamos no começo do curso
+
+Posicionamento fixo
+Podemos ir um pouco além do resultado desejado e começar a pensar na interatividade da página. O que acontece, por exemplo, quando nosso usuário faz a rolagem da página? Ou quando coloca o mouse em cima de um link? Vemos algumas dessas questões no curso avançado de HTML.
+
+Porém, um detalhe relativamente simples de ser feito e que tem um resultado interessante é deixar o rodapé da página sempre visível, independentemente da posição da rolagem da página no navegador.
+
+Rodapé sempre visível
+
+Para conseguir esse resultado, usaremos mais um valor da propriedade position: o valor fixed. Ele nos permite deixar um elemento no lugar que quisermos da janela usando, também, as propriedades top, left, bottom e right para determinar a distância do elemento para esses quatro cantos da janela.
+
+Aplicando a ideia ao nosso <footer>, teremos:
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+O resultado inicial será um pouco estranho. O rodapé deixará de ocupar toda a parte de baixo da tela.
+
+Rodapé pequeno no canto esquerdo da tela
+
+Podemos resolver isso determinando que a largura seja 100%. Como o rodapé tem um espaçamento interno (padding), precisamos usar o width junto com o box-sizing, para que a largura seja medida pelas bordas do rodapé, e não pelo espaço interno apenas.
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+Feito isso, teremos o resultado visual esperado, mas não conseguiremos ver o final da página. O rodapé ficará em cima do final da página.
+
+Rodapé em cima do final da página
+
+Para resolver esse problema, podemos colocar um espaço extra no final do conteúdo principal (tag <main>), dentro dele. Usamos, então, a propriedade padding-bottom:
+
+main {
+    padding-bottom: 80px;
+}
+
+Juntamente com um top: 0, qual dos valores abaixo de position devemos usar para deixar um menu sempre visível no topo da tela ?
+
+fixed
+
+Se um elemento tem as seguintes declarações associadas a ele:
+position: relative;
+top: 0;
+right: 0;
+Em que lugar da tela ele vai aparecer?
+
+Na mesma posição em que aparecia sem essas declarações
 

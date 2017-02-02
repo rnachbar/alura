@@ -22,6 +22,8 @@ h2 {
 /*display block - empilha / display inline - na linha, um do lado do outro*/
 /*pode se colocar mais de uma classe em um elemento*/
 /*float faz o elemento flutuar*/
+/*position relative - referencia ele mesmo*/
+/*position absolute - referencia a janela*/
 
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
@@ -35,7 +37,8 @@ body {
     width: 720px;
     margin-left: auto;
     margin-right: auto;
-    padding: 30px 0;
+    padding: 40px 0;
+    padding-bottom: 80px;
 }
 
 .titulo-principal {
@@ -96,16 +99,20 @@ aside {
     font-family: "Open Sans Condensed", sans-serif;
 }
 
-aside, img { 
+aside, .minha-foto { 
     float: right;
-    width: 15%;
+    box-sizing: border-box;
+    border-left: 10px solid black;
+    border-bottom: 10px solid black;
 }
 
 aside { 
     clear: right;
     padding: 20px;
     box-sizing: border-box;
-
+    width: 15%;
+    position: relative;
+    top: 310px;     
 }
 
 /*inherit assume o valor que foi definido em seu pai (ou ancestral, de um modo geral) em vez de assumir um outro valor*/
@@ -167,12 +174,23 @@ main {
     width: 85%;
 }
 
+/*position fixed é fixo com relação a tela*/
 footer {
     clear: both; /*clearfix*/
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 cite {
     font-style: italic;
     float: right;
+}
+
+.minha-foto {
+    /*position: relative; desloca um elemento da página, relative = posição original*/
+    position: absolute; /*absolute = relativo a janela do navegador*/
+    top: 0;
+    right: 0;
 }
 
