@@ -18,6 +18,7 @@ h2 {
 /*margin controla os espaços externos do elemento*/
 /*padding controla espaço internos do elemento, controla o espaço entre a borda dele e o conteúdo*/
 /*box model - interpretação do navegador a margens, bordas, paddings*/
+/*arquivo reset - zerar estilo padrão do navegador*/
 
 body {
     font-family: "Crimson Text", "Times New Roman", serif;
@@ -38,10 +39,12 @@ main h1 {
     padding: 25px;
     margin: 0;
     border-bottom: 10px solid black;
+    font-size: 60px;
 }
 
 p {
     text-align: justify;
+    margin: 20px 0; /*removendo espaçamentos padrões do navegador*/
 }
 
 blockquote {
@@ -52,6 +55,7 @@ blockquote {
 	margin: 0; /*para eliminar a margem que o navegar define*/
     /*para ter 250px reais de largura é necessário somar as bordas e paddins dos dois lados e subtrair do width para a caixa toda ter 250, nesse caso o conteúdo esta com 250px de largura*/
     box-sizing: border-box; /*mede a partir das bordas para a caixa toda ter 250 pixels de largura de verdade*/
+    margin: 20px 40px;
 }
 
 aside {
@@ -85,6 +89,22 @@ main div {
     width: 720px;
     margin-left: auto;
     margin-right: auto;
+    padding: 30px 0;
 }
 
+aside h1 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
 
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+h2 {
+    font-size: 30px
+}
