@@ -5,8 +5,7 @@ Desenvolvimento de estudos da plataforma Alura
 	na pasta do repositório na máquina
 	git pull
 
-# Subir alterações para o repositório
+# Processo de commit
 	na pasta do repositório na máquina
 	comitar com o git GUI
-	através do git BASH
-	git push
+	através do git BASH - git push
