@@ -234,6 +234,216 @@ Use o operador NOT e monte um SELECT que retorna todas as compras com valor dife
 
 select * from compras where not valor = 108;
 
+############### 3.Alterando e restringindo o formato das nossas tabelas ###############
 
+E se não quiséssemos colocar uma observação? Em vez de deixarmos em branco, podemos usar NULL, um tipo especial suportado pelos bancos de dados pra representar vazio.
+Veja o seguinte comando SQL:
+
+     INSERT INTO COMPRAS (VALOR, DATA, OBSERVACOES, RECEBIDO) VALUES (100.0, '2010-10-10', NULL, 1);
+Repare o NULL. Como dito anteriormente, isso indica que não queremos passar uma observação. É muito comum ver o uso de NULL nos mais diversos tipos de banco de dados.
+
+Mas às vezes queremos evitar que isso aconteça, proibindo o usuário de inserir um valor nulo na tabela. Podemos pedir ao banco de dados que rejeite nulos nas colunas. Para isso, precisamos alterar a tabela e dizer que a coluna OBSERVACOES não aceitará mais valores nulos:
+
+     ALTER TABLE COMPRAS MODIFY COLUMN OBSERVACOES TEXT NOT NULL
+Basicamente, o comando acima altera a tabela COMPRAS através do ALTER TABLE COMPRAS, e modifica a coluna observações dizendo que ela não deve ser nula através do MODIFY COLUMN OBSERVACOES TEXT NOT NULL.
+
+Se tentarmos agora executar o INSERT acima, ele falhará, pois o banco recusará valor nulo para a coluna OBSERVACOES.
+
+Podemos ainda definir mais coisas para nossas tabelas. Vamos supor que a regra de negócio do nosso sistema diz que todas as compras nunca são entregues de primeira. Ou seja, todas compras nascem não entregues. Podemos falar ao banco que o valor padrão (default) da coluna RECEBIDO é falso (ou seja, 0).
+
+Para isso, vamos alterar novamente a tabela:
+
+     ALTER TABLE COMPRAS MODIFY COLUMN RECEBIDO TINYINT(1) DEFAULT '0';
+Novamente, fizemos um MODIFY COLUMN, mas dessa vez na coluna RECEBIDO. Veja que setamos o valor padrão para 0 através do DEFAULT '0'. Poderíamos também setar valores padrão para qualquer uma das colunas.
+
+Caso a coluna tenha um valor padrão, você não precisa passá-lo no comando INSERT. Por exemplo, agora que RECEBIDO possui um valor default, é possível pulá-lo na instrução:
+
+     INSERT INTO COMPRAS (VALOR, DATA, OBSERVACOES) VALUES (189.76, '2009-02-09', 'UMA COMPRA QUALQUER');
+Como não passamos o valor do RECEBIDO, o MySQL entende que deve ser inserido o valor padrão, ou seja, 0.
+
+Vamos agora criar uma nova coluna para guardar a forma de pagamento de cada compra. Nosso sistema deve suportar compras por cartão de crédito, boleto bancário e dinheiro. Podemos criar uma coluna do tipo VARCHAR ou do tipo INT para guardar essa forma de pagamento.
+
+O problema é que se declararmos essa coluna como varchar, ela vai aceitar qualquer valor, inclusive formas de pagamento inexistentes. Podemos avisar ao MySQL que essa coluna só deve aceitar valores como 'CARTAO', 'BOLETO' e 'DINHEIRO', por exemplo. O MySQL chama isso de enum. Vamos criar essa coluna:
+
+     ALTER TABLE COMPRAS ADD COLUMN FORMA_PAGT ENUM('CARTAO', 'BOLETO', 'DINHEIRO');
+Veja a sintaxe: declaramos um ENUM e passamos a lista de itens válidos para ele. Isso significa que se fizermos um INSERT com algum valor diferente do que estiver listado, o banco irá recusar. Veja a criação de uma compra feita por cartão de crédito:
+
+     INSERT INTO COMPRAS (VALOR, DATA, OBSERVACOES, FORMA_PAGT) VALUES (189.76, '2010-02-09', 'UMA OUTRA COMPRA QUALQUER', 'CARTAO');
+Mas repare que demos nome errado a coluna. Vamos renomeá-la usando o comando ALTER TABLE:
+
+     ALTER TABLE COMPRAS CHANGE FORMA_PAGT FORMA_PAGTO ENUM('CARTAO', 'BOLETO', 'DINHEIRO');
+Veja o comando CHANGE: ele recebe a coluna que quer ser alterada, e a versão nova dessa coluna.
+
+O comando ALTER TABLE nos permite alterar a tabela já existente. Ele é bem extenso e você deveria pesquisar mais a respeito!
+
+Para que serve a opção NOT NULL ?
+
+A opção NOT NULL proibe aquela coluna de receber o valor NULL na hora de uma inserção ou alteração. Perceba que o padrão do MySQL é sempre aceitar valores nulos nas colunas. Você deve explicitar sempre que não quiser que uma coluna aceite o valor nulo.
+
+Para que serve o DEFAULT ?
+
+O comando DEFAULT serve para você definir o valor padrão dessa coluna. Ou seja, quando esse valor não for informado no comando INSERT, o MySQL colocará esse valor padrão.
+
+Para que serve um ENUM ?
+
+O ENUM serve para definir uma coluna que só aceita valores específicos. Para isso, use a palavra ENUM e passe todos os valores permitidos: ENUM('valor1', 'valor2', ...)
+
+ENUM, NOT NULL, DEFAULT podem ser usados também no CREATE TABLE?
+
+Sim, você pode usá-los também no CREATE TABLE. Por exemplo,
+        CREATE TABLE FUNCIONARIOS (
+            NOME VARCHAR(100) NOT NULL,
+            CARGO ENUM('DIRETOR', 'FUNCIONARIO') NOT NULL,
+            SALARIO DECIMAL(10,2) DEFAULT '10000'
+        )
+Definimos uma coluna NOME que não pode ser nula, uma coluna CARGO que só pode ser ou DIRETOR ou FUNCIONARIO, e um salário que tem como valor padrão 10.000.
+
+Reescreva o CREATE TABLE do começo do curso, marcando OBSERVACOES como NÃO nulo, valor padrão do RECEBIDO como 1, e FORMA_PAGTO como ENUM que aceita DINHEIRO, CARTAO, BOLETO.
+
+Reescreva o CREATE TABLE do começo do curso, marcando OBSERVACOES como NÃO nulo, valor padrão do RECEBIDO como 1, e FORMA_PAGTO como ENUM que aceita DINHEIRO, CARTAO, BOLETO.
+
+CREATE TABLE compras (
+	id int NOT NULL AUTO_INCREMENT,
+	valor double,
+	data datetime,
+	observacoes text NOT NULL,
+	recebido tinyint(1) DEFAULT 1,
+	forma_pagto ENUM('DINHEIRO', 'CARTAO', 'BOLETO'),
+	PRIMARY KEY (id)
+)
+
+############### 4.Agrupando dados e fazendo consultas mais inteligentes ###############
+
+Vamos supor que precisamos calcular a soma de todas as compras realizadas até hoje. Precisaríamos fazer algo parecido com um 'loop', pegando todos os valores retornados, e somando um-a-um. A SQL nos permite fazer consultas que agrupam valores da forma que queremos.
+Nesse caso, queremos somar todos os valores da coluna VALOR. Usando a função SUM, temos o resultado esperado:
+
+     SELECT SUM(VALOR) FROM COMPRAS
+Por ser um comando SELECT, podemos colocar condições, por exemplo, calcular a soma de todas as compras feitas antes de 01/01/2010:
+
+     SELECT SUM(VALOR) FROM COMPRAS WHERE DATA < '2010-01-01'
+Podemos calcular informações ainda mais interessantes, tal como a média das compras feitas antes de 01/01/2010. Basta usarmos a função AVG:
+
+     SELECT AVG(VALOR) FROM COMPRAS WHERE DATA < '2010-01-01'
+Podemos inclusive juntar as duas, dando nomes mais bonitos para as colunas geradas, usando o comando AS, visto nas aulas anteriores:
+
+     SELECT AVG(VALOR) AS MEDIA, SUM(VALOR) AS SOMA FROM COMPRAS WHERE DATA < '2010-01-01'
+Podemos contar o número de compras da mesma forma, usando a função COUNT:
+
+     SELECT COUNT(VALOR) FROM COMPRAS WHERE DATA < '2010-01-01'
+Percebemos até então que o comando SELECT unido às funções de soma, média e contagem pode gerar dados muito úteis. Mas e se quisermos a soma de todas as compras recebidas e não recebidas? Podemos fazer duas consultas, por exemplo:
+
+     SELECT SUM(VALOR) FROM COMPRAS WHERE RECEBIDO = 1;
+    SELECT SUM(VALOR) FROM COMPRAS WHERE RECEBIDO = 0;
+E se quisermos todo esse resultado em apenas uma única consulta? Afinal, executar uma-a-uma manualmente pode gerar muito trabalho - imagine se quiséssemos a soma das compras por forma de pagamento, seriam 3 consultas diferentes; uma para BOLETO, uma para CARTAO, uma para DINHEIRO.
+
+Para isso, precisamos informar ao MySQL que queremos agrupar os dados. No nosso caso, queremos agrupar compras de acordo com o valor da coluna RECEBIDO. Usamos então o comando GROUP BY, junto ao resto da SQL. Veja o exemplo:
+
+     SELECT SUM(VALOR) FROM COMPRAS GROUP BY RECEBIDO
+Veja que agora ele agrupou e exibiu dois resultados, muito provavelmente a soma de todas as compras na qual recebido vale 1, e as compras na qual recebido vale 0. O problema é que não sabemos qual valor corresponde a cada uma das condições de RECEBIDO. Para isso, podemos exibir a coluna RECEBIDO na consulta também:
+
+     SELECT RECEBIDO, SUM(VALOR) FROM COMPRAS GROUP BY RECEBIDO
+Agora sabemos a soma para cada grupo! Podemos juntar também os valores desse agrupamento para exibir a soma e a quantidade de itens em cada grupo, por exemplo:
+
+     SELECT RECEBIDO, SUM(VALOR) AS SOMA, COUNT(VALOR) AS TOTAL FROM COMPRAS GROUP BY RECEBIDO
+Podemos refinar ainda mais esse resultado, ordenando, por exemplo, pelo grupo na qual a soma seja maior (ou seja, de maneira decrescente). Para isso, usamos o comando ORDER BY, informando o campo que queremos ordenar no final da nossa consulta SQL:
+
+     SELECT RECEBIDO, SUM(VALOR) AS SOMA, COUNT(VALOR) AS TOTAL FROM COMPRAS GROUP BY RECEBIDO ORDER BY SOMA DESC
+Repare a palavra DESC. Ela indica que queremos ordenar de maneira decrescente. Para ordenar de maneira crescente, fazemos uso da palavra ASC:
+
+     SELECT RECEBIDO, SUM(VALOR) AS SOMA, COUNT(VALOR) AS TOTAL FROM COMPRAS GROUP BY RECEBIDO ORDER BY SOMA ASC
+Consultas agrupadas são um recurso muito interessante e permite-nos extrair muitas informações dos nossos dados!
+
+Calcule a média de todas as compras com datas inferiores a 12/05/2009. Cole a instrução SQL aqui quando acabar.
+
+select avg(valor) from compras where data <= '2009-05-12';
+
+Calcule a soma do valor de todas as compras com datas inferiores a 10/10/2010, agrupadas por forma de pagamento. Cole a instrução SQL aqui quando acabar.
+
+select forma_pagt, sum(valor) from compras where data <= '2010-10-10' group by forma_pagt;
+
+Calcule a quantidade de compras com datas inferiores a 12/05/2009 e que já foram recebidas. Cole a instrução SQL aqui quando acabar.
+
+SELECT COUNT(ID) FROM COMPRAS WHERE DATA < '2009-05-12' AND RECEBIDO = 1
+Repare que usamos COUNT(ID). Para a função COUNT não importa qual coluna você vai usar para contar. Por esse motivo, muitos programadores passam a constante 1 para a função COUNT, obtendo o mesmo resultado:
+
+SELECT COUNT(1) FROM COMPRAS WHERE DATA < '2009-05-12' AND RECEBIDO = 1
+
+Calcule a soma de todas as compras, agrupadas por forma de pagamento e compra recebida ou não. Cole a instrução SQL aqui quando acabar.
+
+SELECT RECEBIDO, FORMA_PAGTO, SUM(VALOR) FROM COMPRAS GROUP BY FORMA_PAGTO, RECEBIDO
+
+############### 5.Juntando dados de várias tabelas ###############
+
+Vamos agora guardar, além dos dados da compra, os dados da pessoa que fez a compra. Podemos criar campos como NOME, ENDERECO, TELEFONE e etc, na tabela COMPRAS. Mas essa abordagem nos trará problemas: e se a pessoa muda de endereço? Precisaremos atualizar esses dados em todas as linhas da tabela daquela pessoa? Essa operação pode ser cara.
+Uma outra abordagem seria criar então uma tabela para cada pessoa. Por exemplo, tabela COMPRAS_DO_MAURICIO, COMPRAS_DO_ADRIANO, COMPRAS_DO_RICARDO, e etc. Mas a solução também não é a mais elegante: a cada novo pagador, precisaríamos criar uma nova tabela.
+
+Vamos primeiro criar uma tabela para representar todas as pessoas que já fizeram uma compra:
+
+     CREATE TABLE COMPRADORES (
+      ID INT NOT NULL AUTO_INCREMENT,
+      NOME VARCHAR(100) NOT NULL,
+      ENDERECO VARCHAR(100) NOT NULL,
+      TELEFONE VARCHAR(20) NOT NULL,
+      PRIMARY KEY(ID)
+    )
+Repare na coluna ID que não discutimos até então. Ela serve para que nós possamos identificar uma linha específica na tabela. Veja que até a marcamos como AUTO_INCREMENT, justamente para não termos que nos preocupar com esse valor único, e pedimos para o banco dar um número para cada linha da tabela.
+
+Faça o teste. Insira 2 compradores na tabela:
+
+INSERT INTO COMPRADORES (NOME, ENDERECO, TELEFONE) VALUES ('MAURICIO', 'RUA VERGUEIRO, 123', '(11) 1111-1111');
+INSERT INTO COMPRADORES (NOME, ENDERECO, TELEFONE) VALUES ('ADRIANO', 'AV. PAULISTA, 456', '(11) 2222-2222');
+Agora faça o SELECT na tabela. Veja que cada linha tem um número diferente. Se quisermos achar um elemento específico, podemos sempre buscar pelo ID dele. Essa coluna ID é chamada de primary key, chave primária, ou mesmo PK. É como se fosse o nosso RG: ele identifica um brasileiro específico em relação aos milhões de brasileiros existentes.
+
+Veja que especificamos isso inclusive na hora da criação da tabela, através do PRIMARY KEY(ID). Isso diz ao banco que o ID é a coluna que identifica uma linha e que não deve haver dois elementos com o mesmo ID.
+
+O problema agora é referenciar uma compra para um comprador. Sabemos que para identificar um comprador em específico podemos usar seu ID. Se uma compra pertence a um comprador, basta que a tabela COMPRA tenha uma coluna que guarda o ID do comprador. Vamos criar essa coluna:
+
+ALTER TABLE COMPRAS ADD COLUMN COMPRADOR_ID INT NOT NULL
+Veja que existe uma relação entre a tabela de compradores e a tabela de compras: cada compra tem um comprador, mas um comprador tem muitas compras. Chamamos essa relação de um-pra-muitos, ou one-to-many.
+
+Apenas para testes, vamos colocar uma parte das compras para o comprador com id 1, e outra para o comprador de id 2:
+
+UPDATE COMPRAS SET COMPRADOR_ID = 1 WHERE ID < 8;
+UPDATE COMPRAS SET COMPRADOR_ID = 2 WHERE ID >= 8;
+(Apenas por curiosidade, veja que todas as compras com ID menor que 8 agora apontam para o comprador com ID 1, e todas as compras com ID maior-ou-igual a 8 apontam para o comprador com ID 2).
+
+Vamos agora selecionar todas as compras e seus compradores. Podemos dizer na instrução SQL que queremos exibir mais de uma tabela. Basta separar as tabelas com vírgula:
+
+SELECT * FROM COMPRAS, COMPRADORES
+Veja que ele nos trouxe um resultado gigante. Como são duas tabelas diferentes, e ele não sabe juntá-las, o MySQL nos devolveu todas as combinações possíveis entre os elementos das duas tabelas. Ou seja, se nossa tabela de COMPRAS tivesse apenas uma única compra de 100,00, e a tabela de COMPRADORES tivesse 2 pessoas, o Mauricio e o Adriano, então esse SELECT nos devolveria uma compra de 100,00 para o Mauricio e uma compra de 100,00 para o Adriano.
+
+Precisamos dizer ao MySQL que queremos juntar esses dados, e que a coluna que faz essa junção é justamente a coluna COMPRADOR_ID da tabela COMPRAS com a coluna ID da tabela COMPRADORES. Basta dizermos que essa é a coluna que faz a junção ou, em inglês, o JOIN:
+
+SELECT * FROM COMPRAS JOIN COMPRADORES ON COMPRAS.COMPRADOR_ID = COMPRADORES.ID
+Agora sim, o MySQL tem informações suficientes para juntar os dados das duas tabelas! Ele sabe que o COMPRADOR_ID aponta para um ID de COMPRADOR. Portanto, ele nos trouxe todas as compras junto com os dados do comprador!
+
+Veja que a coluna COMPRADOR_ID é como se fosse um link para um comprador. Colunas que tem justamente essa finalidade são chamadas de foreign key, chave estrangeira, ou simplesmente FK. Podemos inclusive deixar isso claro no MySQL, para que ele não permita que seja inserida uma FK inválida (ou seja, uma FK que não aponta para um comprador válido).
+
+Vamos fazer essa alteração na tabela, e dizer que a coluna COMPRADOR_ID é uma FK:
+
+       ALTER TABLE COMPRAS ADD FOREIGN KEY (COMPRADOR_ID) REFERENCES COMPRADORES(ID)
+Veja que indicamos nessa instrução SQL o nome da coluna que é uma FK (no caso, COMPRADOR_ID) e dissemos que ela aponta para o campo ID da tabela COMPRADORES.
+
+Os JOINs nos permitem juntar tabelas que se relacionam através das FKs. É um recurso poderoso que você deve praticar!
+
+Exiba o NOME do comprador e o VALOR de todas as compras feitas antes de 09/08/2010. Coloque o resultado aqui.
+
+select nome, valor from compras join compradores on compras.comprador_id = compradores.id where data < '2010-08-09';
+
+Exiba todas as compras do comprador que possui ID igual a 1.
+
+SELECT * FROM COMPRAS WHERE COMPRADOR_ID = 1
+
+select * from compras join compradores on compras.comprador_id = compradores.id where compradores.id = 1;
+
+Exiba todas as compras (mas sem os dados do comprador), cujo comprador tenha nome que começa com 'GUILHERME'.
+
+SELECT COMPRAS.* FROM COMPRAS INNER JOIN COMPRADORES ON COMPRAS.COMPRADOR_ID = COMPRADORES.ID WHERE NOME LIKE 'raphael%';
+
+Exiba o nome do comprador e a soma de todas as suas compras.
+
+SELECT COMPRADORES.NOME, SUM(VALOR) 
+FROM COMPRAS INNER JOIN COMPRADORES ON COMPRAS.COMPRADOR_ID = COMPRADORES.ID
+GROUP BY COMPRADORES.NOME
 
 

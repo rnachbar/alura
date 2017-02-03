@@ -84,10 +84,84 @@ delete from compras where id = 44;
 # dizer todas menos essa, onde valor não for 108
 select * from compras where not valor = 108;
 
+##### AULA 3
 
+# udpdate muda o conteudo
+# alter table muda estrutura
 
+desc compras; # estrutura da tabela
+insert into compras (valor, data, recebido, observacoes) values (500.0, '2014-04-05', 1, null); # null = vazio
 
+# select null - is null
+select * from compras where observacoes is null;
 
+# registros que não são nulos
+select * from compras where observacoes is not null;
+
+# modificar estrutura tabela
+alter table compras modify observacoes varchar(255) not null;
+
+alter table compras modify recebido tinyint(1) default 0;
+
+# adicionar coluna
+# enum defini uma coluna que só aceita valores específicos
+alter table compras add column forma_pagt enum('cartao', 'dinheiro', 'boleto');
+
+##### AULA 4
+
+# agregação
+#soma
+select sum(valor) from compras;
+select sum(valor) from compras where data > '2010-01-01';
+
+# contar
+select count(valor) from compras;
+select count(valor) from compras where data > '2010-01-01';
+
+select sum(valor) as soma, count(valor) as qtde from compras where data > '2010-01-01';
+
+# agrupar, devolver mais de uma linha
+# where antes do group by
+select recebido, sum(valor) as soma from compras group by recebido;
+
+select month(data), year(data), sum(valor) from compras group by month(data), year(data) order by year(data), month(data);
+
+# media
+select month(data), year(data), avg(valor) from compras group by month(data), year(data) order by year(data), month(data);
+
+# sum = soma
+# avg = média
+# count = conta
+
+##### AULA 5
+
+# compradores
+create table compradores (
+	id int not null auto_increment primary key,
+	nome varchar(100) not null,
+	endereco varchar(100) not null,
+	telefone varchar(20) not null
+);
+
+# inserindo em compradores
+insert into compradores (nome, endereco, telefone) values ('raphael', 'sebastiao alves', '999999999');
+insert into compradores (nome, endereco, telefone) values ('nachbar', 'rua dois', '11111111');
+
+select * from compradores;
+
+# adicionando coluna, uma chave estrangeira, pq comprador_id aponta para uma outra tabela
+alter table compras add column comprador_id int;
+
+desc compras;
+
+update compras set comprador_id = 1 where id <=8;
+update compras set comprador_id = 2 where id > 8;
+
+# juntando tabelas
+select observacoes, valor, nome from compras join compradores on compras.comprador_id = compradores.id;
+
+# transformando coluna em chave estrangeira
+alter table compras add foreign key (comprador_id) references compradores(id);
 
 
 
