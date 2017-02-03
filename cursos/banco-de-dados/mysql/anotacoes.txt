@@ -1,5 +1,154 @@
-Banco de dados ajuda você a extrair informações de n maneiras
+Banco de dados ajuda você a extrair informações de n maneiras, software que sabe guardar informações
 SQL é a linguagem que usaremos
+
+select - busca dados
+where - filtra dados
+
+############### 1.Consultando os dados ###############
+
+Banco de dados
+Um problema muito comum que temos é controlar nossos gastos durante o ano, por exemplo, para compararmos o quanto a mais gastamos em janeiro e dezembro nas festas de final de ano do que com o quanto gastamos durante o período de férias de meio de ano com os gastos de supermercado.
+
+Armazenar dados, para depois pesquisá-los e manipulá-los é uma necessidade comum no mercado de informática.
+
+Uma possibilidade para realizar esse armazenamento de informações é através de planilhas eletrônicas, como o Excel, onde podemos ter algumas colunas tais como dia, valor e motivo da compra. No entanto, apesar de ser um ambiente interessante, o Excel se torna complexo quando precisamos extrair e manipular suas informações. Se necessitarmos utilizar esses dados através de alguma aplicação ou sistema, isso pode se tornar ainda mais complexo, pois será necessário fazer a leitura dos arquivos do Excel para conseguirmos consultar as informações.
+
+Para simplificar esse trabalho, existem os softwares de bancos de dados, que nos permitem armazenar e manipular informações de uma maneira mais simples através de uma linguagem de manipulação de dados chamada SQL (Structured Query Language). Para conseguirmos utilizar essa linguagem, precisamos instalar um software (servidores de banco de dados) que nos permita armazenar essas informações, dos quais se destacam o MySQL, Oracle e SQLServer. Durante este curso utilizaremos o MySQL.
+
+O MySQL é um software que pode ser instalado seguindo as maneiras tradicionais de cada sistema operacional. Por exemplo, no Windows, o processo é realizado através do download de um arquivo .msi, enquanto no Linux (versões baseadas em Debian), pode ser feito através de um simples comando apt-get, e no MacOS pode ser instalado com um pacote .dmg. Para realizar a instalação do servidor MySQL, basta baixar também o instalador. No exercício, você terá os links certos para isso.
+
+Criando o nosso banco de dados
+Durante todo o curso usaremos o terminal do MySQL. Apesar dele não ser a melhor interface gráfica, ele é igual para todas as plataformas, e não muda de versão para versão. Se você já conhecer alguma, não há problema de fazer uso dela.
+
+Abra o terminal do seu sistema operacional. No Windows, digite cmd no Executar. No Mac e Linux, abra o terminal. Nele, vamos entrar no MySQL:
+
+mysql -uroot -p
+Esse é o comando para nos conectarmos no MySQL que está instalado na máquina. O -u indica o usuário root, e o -p é porque digitaremos a senha. Como não há senha, pressione enter.
+
+Vamos agora criar um banco de dados; afinal o MySQL pode tomar conta de vários bancos diferentes. O create database cria, e o use diz ao MySQL que é o banco que queremos usar.
+
+create database controle_compras;
+use controle_compras;
+Agora, vamos criar nossa primeira tabela. Tabela é como se fosse uma planilha do Excel, onde temos colunas, cada uma representando uma informação diferente, por exemplo, nome do produto, preço, etc, e linhas, onde cada linha é um dado em particular, por exemplo, geladeira, 50 reais.
+
+A instrução para se criar uma tabela para nosso sistema de compras é:
+
+create table COMPRAS (id int auto_increment primary key, valor double, data date, observacoes varchar(255), recebido boolean);
+Repare que na instrução acima, passamos o nome da tabela (COMPRAS), e depois a lista de colunas (id, valor, data, descrição e recebido). Passamos também o tipo de cada uma, ou seja valor é double, data é date, e assim por diante.
+
+O id é um campo em particular, estamos usando ele como um identificador único para aquela linha. Pense no mundo real, o seu RG é uma chave importante, pois ele consegue identificar um brasileiro dentre todos os outros, ele é um número e é sequencial, alguém tinha o RG 1 e agora alguém tem o RG 223334446, essa chave é tão importante que chamamos de chave primária. A chave primária não precisa necessariamente ser sequencial, mas deve ser única: não devem existir duas pessoas com o mesmo RG, assim como não devem existir dois cursos com o mesmo código, dois produtos diferentes com o mesmo código de barra, etc. Por isso que dizemos que o campo id é primary key, ou seja, chave primária. Além disso, dizemos que ele é sequencial, serial, cresce de um em um, isto é, um número inteiro que é incrementado automaticamente a cada novo produto: int auto_increment.
+
+Consultando dados
+Queremos inserir na tabela COMPRAS, então começamos a instrução:
+
+ INSERT INTO COMPRAS
+Em seguida, passamos os valores que queremos inserir. Por exemplo, suponha uma compra de 100,00 no dia 12/05/2007, que foi recebida, e que tem a observação 'COMPRAS DE MAIO':
+
+ INSERT INTO COMPRAS VALUES (100.0, '2007-05-12', 'COMPRAS DE MAIO', 1)
+Separamos com vírgula cada um dos diferentes valores. Repare o uso de aspas simples (') quando o valor passado é uma data ou string. Veja também o valor 1 no lugar do campo recebido para indicar verdadeiro (colocaríamos 0 se quiséssemos passar falso).
+
+Mas o MySQL não sabe que queremos colocar o valor 100.0 no campo valor ou 'COMPRAS DE MAIO' no campo observacoes; precisamos passar essa informação pra ele, ou seja, passar o nome de cada coluna que tem um valor a ser inserido:
+
+ INSERT INTO COMPRAS (VALOR, DATA, OBSERVACOES, RECEBIDO) VALUES (100.0, '2007-05-12', 'COMPRAS DE MAIO', 1)
+Observe o comando inicial. INSERT INTO recebe o nome da tabela (no nosso caso COMPRAS). Em seguida, passamos a lista de colunas que vamos colocar valores:(VALOR, DATA, OBSERVACOES, RECEBIDO). Por fim, passamos os valores que gostaríamos de inserir, usando o comando VALUES: VALUES (100.0, '2007-05-12', 'COMPRAS DE MAIO', 1). Todas instruções de INSERT são similares a essa: passamos o nome da tabela, o nome das colunas, e os valores a serem inseridos, separados por vírgula.
+
+Pronto. Com essa compra já inserida nesse banco de dados, vamos começar a consultá-las. Se quiséssemos, por exemplo, ver todas as compras já cadastradas na minha lista, faríamos:
+
+ SELECT * FROM COMPRAS
+Entendendo o comando que acabamos de digitar: SELECT quer dizer que queremos executar a operação de seleção; * indica que queremos selecionar todas as colunas daquela tabela; FROM COMPRAS quer dizer que a tabela que queremos executar esse comando é a tabela "compras".
+
+Antes de começarmos a discutir sobre seleções usando SQL, vamos primeiro importar alguns dados para a tabela que criamos na seção anterior. Faça o download do arquivo .sql no exercício. Abra o arquivo, e veja que ele contém apenas um monte de INSERTs. Importe todos eles, saindo do MySQL, e digitando a instrução abaixo. Ela basicamente pegará todas as instruções que está no arquivo cap2.sql e mandará para o MySQL.
+
+mysql -uroot -p controle_compras < cap2.sql
+Volte para o MySQL. Se quiséssemos selecionar apenas valor e data dessa tabela, faríamos:
+
+ SELECT VALOR, DATA FROM COMPRAS
+Podemos inclusive criar novas colunas a partir das já existentes. Por exemplo, caso quiséssemos exibir, além de valor e data, o triplo de cada valor, poderíamos fazer:
+
+ SELECT VALOR, VALOR * 3, DATA FROM COMPRAS
+Podemos até dar um nome para essa nova coluna, por exemplo, "triplo", usando a instrução AS:
+
+ SELECT VALOR, VALOR * 3 AS TRIPLO, DATA FROM COMPRAS
+Mas recuperar todas as informações de uma tabela de uma só vez não é comum. Geralmente aplicamos filtros sobre esses resultados. Vamos supor que precisássemos saber todas as compras com valor superior a 1.000,00 reais. Poderíamos deixar esse filtro claro na instrução SQL:
+
+ SELECT * FROM COMPRAS WHERE VALOR > 1000
+Repare o comando WHERE: ele é quem informa a SQL que filtraremos os resultados. Já a condição VALOR > 1000 deixa bem claro qual o filtro que queremos fazer.
+
+Podemos montar filtros ainda mais complexos. Por exemplo, caso precisássemos de todas as compras com valor superior a 1.000,00 reais e inferior a 3.000,00, poderíamos fazer:
+
+ SELECT * FROM COMPRAS WHERE VALOR > 1000 AND VALOR < 3000
+Ainda mais complexa: filtrar todas as compras cujo valor é superior a 1.000,00 reais e inferior a 3.000,00 ou a data seja inferior a 12/02/2010:
+
+ SELECT * FROM COMPRAS WHERE (VALOR > 1000 AND VALOR < 3000) OR (DATA < '2010-02-12')
+Repare no uso dos parênteses; eles indicam que a linha deve ser selecionado caso VALOR > 1000 AND VALOR < 3000 ou DATA < '2010-02-12'. Você pode montar a expressão que quiser, usando ANDs, ORs. Além de maior e menor, a SQL suporta outros tipos de consultas, como por exemplo:
+
+Maior-ou-igual:
+
+SELECT * FROM COMPRAS WHERE VALOR >= 1000
+Menor-ou-igual:
+
+SELECT * FROM COMPRAS WHERE VALOR <= 1000
+Diferente:
+
+SELECT * FROM COMPRAS WHERE VALOR <> 1000
+Podemos filtrar também por textos. Se quiséssemos, por exemplo, buscar todas as compras cuja observação seja igual a "COMPRAS DE JANEIRO", podemos fazer:
+
+ SELECT * FROM COMPRAS WHERE OBSERVACOES = 'COMPRAS DE JANEIRO'
+Repare o uso das aspas simples ('). Ela indica que o conteúdo que será passado é do tipo texto. O "igual" irá buscar por linhas que possuem essa observação. Mas as vezes queremos buscar por apenas uma parte do texto. Por exemplo, caso quiséssemos todas as compras cuja observação começasse com o texto "COMPRAS", independentemente do que viesse a seguir, deveríamos fazer:
+
+ SELECT * FROM COMPRAS WHERE OBSERVACOES LIKE 'COMPRAS%'
+O caractere % funciona como um coringa, ou seja, não importa o que houver dali pra frente. Ele pode ser usado em qualquer lugar da consulta. Por exemplo, caso quiséssemos todas as compras cuja observação contenha a palavra "COMPRA" em qualquer lugar, faríamos:
+
+ SELECT * FROM COMPRAS WHERE OBSERVACOES LIKE '%COMPRAS%'
+A instrução SELECT é poderosíssima. Boa sorte nos exercícios!
+
+Selecione VALOR e OBSERVAÇÕES de todas as compras cuja data seja maior-ou-igual que 15/12/2008. Cole a instrução SQL aqui quando acabar.
+
+select valor, observacoes from compras where data >= '2008-12-15';
+
+Qual o comando SQL para juntar duas condições diferentes? Por exemplo, SELECT * FROM TABELA WHERE campo > 1000 campo < 5000.
+
+AND
+
+Vimos que todo texto é passado através de aspas simples ('). Posso passar aspas duplas (") no lugar?
+
+Sim. Não há diferença nenhuma para o seu banco de dados. Geralmente usamos aspas simples, pois, na hora de misturar o código SQL com o código Java (ou C# ou da sua linguagem favorita), facilitam o trabalho.
+Por exemplo: String sql = "INSERT INTO COMPRAS (VALOR, DATA, OBSERVACOES, RECEBIDO) VALUES (245.67, '2010-03-01', 'COMPRAS DO MES', 1);"
+
+Veja que as aspas duplas são usadas para declarar a variável e, dentro dela, usamos aspas simples para passar os valores.
+
+Selecione todas as compras cuja data seja maior-ou-igual que 15/12/2008 e menor do que 15/12/2010. Cole a instrução SQL aqui quando acabar.
+
+select * from compras where data >= '2008-12-15' and data < '2010-12-15';
+
+Selecione todas as compras cujo valor esteja entre R$15,00 e R$35,00 e a observação comece com a palavra 'LANCHONETE'. Cole a instrução SQL aqui quando acabar.
+
+select * from compras where (valor BETWEEN 15.00 and 35.00) and (observacoes like 'lanchonete%');
+SELECT * FROM COMPRAS WHERE VALOR >= 15.0 AND VALOR <= 35.0 AND OBSERVACOES LIKE 'LANCHONETE%';
+
+Selecione todas as compras que já foram recebidas. Cole a instrução SQL aqui quando acabar.
+
+select * from compras where recebido = 1;
+
+Selecione todas as compras que ainda não foram recebidas. Cole a instrução SQL aqui quando acabar.
+
+select * from compras where recebido = 0;
+
+Vimos que para guardar o valor VERDADEIRO para a coluna RECEBIDO, devemos passar o valor 1. Para FALSO, devemos passar o valor 0. E quanto as palavras já conhecidas para verdadeiro e falso: TRUE e FALSE. Elas funcionam? Ou seja,
+INSERT INTO COMPRAS (VALOR, DATA, OBSERVACOES, RECEBIDO) VALUES (100.0, '2010-09-08', 'COMIDA', TRUE) ;
+funciona?
+
+Faça o teste e responda a questão.
+
+Sim. O MySQL também aceita os valores TRUE e FALSE.
+
+Selecione todas as compras com valor maior que 5.000,00 ou que já foram recebidas. Cole a instrução SQL aqui quando acabar.
+
+select * from compras where valor >  5.000 or recebido = true;
+
+Selecione todas as compras que o valor esteja entre 1.000,00 e 3.000,00 ou seja maior que 5.000,00. Cole a instrução SQL aqui quando acabar.
+
+select * from compras where (valor >= 1000 and valor <= 3000) or valor > 5000;
 
 
 
