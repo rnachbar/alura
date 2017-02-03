@@ -1,0 +1,6 @@
+Banco de dados ajuda você a extrair informações de n maneiras
+SQL é a linguagem que usaremos
+
+
+
+
