@@ -150,6 +150,90 @@ Selecione todas as compras que o valor esteja entre 1.000,00 e 3.000,00 ou seja 
 
 select * from compras where (valor >= 1000 and valor <= 3000) or valor > 5000;
 
+############### 2.Atualizando e excluindo dados ###############
+
+Continuaremos com a estrutura de dados utilizada no capítulo anterior. Se você deseja reconstruí-la, baixe o arquivo do projeto que contém alguns INSERTs para criar compras na tabela COMPRAS. Importe o arquivo igual na aula passada.
+mysql -uroot -p < NOME-DO-ARQUIVO.sql
+Agora que já existem várias compras cadastradas, desejamos selecionar apenas as que possuem valor entre R$200,00 e R$700,00. Para isso usaremos a cláusula WHERE:
+
+     SELECT * FROM COMPRAS WHERE valor >= 200 AND valor <= 700
+Mas será que não existe algum operador mais simples?
+
+     SELECT * FROM COMPRAS WHERE valor BETWEEN 200 AND 700
+O operador BETWEEN serve para filtrar registros de acordo com um intervalo de valores. É possível filtrar apenas as compras realizadas entre 05/01/2010 e 25/06/2010.
+
+     SELECT * FROM COMPRAS WHERE DATA BETWEEN '2010-01-05' AND '2010-06-25'
+Mas o que precisamos fazer é alterar os registros criados durante esse período. Para todos eles vamos colocar a observação "compra emergencial". O comando SQL para realizar alteração em uma tabela é o UPDATE. Devemos informar o nome da coluna que será alterada e o novo valor. Por exemplo, se desejamos atualizar todas as compras para emergenciais, gostaríamos de algo como:
+
+"Atualize as compras, alterando a observação para 'compra emergencial'"
+
+Podemos fazer um UPDATE como o a seguir:
+
+     UPDATE COMPRAS SET OBSERVACOES = 'compra emergencial'
+O comando UPDATE atualiza os registros já existentes. Ele é seguido pelo nome da tabela, no nosso caso, COMPRAS. Também é preciso indicar quais colunas terão seu valor alterado, usando o comando SET seguido pelo nome das colunas e pelo novo valor desejado. Portanto, SET OBSERVACOES = 'compra emergencial' indica que queremos colocar o valor 'compra emergencial' na coluna OBSERVACOES.
+
+No comando acima, em nenhum momento foi dito que essa alteração só deveria ser aplicada para as compras realizadas em um determinado período. Como não havia nenhuma restrição no comando, todos os registros foram alterados e agora todas as compras têm a mesma observação. Todas as restrições que aprendemos até agora ao usar o comando WHERE se aplicam ao comando UPDATE. Com o uso do WHERE, teríamos evitado a alteração de todos os registros.
+
+Para corrigir, vamos alterar a observação de todas as compras que não estão em um determinado intervalo de datas:
+
+"Atualize as compras, alterando a observação para 'uma compra comum', somente se a data não estiver entre os dias 05-01 e 25-06."
+
+Traduzindo para sql:
+
+     UPDATE COMPRAS SET OBSERVACOES = 'uma compra comum' WHERE DATA NOT BETWEEN '2010-01-05' AND '2010-06-25'
+No comando acima, o UPDATE foi utilizado com o WHERE para restringir as compras que serão afetadas pela alteração que desejamos. Nessa condição apareceu um novo operador, NOT, em WHERE DATA NOT. Queremos alterar todos as compras que foram feitas em qualquer data exceto as de um determinado período; ou seja, queremos fazer uma negação. O BETWEEN estabelece esse período e o NOT nega essa condição. Podemos ler o trecho DATA NOT BETWEEN '2010-01-05' AND '2010-06-25' como: a data não está no período entre 05/01/2010 e 25/06/2010.
+
+Agora sabemos que é possível usar WHERE em um comando UPDATE para filtrar os dados da mesma forma que em um SELECT. Podemos alterar as compras feitas no dias 25/12/2010 ou no dia 12/10/2010 ou ainda no dia 12/06/2010 para conter a observação "datas festivas". Uma forma seria usar vários OR:
+
+WHERE DATA = '2010/12/25' OR DATA = '2010-10-12' OR DATA = '2010-06-12'
+
+O exemplo está correto, porém o código ficou feio, pois repete-se o nome da coluna DATA muitas vezes. Existe uma condição que pode ser usada justamente para melhorar isso:
+
+     UPDATE COMPRAS SET OBSERVACOES = 'datas festivas' WHERE DATA IN('2010-12-25', '2010-10-12', '2010-06-12')
+O operador IN foi usado para criar um conjunto de valores que usamos na comparação. O trecho WHERE DATA IN ('2010-12-25', '2010-10-12', '2010-06-12') diz que queremos todos os registros com qualquer uma das datas que esteja entre os parênteses, e apenas essas datas (nenhuma compra feita em outra data serve).
+
+Na medida em que usamos o banco de dados, muita coisa que está sendo guardada se torna obsoleta. É possível excluir qualquer informação que não seja mais de nosso interesse. Vamos:
+
+"Excluir todas as compras efetuadas antes de 2009":
+
+     DELETE FROM COMPRAS WHERE DATA < '2009-01-01'
+O comando DELETE exclui registros de uma tabela. E por isso sempre deve ser executado usando o WHERE. Se nenhuma condição for usada junto com o comando DELETE então todos os registros da tabela serão excluídos. Cuidado. Usamos a condição WHERE DATA < '2009-01-01' para excluir todas as compras feitas antes de 01/01/2009.
+
+Os comandos UPDATE e DELETE são essenciais para a manutenção dos registros de nosso banco de dados. Como eles alteram definitivamente os valores dos registros, é importantíssimo sempre usarmos uma condição através do comando WHERE para limitar o efeito desses comandos a apenas alguns registros. Uma dica é sempre escrever primeiro o SELECT com o WHERE ao usar um UPDATE ou DELETE. Por exemplo, antes de excluir as compras anteriores a 2009, poderíamos ter executado o seguinte:
+
+     SELECT * FROM COMPRAS WHERE data < '2009-01-01'
+Assim poderíamos analisar o resultado e ter certeza que só compras anteriores a 2009 estavam na lista de resultados. Que tal fazer alguns exercícios para se acostumar com o uso do UPDATE e do DELETE?
+
+Altere as compras, colocando a observação 'preparando o natal' para todas as que foram efetuadas no dia 20/12/2010
+
+update compras set observacoes = 'preparando o natal' where data = '2010-12-20';
+
+Altere o VALOR das compras feitas antes de 01/06/2009. Some R$10,00 ao valor atual.
+
+update compras set valor = valor + 10 where data = '2009-06-01';
+
+Atualize todas as compras feitas entre 01/07/2009 e 01/07/2010 para que elas tenham a observação 'entregue antes de 2011' e a coluna recebido com o valor TRUE.
+
+update compras set observacoes = 'entregue antes de 2011', recebido = TRUE where data between '2009-07-01' and '2010-07-01';
+
+Em um comando WHERE é possível especificar um intervalo de valores. Para tanto, é preciso dizer qual o valor mínimo e o valor máximo que define o intervalo. Qual é o operador que é usado para isso?
+
+Para criar um intervalo entre valores e usá-lo em uma condição (WHERE) usamos o BETWEEN
+
+Qual operador você usa para remover linhas de compras de sua tabela?
+
+O nome do operador é DELETE, por isso é comum em português dizermos que vamos 'deletar' algo.
+
+Exclua as compras realizadas entre 05 e 20 março de 2009. Coloque abaixo o comando executado.
+
+delete from compras where data between '2009-03-05' and '2009-03-20';
+
+O operador lógico NOT pode ser usado para alterar todas as compras que não foram realizadas em um período específico. Esse operador pode ser usado para negar qualquer condição. Por exemplo, para selecionar qualquer registro com data diferente de 03/11/2011, pode ser construído o seguinte WHERE:
+WHERE NOT DATA = '2011-11-03'
+Use o operador NOT e monte um SELECT que retorna todas as compras com valor diferente de R$ 108,00.
+
+select * from compras where not valor = 108;
+
 
 
 
