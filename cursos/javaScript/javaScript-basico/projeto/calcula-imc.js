@@ -1,49 +1,36 @@
-// var tdAltura = document.getElementById("altura-2");
-// var tdPeso = document.getElementById("peso-2"); 
-
-// var peso2 = tdPeso.textContent;
-// var altura2 = tdAltura.textContent;
-
-// var paciente2 = { peso : peso2, altura : altura2 }; // {} = objeto, chave : valor
-
-// var tdAltura = document.getElementById("altura-1");
-// var tdPeso = document.getElementById("peso-1"); 
-
-// var peso1 = tdPeso.textContent;
-// var altura1 = tdAltura.textContent;
-
-// var paciente1 = { peso : peso1, altura : altura1 }; // {} = objeto, chave : valor
-
-// var pacientes = [paciente1, paciente2]; // [] = array
-
 var trsPacientes = document.getElementsByClassName("paciente");
 
-// length pega o tamanho do array e menos 1 por ser a ultima posição do array
-for (var posicaoAtual = 0; posicaoAtual <= trsPacientes.length - 1; posicaoAtual++) {
-	var pacienteTr = trsPacientes[posicaoAtual];
-
+percorreArray(trsPacientes, function(pacienteTr) {
+	// pegando o elemento
 	var tdNome = pacienteTr.getElementsByClassName("info-nome")[0];
 	var tdPeso = pacienteTr.getElementsByClassName("info-peso")[0];
 	var tdAltura = pacienteTr.getElementsByClassName("info-altura")[0];
 
-	var paciente = {
-		nome : tdNome.textContent, // pegando o conteudo com o textContent
+	var pacienteAtual = {
+		// pegando o conteudo com o textContent
+		nome : tdNome.textContent,
 		peso : tdPeso.textContent,
-		altura : tdAltura.textContent
+		altura : tdAltura.textContent,
+		// função anonima
+		pegaImc : function() {
+			// this pega do objeto atual
+			if (this.altura != 0) {
+				// js executa as contas da esquerda para a direita
+				var imc = this.peso / (this.altura * this.altura);
+				return imc;
+			} else {
+				console.log("Não executei por que altura eh igual a zero");
+			}
+		}
 	}
 
-	if (paciente.altura != 0) {
-		// js executa as contas da esquerda para a direita
-		var imc = paciente.peso / (paciente.altura * paciente.altura); 
+	var imc = pacienteAtual.pegaImc();
 
-		var tdImc = pacienteTr.getElementsByClassName("info-imc")[0];
-		tdImc.textContent = imc; //atualizando o elemento com o IMC calculado
+	var tdImc = pacienteTr.getElementsByClassName("info-imc")[0];
+	tdImc.textContent = imc; //atualizando o elemento com o IMC calculado
+	console.log(imc);
 
-		console.log(imc);
-	} else {
-		console.log("Não executei por que altura eh igual a zero");
-	}
-}
+});
 
 /* Sessão de comentários
 
