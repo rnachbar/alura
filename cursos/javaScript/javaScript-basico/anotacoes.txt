@@ -1,0 +1,323 @@
+JavaScript é uma linguagem de programação, baseada em script que funciona em várias plataformas (ex: navegadores)
+No servidor: node.js
+
+############### 1. Introdução ###############
+
+Introdução
+Javascript é uma das linguagens mais importantes de nosso tempo, justamente por ser entendida pelos mais diversos navegadores (desktop/mobile) sem a necessidade de instalação de plugins ou qualquer outro artifício.
+
+Além de ser a lingua franca da web, ela é cada vez mais usada em servidores web devido ao sucesso do Node.js que revigorou a ideia de se trabalhar com esta linguagem no lado do servidor, algo que a Netscape havia tentado no passado, mas que não emplacou.
+
+Há ainda smartphones que permitem criar aplicativos com Javascript como o Windows Phone 8.
+
+O padrão ECMASCRIPT
+O nome Javascript esta no coletivo imaginário dos desenvolvedores, mas na verdade a linguagem segue o padrão ECMA-262. Este padrão foi criado para tentar unificar a sintaxe e garantir a compatibilidade entre os diversos navegadores do mercado.
+
+Você aprenderá neste treinamento a sintaxe do ECMASCRIPT versão 5, permitindo aplicar seu conhecimento em qualquer plataforma que suporte a linguagem, sejam elas navegadores, smartphones ou servidores que suportem este padrão.
+
+Navegador como plataforma
+Javascript é uma linguagem interpretada, isto é, os scripts são lidos linha a linha e cada instrução é traduzida por um interpretador. Para facilitar seu aprendizado e dispensar qualquer configuração extra em sua máquina, utilizaremos o Google Chrome como plataforma, ele será nosso ambiente de execução de Javascript.
+
+Escolhemos o Chrome, mas nada impede que você escolha outro navegador como Firefox, Safari, entre outros. O importante é que o navegador escolhido suporte o ECMASCRIPT 5, padrão suportado por navegadores modernos.
+
+Preparando o ambiente e considerações gerais
+Independente do sistema operacional que você use ou editor de texto favorito, por uma questão de organização, sugerimos que você crie uma pasta com o nome alura-js com a finalidade de armazenar as páginas que forem pedidas ao longo dos capítulos.
+
+Qual editor de texto usar? Aquele que você já domina, claro! Até mesmo o mais simples dos editores é suficiente para o seu treinamento. Nos vídeos o instrutor estará utilizando o Sublime Text 2 para Ubuntu.
+
+Ao decorrer do curso, utilizaremos uma página HTML com o título do capítulo em questão, ela deve ser criada na pasta alura-js com o nome introducao.html e com a seguinte estrutura:
+
+<!-- introducao.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+    </body>
+</html>
+Ah, não se esqueça de que "grandes poderes trazem grandes responsabilidades" e que o aprendizado da linguagem Javascript abrirá novas portas para você, seja no desenvolvimento web, mobile ou no lado do servidor.
+
+Como o browser interpreta seu código
+Vimos que a linguagem Javascript pode ter diferentes hospedeiros e que neste treinamento usaremos o seu navegador que não necessita maiores configurações. Ainda sem entrar nos detalhes da linguagem, se quisermos exibir na tela uma alert com o texto "bem-vindo" podemos usar o seguinte script:
+
+alert("bem-vindo");
+E agora? Onde adicionar esse código em nossa página? Que tal adicionarmos dentro da tag <body> da página introducao.html que criamos? Veremos o que acontece quando colocamos um código Javascript dentro de uma pagina html normalmente:
+
+<!-- introducao.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+      alert("bem-vindo");
+    </body>
+</html>
+Quando visualizamos a página (basta dar dois cliques sobre o arquivo), vemos que nosso script é exibido como texto, isto é, o navegador não fez nenhum tratamento especial para interpretar aquele código como um script:
+
+código não interpretado pelo navegador
+
+Faz todo sentido, já que criamos uma página HTML que está preparada para exibir conteúdo em forma de texto.
+
+A tag SCRIPT
+Precisamos dar uma pista para que o navegador deixe de olhar aquele trecho de código como HTML e comece a vê-lo como um script que deve ser interpretado. Para isso, usamos a tag <script>:
+
+<!-- introducao.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+    <script>
+            alert("bem-vindo");
+       </script>
+    </body>
+</html>
+Código interpretado pelo navegador
+
+Agora sim! Quando a página é recarregada no navegador (você pode recarregá-la pressionando F5 ou CTRL + R) nosso trecho de script é interpretado como um código e não como conteúdo qualquer da página e o alerta é exibido.
+
+A tag <script> pode ser tanto adicionada dentro da tag <head> ou logo antes do fechamento da tag <body>. Neste treinamento trabalharemos sempre com a tag <script> como ultimo elemento da tag <body>.
+
+Para testar a tag <script>, você também pode usar o comando prompt, que irá exibir uma janela pedindo que você digite um texto qualquer:
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+      <script>
+        prompt();
+      </script>
+    </body>
+</html>
+Note que nessa janela está escrito undefined em cima do campo, isso acontece pois você não informou qual texto deve aparecer. Para informá-lo, basta passá-lo dentro do parênteses.
+
+No exemplo abaixo, o texto que aparecerá será "Digite seu nome":
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+      <script>
+        prompt("Digite seu nome");
+      </script>
+    </body>
+</html>
+Legal! Mas de que adianta você digitar seu nome se essa informação é perdida logo em seguida, certo? Nós podemos, a fim de evitar esta perda, armazenar o que o usuário digitar em uma variável(não se preocupe com a sintaxe por enquanto, no próximo capítulo iremos entender variáveis bem mais profundamente):
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+      <script>
+        var nome = prompt("Digite seu nome");
+      </script>
+    </body>
+</html>
+Agora você pode, inclusive, mostrar o seu nome em um alert:
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+      <script>
+        var nome = prompt("Digite seu nome");
+        alert(nome);   
+      </script>
+    </body>
+</html>
+HTML 5 e a tag <SCRIPT>
+Um ponto importante aqui é que você pode já ter visto a declaração da tag <script> utilizando o atributo type:
+
+<script type="text/Javascript">
+</script>
+Quando utilizando o padrão HTML5, não somos obrigados a adicionar o atributo type. Para isso, precisamos dizer ao navegador que estamos utilizando HTML5, o que pode ser feito utilizando-se a tag abaixo no inicio do seu html:
+
+<!DOCTYPE html>
+Apesar do Javascript ser um mundo diferente do HTML, com esta declaração precisamos digitar menos em nossa tag script, algo que é muito bem-vindo, não?
+
+Interagindo com o console
+Quando programando em Javascript, nós podemos utilizar o comando alert citado anteriormente para mostrar coisas na tela. Se quisermos mostrar duas informações ao mesmo tempo, podemos utilizar dois alerts:
+
+<script>
+alert("primeiro");
+alert("segundo");
+</script>
+Porém, ao rodar esse código você perceberá que o segundo alert só aparece após termos fechado o primeiro, o que o torna pouco prático. Além disso, o alert é um comando que existe apenas no navegador, ou seja, não funcionará caso usado em outras plataformas como o Node.js, por exemplo.
+
+Por esse motivo, o substituiremos pelo comando: console.log
+
+<script>
+console.log("bem-vindo");
+</script>
+No lugar de exibir uma janela na tela, a instrução console.log imprime no console do navegador(ou do servidor caso tivéssemos rodando nosso código nele). O problema é que se recarregarmos a página nada é exibido! Como assim?
+
+Não se preocupe, o texto foi mostrado no console, nós só precisamos abrí-lo! Para isso o atalho no Windows e Linux: CONTROL + SHIFT + J ou no MAC OS CMD + OPT + J). Para escondê-lo, basta executar a mesma tecla de atalho novamente:
+
+Exibindo console
+
+Script como arquivo externo
+Agora que você já entendeu que para o navegador interpretar seu script ele precisa estar envolvido pela tag <script> e que para visualizar a saída no console precisa abrí-lo. Está na hora de organizarmos melhor o nosso código.
+
+Até agora estamos escrevendo html e Javascript no mesmo arquivo, o que pode se tornar confuso rapidamente. Para evitarmos isso, podemos escrevê-los em arquivos separados!
+
+Podemos, por exemplo, criar o arquivo intro.js na mesma pasta do arquivo introducao.html. A diferença é que moveremos nosso código que exibe a mensagem no console para dentro deste arquivo:
+
+// intro.js
+console.log("bem-vindo");
+Note que, dentro do nosso arquivo .js, nós teremos apenas código Javascript, nada de tags html como o <script> aqui!
+
+A nossa tag <script> continuará na nossa pagina introducao.html. Porém, agora não terá nenhum conteúdo, em vez disso apontará para o arquivo Javascript que criamos através do atributo src:
+
+<script src="intro.js"></script>
+O resultado da página deve continuar o mesmo.
+
+Identificando problemas
+Somos seres humanos e pode acontecer de esquecermos de importar o script, digitarmos a tag errada ou até mesmo apontarmos para um arquivo que não exista. Você não quer ficar horas olhando para seu arquivo script procurando por um erro se sequer ele foi carregado, não é mesmo?
+
+É por isso que é uma boa prática verificar se o arquivo importado através da tag script foi carregado! Fazemos isso também com o console aberto, mas no lugar de selecionarmos a aba "console", selecionamos a aba "rede" (ou "network", caso seu navegador esteja em inglês). Não esqueça de recarregar sua página toda vez que mudar para esta aba.
+
+A aba "rede" exibe uma lista de todos os arquivos externos carregado, logo, se tudo correu bem com nosso arquivo intro.js ele deve aparecer na lista. Se estiver vermelho, significa que o arquivo não existe ou está em outro diretório:
+
+Exibindo recursos carregados
+
+Uma grande vantagem de termos nosso código em um arquivo separado é que, caso ele tenha algum erro, é possível acessar diretamente a linha problemática no próprio navegador, algo que não somos capazes quando adicionamos diretamente nosso código na página. Vejamos um exemplo alterando nosso intro.js:
+
+// intro.js
+console.log("bem-vindo");
+console.log("bem-vindo);
+No código anterior, adicionamos mais uma saída para o console, mas com problema. Conseguiu descobrir onde? O texto não termina com aspas simples, algo considerado um erro pelo Javascript.
+
+Ao abrir sua página mais uma vez uma mensagem de erro será exibida no console e no canto direito aparece um link para o arquivo intro.js que indica a linha do erro, inclusive você pode clicar no link que ele exibirá o código para você:
+
+Console exibindo mensagem de erro
+
+Exibindo a linha do erro
+
+Existem outras vantagens de deixarmos o nosso código num arquivo separado, a que vimos é uma delas e as outras serão apresentadas ao longo do treinamento.
+
+Agora que você já sabe como as coisas se encaixam, inclusive como encontrar a causa de problemas em seu código mesmo antes de aprender a linguagem, podemos continuar nossa caminhada, pois o "kit de sobrevivência" já lhe foi dado.
+
+No próximo capítulo veremos como o Javascript lida com variáveis, algo indispensável numa linguagem de programação, mas esteja atento:
+
+Você escreverá seu código em arquivos separados, ajudando na depuração do seu código.
+Você precisará associar o arquivo à página através da tag script.
+A saída da sua aplicação utilizará o console, reforçando ainda mais seu uso.
+Erros em seu código podem ser encontrados como mensagem do console em vermelho, inclusive você pode clicar no link do canto direito da tela que o levará diretamente para a linha com problema.
+O projeto do curso
+Ao fim de nosso curso, teremos uma aplicação de agenda de pacientes, com funcionalidade para calcular o IMC de cada um deles a partir de um botão e adicionar novos pacientes.
+
+O resultado será parecido com o seguinte:
+
+
+
+Então vamos lá! Mãos à obra e boa sorte!
+
+Segue uma vez o código da página introducao.html e intro.js:
+
+<!-- introducao.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      <meta charset="utf-8">
+      <title>Introdução</title>
+    </head>
+    <body>
+      <h1>Bem-vindo</h1>
+      <script src="intro.js"></script>
+    </body>
+</html>
+
+// intro.js
+console.log("bem-vindo");
+console.log("bem-vindo");
+
+O Javascript é uma das linguagens mais importantes de nosso tempo porque:
+
+é uma linguagem que, além de ser a padrão nos navegadores atuais, vem expandindo para outras áreas como servidores como o Node.js
+Javascript é a linguagem da web, a única entendida pelo navegador sem a necessidade de instalação de plugins ou algo do tipo. Inclusive hoje atua no lado do servidor devido ao sucesso do Node.js.
+
+O nome Javascript é muito difundido, mas na verdade hoje os navegadores seguem um padrão. Que padrão é esse?
+
+ECMA 262
+O Javascript é o nome de uma implementação do padrão ECMA 262, isto é, quando dizemos que programamos em Javascript, na verdade programamos em ECMASCRIPT. Este padrão historicamente foi criado para resolver os problemas de compatibilidade da linguagem entre navegadores.
+
+Para rodarmos nossos scripts precisamos de uma plataforma, que pode ser:
+
+Para rodarmos nossos scripts precisamos de uma plataforma, que pode ser:
+
+o navegador ou um servidor como Node.js
+Tanto os navegadores do mercado quanto servidores como o Node.js são capazes de interpretar o padrão ECMA 262. Isso torna a linguagem ainda mais atrativa, porque possibilita criar soluções web completas utilizando apenas uma linguagem.
+É claro que existem diferenças, já que no servidor não temos uma página para manipular, logo, não existe DOM (a estrutura da página html em memória) nem mesmo podemos exibir alertas com a alert porque não existe um navegador.
+
+Ainda assim, podemos aplicar o conhecimento do core da linguagem nos dois ambientes.
+
+Sabemos que o navegador entende apenas HTML e que se colocarmos scripts diretamente no corpo da mensagem ele será interpretado como texto. Como resolvemos isso?
+
+Através da tag <script></script>. Tudo que estiver dentro dela será interpretado como script e não texto.
+Este problema é resolvido utilizando-se a tag <script></script>, que pode vir tanto dentro da tag <head> quanto dentro da tag <body>. Tudo que estiver dentro da tag script será interpretado como Javascript e não como texto.
+
+Vimos que é melhor criar nossos scripts em arquivos externos e importá-los em nossa página para facilitar a depuração de nosso código. Qual dos exemplos abaixo apresenta a configuração correta da tag script para tal finalidade?
+
+<script src="meuscript.js"></script>
+Um exemplo válido é <script src="meuteste.js"></script>. É através do atributo srcque indicamos o nome do arquivo com nossos scripts. É importante que a tag abra e feche, por exemplo, o seguinte exemplo é uma importação inválida:
+<script src="meuteste.js">.
+
+Complete o script abaixo que lê a idade do usuário, com a pergunta "Qual é a sua idade?", e exibe um alerta com a idade em seguida:
+<script>
+    var idade =  ######### 
+    alert(#######);
+</script>
+Diga o que está na parte oculta (######), na ordem que aparece no código:
+
+prompt("Qual é a sua idade?"); e idade
+
+Quando queremos ler uma informação que o usuário digita, devemos utilizar o comando prompt(). Como queremos que apareça uma pergunta também, devemos utilizar o comando prompt() com o texto entre aspas dentro do parênteses, desta forma:
+var idade = prompt("Qual é a sua idade?");
+
+Como salvamos a informação digitada pelo usuário na variável idade, para exibi-la devemos usar o alert somente com o nome da variável, sem aspas, desta forma:
+
+alert(idade);
+
+O script completo ficará assim:
+
+<script>
+    var idade = prompt("Qual é a sua idade?");
+    alert(idade);
+</script>
+
+mos a importância do console, aliás, como o exibimos mesmo?
+
+No Windows e Linux: CONTROL + SHIFT + J No MAC: CMD + OPT + J
+Mesmo antes de você aprender a programar em Javascript já vimos a importância de consultarmos o console. Ele é um "oráculo" que tudo sabe do seu código Javascript. Se algo der errado, não só ele exibe a mensagem de erro, mas também indica a linha problemática. O atalho para acessá-lo é : CONTROL + SHIFT + J, no Windows e Linux ou no CMD + OPT + J, no Mac OS.
+Existe a tecla de atalho F12, mas que pode não focar diretamente na aba do console, por isso o atalho que vimos é mais recomendado.
+
+
+
+
+
+
