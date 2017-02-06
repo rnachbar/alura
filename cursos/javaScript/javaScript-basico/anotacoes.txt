@@ -316,8 +316,288 @@ No Windows e Linux: CONTROL + SHIFT + J No MAC: CMD + OPT + J
 Mesmo antes de você aprender a programar em Javascript já vimos a importância de consultarmos o console. Ele é um "oráculo" que tudo sabe do seu código Javascript. Se algo der errado, não só ele exibe a mensagem de erro, mas também indica a linha problemática. O atalho para acessá-lo é : CONTROL + SHIFT + J, no Windows e Linux ou no CMD + OPT + J, no Mac OS.
 Existe a tecla de atalho F12, mas que pode não focar diretamente na aba do console, por isso o atalho que vimos é mais recomendado.
 
+############### 2. Variáveis e comandos básicos ###############
 
+Variáveis e comandos básicos
+Agora que você já tem ideia de o que é o Javascript, por que devemos usá-lo e do ambiente que usaremos nesse curso, está na hora de começarmos a colocar a mão na massa!
 
+Declarando variáveis
+Para começar, vamos entender como funcionam variáveis no Javascript, lembre-se sempre de utilizar o console para executar nossos comandos.
 
+No Javascript, tudo que precisamos para criar uma variável é digitar a palavra var seguida do nome de sua variável e atribuir um valor à ela. Sendo assim, podemos criar uma variável chamada idade simplesmente digitando:
+
+var idade = 19;
+Assim que o interpretador de Javascript passar por essa linha, ele criará uma variável com o nome "idade" e atribuirá a ela o valor 19. Do mesmo jeito que você consegue declarar uma variável e atribuir a ela um número inteiro, você consegue atribuir um número decimal:
+
+var peso = 57.5;
+O mesmo você consegue fazer com textos (ou strings), basta atribuir algo que esteja entre aspas duplas:
+
+var nome = "Leonardo";
+Entendendo a tipagem dinâmica do Javascript
+Note que nós não dissemos o tipo dessa variável em nenhum momento, quem vai definir o tipo será o interpretador, dependendo do valor que você estiver atribuindo à variável.
+
+Você pode verificar o tipo de uma variável utilizando o comando typeof, veja o exemplo abaixo:
+
+var idade = 19;
+console.log(typeof idade); // Vai imprimir number
+No caso da nossa variável peso, o valor que atribuímos foi um número decimal, mas para o Javascript não tem diferença de tipos, perceba que ao utilizarmos o comando typeof a saída também será number:
+
+var peso = 57.5;
+console.log(typeof peso); // Vai imprimir number
+Se criássemos uma variável nome e atribuíssemos um texto, como abaixo, o tipo da variável seria string, como você pode conferir abaixo:
+
+var nome = "Leonardo";
+console.log(typeof nome); // Vai imprimir string
+Isso acontece pois o Javascript possui um sistema de tipagem que chamamos de tipagem implícita - ou seja, não dizemos explicitamente o tipo de uma variável - e dinâmica, o que quer dizer que, se mudarmos o valor dessa variável, o tipo dela também mudará.
+
+Por exemplo, se atribuirmos o valor 10 à variável nome que criamos acima, o tipo da variável passará a ser Number:
+
+var nome = "Leonardo";
+console.log(typeof nome); // imprime "string"
+
+nome = 10;
+console.log(typeof nome); // imprime number
+Caso você crie uma variável com o valor true ou false, o tipo dela será boolean;
+
+var ehEstagiario = true;
+console.log(typeof ehEstagiario); // imprime "boolean"
+Nós também podemos gerar variáveis com valores booleanos(verdadeiro ou falso) a partir de operadores de comparação.
+
+Por exemplo, podemos criar uma variável chamada ehIgual que será verdadeira ou falsa de acordo com uma comparação de igualdade, que é feita utilizando o operador ==
+
+var ehIgual = (2 == 2);
+
+console.log(ehIgual); //imprime true
+
+//-----------
+
+var ehIgual = (2 == 3);
+
+console.log(ehIgual); //imprime false
+Ou uma variável chamada ehDiferente, que será verdadeira se dois valores forem diferentes. Para comparar se os valores são diferentes utilizaremos o operador !=:
+
+var ehDiferente = (2 != 1);
+
+console.log(ehDiferente); //imprime true;
+
+//-----------
+
+var ehDiferente = (2 != 2);
+
+console.log(ehDiferente); //imprime false;
+Além das comparações de igualdade e diferença, podemos também comparar se um valor é maior que outro
+
+5 > 4 // true
+5 > 10 // false
+Se é menor
+
+4 < 5 // true 
+4 < 0 // false
+Se é maior ou igual
+
+ 5 >= 5 //true
+ 5 >= 0 //true
+ 5 >= 6 //false
+E se é menor ou igual
+
+4 <= 4 // true
+4 <= 5 // true
+4 <= 3 // false
+Esses tipos: boolean, number e string são os três tipos básicos no Javascript. Além desses, ainda existem outros que serão abordados mais para frente neste curso.
+
+Operações aritméticas básicas
+Agora que já aprendemos como declarar uma variável e como funciona o sistema de tipagem dinâmica do Javascript, vamos fazer algumas contas simples com elas.
+
+Para dividir um número por outro, por exemplo, basta utilizar operador de divisão, que é representado pelo caractere barra("/"), sendo assim, ao digitarmos 12/2 no console, temos o resultado 6. O mesmo funciona com outras operações básicas, como multiplicação(utiliza-se o operador *), soma(+) e subtração(-).
+
+Deste modo, podemos colocar em prática uma fórmula de calculo de salário anual, por exemplo, onde o valor acumulado é igual a 13 vezes o valor mensal + um bonus de 10% sobre o salario mensal:
+
+var salarioMensal = 1400;
+var salarioAnual = 13*salarioMensal+salarioMensal*0.10;
+console.log(salarioAnual); // imprime 18340;
+Projeto para baixar
+Baixe o projeto nessa URL: https://s3.amazonaws.com/caelum-online-public/javascript-linguagem/projeto.zip.
+
+Abra a pasta no Sublime ou seu editor favorito. Também abra no browser para ver o HTML que já demos pronto pra você.
+
+Calculo de IMC de um paciente
+Imagine que temos uma variável contendo o peso de um paciente e outra contendo a altura, a partir destas duas variáveis, é possível calcular o IMC(índice de massa corporal) deste paciente, que é resultado do peso dividido pela altura ao quadrado, ou peso/(altura*altura).
+
+Vamos então calcular o IMC de um paciente que pesa 100 quilos e tem 2 metros de altura. Para isso, vamos declarar a variável peso e a variável altura:
+
+var peso = 100;
+var altura = 2.00;
+Agora basta utilizar a formula de calculo de IMC:
+
+var peso = 100;
+var altura = 2.00;
+
+var imc = peso / altura * altura;
+
+console.log(imc); // imprime 100
+Mas espere, o resultado da conta deveria ser 25, mas foi 100!
+
+Isso aconteceu pois as operações aritméticas são executada pelo interpretador de Javascript da esquerda para a direita. Portanto, a conta que foi de fato efetuada foi:
+
+peso / altura = 50
+50 * altura = 100
+Então, para nossa formula funcionar, precisamos dizer que a operação altura*altura(altura ao quadrado) deve ser executada primeiro! Para isso, basta envolver essa operação utilizando parênteses:
+
+var peso = 100;
+var altura = 2.00;
+
+var imc = peso / (altura * altura);
+
+console.log(imc) // 25
+Agora sim, calculamos o IMC com sucesso!
+
+Fluxo de dados com If/Else
+Agora já conseguimos fazer contas básicas, mas o que aconteceria se o valor da variável altura fosse 0?
+
+A conta seria:
+
+100 / (0*0) -> 100 / 0
+Estamos tentando dividir um numero por 0! Ao executar essa conta, teríamos a saída Infinity no console, indicando que o resultado dessa operação não é tangível, afinal é impossível dividir um número por 0!
+
+Precisamos então executar a conta apenas se altura for diferente de 0. Para isso, envolveremos o nosso código no comando if, que tem como objetivo filtrar a execução de um determinado bloco de código com base em uma condição. Para usarmos o comando if, precisamos passar para ele um valor booleano, ou seja, uma condição, que decidirá se o código será executado ou não.
+
+Nós só podemos executar a conta se a altura for diferente de 0, ou seja, quando altura != 0, então é essa condição que vamos passar para o if:
+
+if(altura != 0){
+    var imc = peso / (altura * altura);
+    console.log(imc) // 25
+}
+Mas agora nós simplesmente paramos de efetuar a conta, seria legal mostrar uma mensagem para que soubéssemos o por quê de não termos executado a conta. Ou seja, quando a condição do if não for verdadeira, queremos mostrar uma mensagem. Para isso, podemos usar o comando else:
+
+if(altura != 0){
+    var imc = peso / (altura * altura);
+    console.log(imc) // 25
+}else{
+    console.log("Não posso executar uma divisão por 0!");
+}
+Tratando vários casos com Ifs
+Imagine que, na nossa fórmula de calculo de salário anual, o bônus varie de acordo com o salário mensal. Por exemplo:
+
+se o salário mensal for maior que 0 e menor que 1000, o bonus é 5%
+
+se não cair na condição anterior e o salário mensal for menor que 2000, o bonus é 10%
+
+se não cair na condição anterior, o bonus é 15%
+
+Mas antes de pensar em todas essas condições, vamos pensar só na primeira: se o salário for maior que 0 e menor que 1000, temos que usar 5% de bônus. Perceba que nós temos duas condições que precisamos respeitar: salarioMensal > 0 E salarioMensal < 1000, para isso vamos utilizar o operador &&, que fará com que o if só seja executado se as duas condições forem verdadeiras:
+
+if(salarioMensal > 0 && salarioMensal < 1000){
+    var salarioAnual = 13*salarioMensal+salarioMensal*0.05;
+    console.log(salarioAnual);
+}
+Além do operador and(&&) há também o operador or(representado por ||), que faz com que, se pelo menos uma das duas condições for verdadeira, o if seja executado!
+
+Por exemplo, suponha que só queremos calcular o salarioAnual de um funcionário se o tipoDoFuncionario for "estagiário" OU "CLT", teríamos então um código parecido com o seguinte:
+
+if(tipoDoFuncionario == "estagiário" || tipoDoFuncionario == "clt"){
+
+    if(salarioMensal > 0 && salarioMensal < 1000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.05;
+        console.log(salarioAnual);
+    } 
+
+}
+Legal, mas até agora só estamos respeitando a primeira condição para calcular o bônus do salário, vamos partir para a próxima: se não cair na condição anterior e o salário mensal for menor que 2000. Precisamos então só executar determinado código se o if anterior não for executado! Você se lembra do comando que faz isso? O else! Teríamos então o seguinte código:
+
+if(tipoDoFuncionario == "estagiário" || tipoDoFuncionario == "clt"){
+
+    if(salarioMensal > 0 && salarioMensal < 1000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.05;
+        console.log(salarioAnual);
+    }else{
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.10;
+        console.log(salarioAnual);
+    }
+
+}
+Mas espere, o bonus só é 10% se não cair na condição anterior e se o salário mensal for menor que 2000! Vamos então colocar mais essa condição no nosso código:
+
+if(tipoDoFuncionario == "estagiário" || tipoDoFuncionario == "clt"){
+
+    if(salarioMensal > 0 && salarioMensal < 1000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.05;
+        console.log(salarioAnual);
+    }else{
+        if(salarioMensal < 2000){
+            var salarioAnual = 13*salarioMensal+salarioMensal*0.10;
+            console.log(salarioAnual);    
+        }
+    }
+
+}
+Agora estamos respeitando a condição, mas note que nós estamos encadeando muitos ifs, fazendo com que o nosso código cresça horizontalmente! Para evitar isso, temos o comando else if, que é exatamente o que parece: uma junção do else com um if, podemos então substituir o if encadeado no nosso código:
+
+if(tipoDoFuncionario == "estagiário" || tipoDoFuncionario == "clt"){
+
+    if(salarioMensal > 0 && salarioMensal < 1000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.05;
+        console.log(salarioAnual);
+    }else if(salarioMensal < 2000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.10;
+        console.log(salarioAnual);    
+    }
+}
+Agora só falta a ultima parte de nossa lógica: se o ultimo if não for executado, o bonus é 15%. Para isso, basta adicionarmos um else ao fim de nosso ultimo if:
+
+if(tipoDoFuncionario == "estagiário" || tipoDoFuncionario == "clt"){
+
+    if(salarioMensal > 0 && salarioMensal < 1000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.05;
+        console.log(salarioAnual);
+    }else if(salarioMensal < 2000){
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.10;
+        console.log(salarioAnual);    
+    }else{
+        var salarioAnual = 13*salarioMensal+salarioMensal*0.15;
+        console.log(salarioAnual);    
+
+    }
+}
+
+Em javascript podemos atribuir comparações a uma variável. No código abaixo, qual será a saída de cada console.log();?
+var ehIgual = (2 == 3);
+var ehDiferente = (2 != 3);
+
+console.log(ehIgual);
+console.log(ehDiferente);
+
+false e true
+A saída é false e true. O javascript realiza a comparação, verifica se ela é verdadeira ou falsa e então atribui o resultado a variável. No caso, 2 não é igual 3, a comparação é falsa, então o valor da variável ehIgual é false. Em ehDiferente, a comparação é verdadeira concorda? 2 realmente é diferente de 3, e por isso seu resultado é true.
+E agora, qual o tipo dessas variáveis? boolean! Podemos conferir isso no console com:
+
+typeof ehIgual;
+typeof ehDiferente;
+
+Ao se executar o seguinte código, o que é impresso no console? Você pode testar o código abaixo dentro da tag <script> no arquivo ifs-encadeados.html.
+var nome = "Leonardo";
+console.log(typeof nome);
+
+nome = 10;
+console.log(typeof nome); 
+
+nome = "20";
+console.log(typeof nome);
+
+string number string
+
+Lembre-se que typeof retorna o tipo da variável, ou seja
+typeof "pessoa" retorna uma string.
+
+Lembrando que as strings são sempre palavras com "aspas" em volta.
+
+typeof 10 retorna number
+
+Pois não tem as aspas em volta e é um número.
+
+typeof "10" retorna uma string
+
+Esse é o caso mais complicado, pois apesar de ser um número, está com as "aspas" em volta, ou seja, acaba por se tornar uma string.
+
+Sabendo disso já deve ser possível responder a pergunta.
 
 
