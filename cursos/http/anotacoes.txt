@@ -1,0 +1,168 @@
+############### 1. O que é o HTTP ###############
+
+Nesse treinamento focaremos nos fundamentos da web. Isto é importante pois a grande maioria das aplicações hoje em dia a utilizam de alguma forma ou funcionam dentro dela. Não focaremos em nenhuma plataforma específica de desenvolvimento como Java ou PHP. Focaremos nas regras de comunicação da web. Quanto mais o desenvolvedor entender essas regras, mais fácil será a criação de aplicações web.
+Cliente-Servidor
+Quando alguma página na internet é acessada utiliza-se um navegador como Google Chrome, Mozilla Firefox ou o Microsoft Edge. Você, aluno que está usando a Alura, já tem esse navegador instalado. Entre ele e a Alura aconteceu uma comunicação, por isso você está vendo este curso e vídeo, fazendo exercícios e etc. Os dados são enviados através de uma rede gigante chamada Internet.
+
+O navegador (estou usando o Google Chrome, e você?), representa nessa comunicação o cliente e a Alura o servidor. O cliente pede informações e o servidor responde. Esse modelo de comunicação, ou essa arquitetura, é chamado de Cliente-Servidor, em inglês Client-Server.
+
+Definindo regras de comunicação
+Em qualquer comunicação tem que existir algumas regras e vocabulário. Pensando no idioma português essas regras são bastante complexas e extensas. Mas ainda bem que não estamos falando sobre o português e sim apenas sobre a comunicação client-server, sobre a comunicação do seu navegador para a Alura ou algum outro site.
+
+Por exemplo, o que acontece quando acessarmos algum curso que não existe na Alura? O servidor não saberá a resposta e precisará indicar para o navegador que não conseguiu carregar os dados. Esse comportamento deve estar definido em algum lugar. É por isso que foi criado um idioma próprio, ou melhor, um protocolo próprio que possui um vocabulário e gramática específica. Este protocolo é quem define as regras de comunicação entre cliente e servidor! Existem vários protocolos no mundo de computação e redes, mas nesse treinamento focaremos no protocolo principal usado na internet, o tal do HTTP.
+
+Resumindo: Descobrimos que o HTTP é um protocolo que define as regras de comunicação entre cliente e servidor na internet. Vamos focar nos próximos vídeos e entender melhor esse protocolo tão importante. Agora é praticar com os exercícios, mãos a obra!
+
+O que aprendemos neste capítulo?
+Na internet sempre tem um cliente e um servidor
+Entre o cliente e o servidor precisam haver regras de comunicação
+As regras são definidas dentro de um protocolo
+HTTP é o protocolo mais importante na internet
+
+Olá Aluno!
+Nesse treinamento vamos falar sobre a "sigla" mais importante da internet: o HTTP. O objetivo é entender o protocolo HTTP detalhadamente. Quanto mais o desenvolvedor souber sobre este protocolo, melhor, pois ele é utilizado em todas aplicações web.
+
+No entanto, não focaremos como essas aplicações são criadas e funcionam internamente. Para isso existem várias plataformas como PHP, .NET ou Java (entre muitas outras) que não abordaremos. Temos treinamentos dedicados para conhecer estas plataformas.
+
+Resumindo então, nosso foco será o protocolo HTTP!!
+
+Falamos tanto sobre esta sigla, mas qual é o significado do HTTP? Pesquise na web!
+
+Hypertext Transfer Protocol
+
+No mundo de TI temos muitas siglas e abreviações! O que menos importa é decorar esses nomes, mas é preciso entender o que há por trás. Nesse treinamento vamos focar nos principais conceitos do protocolo HTTP, aquilo que realmente importa para o desenvolvedor.
+
+O protocolo HTTP segue o modelo Client-Server. O que o navegador (como Chrome ou Firefox) representa nesse modelo? O cliente ou o servidor?
+
+Cliente
+ 
+Acertou! Nesse modelo, o navegador representa o cliente. É importante saber que não só navegadores dominam o protocolo HTTP. Ainda veremos mais sobre esses outros neste treinamento
+
+O cliente inicia a comunicação e o servidor responde. No entanto, qual é o papel do HTTP entre Cliente e Servidor?
+
+Estabelecer regras de comunicação
+
+Se você compreende este texto, é porque você sabe português! Para que alguém consiga se comunicar com você, esse alguém deverá usar o português (supondo que você desconheça outro idioma, é claro). Isso significa que, sua regra (protocolo) de comunicação com o mundo é a lingua portuguesa que define a forma com que as informações devem chegar até você (através do vocabulário, regras de gramática e etc). Uma outra pessoa que conheça português irá usar do mesmo formato, já que vocês possuem um idioma em comum.
+Na internet como já vimos, o idioma mais comum é o HTTP. Ele é responsável por definir a forma com que os dados são trafegados na rede através de várias regras. Portanto todo mundo que conhece o idioma HTTP poderá receber e enviar dados e participar dessa conversa!
+
+Você já usou Torrent para baixar algum arquivo na internet? Caso sim, aproveitou um outro modelo de comunicação, o P2P ou Peer-To-Peer!
+O modelo Cliente-Servidor não é o único modelo de comunicação na rede, nem sempre o mais adequado. Por exemplo, imagine que precisa contar as letras de 20 palavras. No caso do modelo Cliente-Servidor, quem fará esse trabalho é o servidor, certo? E se precisar contar as letras de 1 milhão de palavras? Muito trabalhoso para o servidor não?
+
+O modelo Cliente-Servidor tenta centralizar o trabalho no servidor, mas isso também pode gerar gargalos. Se cada Cliente pudesse ajudar no trabalho, ou seja, assumir um pouco da responsabilidade do servidor seria muito mais rápido. Isso é a ideia do P2P! Não há mais uma clara divisão entre Cliente-Servidor, cada cliente também é servidor e vice versa!
+
+Isto é útil quando você precisa distribuir um trabalho ou necessita baixar algo de vários lugares diferentes. Faz sentido?
+
+Usando algum aplicativo de Torrent o protocolo utilizado não é o HTTP e sim o protocolo P2P como Bittorrent ou Gnutella.
+
+O HTTP não é o único protocolo de comunicação que existe. Aliás, existem milhares de protocolos no mundo de TI, no entanto o HTTP é de longe o mais popular.
+Na lista abaixo tem um item que não representa um protocolo para internet. Qual? Pesquise se for necessário!
+
+SQL
+ 
+SQL (Structured Query Language) não é um protocolo para internet e sim uma linguagem de consulta para banco de dados. Um banco de dados cuida dos dados de uma aplicação, é parecido com uma planilha de excel. O SQL ajuda muito a acessar esses dados.
+Um banco de dados não se preocupa com como os dados serão visualizados, ele só administra os dados! Aqui no Alura o banco de dados guarda informações sobre os usuários, cursos, perguntas, respostas etc.
+
+Agora a gente já sabe que existe um cliente, o navegador como Chrome e Firefox, e um servidor, o Alura. Para definir as regras de comunicação entre cliente e servidor existe o protocolo HTTP.
+Também já sabemos que o servidor usa alguma plataforma como PHP, Java, .Net ou outros. Qual plataforma realmente é utilizada? Não é tão fácil de descobrir pois o HTTP, de propósito, não está focado em alguma plataforma especifica e esconde isso da gente. Bom, eu não vou esconder nada e vou contar para vocês que o Alura usa a plataforma Java e o servidor concreto se chama Tomcat.
+
+Também já falamos que o SQL é uma linguagem para consultar o banco de dados. Alura usa SQL para acessar o banco de dados MySQL.
+
+Com essas informações já temos uma breve ideia da arquitetura do Alura!
+
+Cliente  <--- HTTP ---> Servidor Java  <--- SQL ---> Banco de dados
+
+Há arquiteturas muito mais complexas, mas a grande maioria usa o protocolo HTTP no topo. O protocolo HTTP garante a conectividade. Isso quer dizer que o protocolo HTTP funciona em todos os lugares sem ter problemas com firewalls e outras regras de segurança. A gente pode se conectar sem maiores problemas com qualquer servidor no mundo!
+
+############### 2. A web segura - HTTPS ###############
+
+Ao acessarmos http://www.alura.com.br pelo navegador podemos perceber que há uma pequena mudança no protocolo. O nome do protocolo agora é https: a versão segura do HTTP.
+
+
+Quando usamos o HTTP (sem o s no final) todos os dados enviados entre cliente e servidor são transmitidos em texto puro, inclusive dados sensíveis como login e senha! Mas por que é importante sabermos isso?
+
+Bem, quando o navegador pede informações do Alura, nessa comunicação há vários intermediários. Por exemplo, usando uma conexão WIFI, os dados do navegador passam primeiro para o roteador WIFI e do roteador passam depois para o modem do provedor, do modem para algum servidor do provedor de internet, como Oi ou NET. É muito provável que existam outros servidores intermediários no provedor antes que os dados realmente cheguem no servidor do Alura. Com a resposta é a mesma coisa, ela volta passando por esses servidores no meio antes de chegar até nosso navegador. O problema é, quando usamos HTTP (sem s), qualquer servidor no meio pode espionar os dados enviados, algo totalmente inseguro!
+
+Certificado digital - a identificação na web
+Reparem que no navegador, ao lado do https, aparece um cadeado.
+
+
+
+Ao clicarmos no cadeado podemos ver mais informações sobre HTTPS. Repare que existe o Alura que possui uma identidade confirmada:
+
+
+
+A web segura trabalha bem parecida com a vida real. Uma pessoa possui uma identidade (RG ou Passaporte) para se identificar. Outras pessoas e organizações confiam nessa identidade pois ela foi emitida por um órgão confiável. Se cada pessoa criasse o seu próprio RG não teríamos certeza da confiabilidade de seus dados e esta é a razão de solicitarmos o RG de um órgão especial do governo. Na web isso funciona bem parecido, só que a identidade é chamada de certificado digital.
+
+Autoridade certificadora
+Então, ao clicar no cadeado podemos ver informações sobre o certificado digital do Alura! Esse certificado emitido é confirmado por um órgão ou entidade confiável. Nesse caso a entidade que criou o certificado do Alura se chama COMODO RSA Domain Validation:
+
+
+
+Existem outras entidades certificadoras, mas em geral, o navegador conhece essas entidades e confia nelas como na vida real pessoas confiam que o RG foi emitido por um órgão do governo. Repare também que o certificado possui uma validade como o RG.
+
+Chave Pública
+Através do certificado o navegador consegue confirmar a identidade do Alura. Ótimo. No entanto, com isso não sabemos ainda como transmitir os dados de maneira segura. Para isso o certificado possui uma chave e essa chave é utilizada para criptografar os dados entre cliente e servidor. Ou seja, o certificado não só prova a identidade como também oferece uma chave para criptografar os dados!
+
+
+
+Reparem que a chave na verdade é uma chave pública. Se tem uma chave pública tem que haver uma chave privada, certo? Mas cadê ela? Bom, a chave privada fica com o Alura, é só do Alura. Jamais o servidor do Alura pode oferecer essa chave para alguém, caso contrário toda comunicação se tornará insegura! Em geral, a chave publica é utilizada por qualquer um que queira se comunicar com o Alura pois faz parte do certificado. A chave privada só o Alura conhece, essa chave não é compartilhada com ninguém.
+
+Interessante é que os dados que foram criptografados com a chave pública só podem ser descriptografados com a chave privada! As chaves criam um par e devem ser utilizadas em conjunto (também chamadas de chaves assimétricas). O contrário também é verdadeiro: os dados criptografados com a chave privada só podem ser descriptografados pela chave pública. Ou seja, basta usar essa chave pública do certificado para enviar dados para o Alura de maneira segura e teremos certeza que só o Alura pode ler estes dados! Perfeito.
+
+
+
+Importante é mencionar que na hora de desenvolver uma aplicação web normalmente não é preciso se preocupar se é HTTP ou HTTPs, qual é a chave pública ou certificado etc. Usar HTTPS é apenas uma configuração na infraestrutura do servidor e normalmente não causa mudanças no desenvolvimento na aplicação web.
+
+Resumindo
+Aprendemos nesse capítulo que só com HTTPs a web se torna segura. Para enviar dados de maneira segura devemos utilizar uma chave pública, e o servidor usa em troca uma chave privada. A chave pública está embutida dentro de um certificado, a chave privada fica visível apenas no lado do servidor. O certificado que possui a chave pública, confirma a identidade de um site ou aplicação, possui o endereço do site e a validade. O certificado é emitido por uma autoridade certificadora que o navegador confia.
+
+O que aprendemos nesse capítulo?
+só com HTTPs a web é segura
+HTTPs significa usar um certificado digital do servidor
+o certificado prova a identidade e tem validade
+o certificado possui uma chave publica
+a chave é utilizada pelo navegador para criptografar os dados
+
+O que acontece com nossos dados quando usamos HTTP (sem s)?
+
+Os dados são transportados em texto puro para o servidor, visível para qualquer um.
+ 
+Quando usamos HTTP os dados são enviados em texto puro. O que pode ser perigoso, já que estamos deixando aberto para intermediários.
+
+Quando precisamos informar nossos dados a algum servidor queremos ter certeza que este servidor realmente representa a entidade em questão. Queremos confiar em quem estamos fornecendo nossos dados!
+Um certificado digital prova uma identidade para um site, onde temos informações sobre o seu domínio e a data de expiração desse certificado.
+
+Além disso, o certificado ainda guarda a chave pública que é utilizada para criptografar (cifrar) os dados que são trafegados entre cliente e servidor.
+
+Aprendemos no video que o HTTPS usa uma chave pública e uma chave privada. As chaves estão ligadas matematicamente, o que foi cifrado pela chave pública só pode ser decifrado pela chave privada e vice versa. Isso garante que os dados cifrados pelo navegador (chave pública) só podem ser lidos pelo servidor (chave privada). Como temos duas chaves diferentes envolvidas, esse método de criptografia é chamado de criptografia assimétrica. No entanto, a criptografia assimétrica tem um problema, ela é lenta.
+
+Por outro lado temos a criptografia simétrica que usa a mesma chave para cifrar e decifrar os dados, como na vida real onde usamos a mesma chave para abrir e fechar a porta. Já a criptografia simétrica é muito mais rápida mas infelizmente não tão segura. Como existe apenas uma chave, ela ficará espalhada pelos clientes (navegadores) e qualquer um, que tem a posse dessa chave, pode decifrar a comunicação.
+
+
+Agora o interessante é que o HTTPS usa ambos os métodos de criptografia, assimétrica e simétrica. Como assim? Muita calma, tudo que aprendemos é verdade! Só faltou o grande final :)
+
+No certificado vem a chave pública para o cliente utilizar, certo? E o servidor continua na posse da chave privada, ok? Isso é seguro mas lento e por isso o servidor gera uma chave simétrica ao vivo. Uma chave só para ele e o cliente com o qual está se comunicando naquele momento! Essa chave exclusiva (e simétrica) é então enviada para o cliente utilizando a criptografia assimétrica (chave privada e pública) e então é utilizada para o restante da comunicação.
+
+Então HTTPS começa com criptografia assimétrica para depois mudar para criptografia simétrica. Essa chave simétrica será gerada no início da comunicação e será reaproveitada nas requisições seguintes. Bem-vindo ao mundo fantástico do HTTPS :)
+
+Todas as afirmações abaixo estão corretas exceto:
+
+HTTP significa usar um certificado digital do servidor.
+As afirmações corretas são:
+O certificado guarda a chave pública.
+A chave privada fica no lado do servidor apenas.
+O certificado prova a identidade e tem validade.
+Portanto a afirmação HTTP significa usar um certificado digital do servidor não está correta.
+
+Lembrando o HTTP não utiliza criptografia nenhuma e é inseguro! Para deixar a web segura devemos usar o HTTPs sempre.
+
+Qual o objetivo de uma autoridade certificadora ?
+
+Garantir que podemos confiar naquele certificado (identidade).
+Para saber mais: Essa garantia é feita através de uma assinatura digital. A autoridade certificadora (CA) assina digitalmente o certificado! Como na vida real, existem também no mundo digital: assinaturas!
+
+
+############### 3.  ###############
+
+
+

@@ -1,0 +1,56 @@
+HTTP e os fundamentos da Web
+
+O que veremos no curso: como funciona a comunição na Web, os fundamento e conceitos principais.
+
+### AULA 1 
+
+- Quando se esta no navegador e se acessa um site existe uma comunição, o navegador pede para o site a sua página principal;
+- Nessa comunicação o navegar representa o CLIENTE e o site é o servidor. O cliente envia a requisição e o servidor responde a requisição;
+- O cliente (navegador) pede informações para o servidor (site) que responde;
+- Na web sempre existirá um cliente e um servidor, comunicação client-server;
+- Entre o cliente (navegador) e o servidor (site) existem regras de comunicação;
+- Protocolo HTTP é o mais comum na web;
+- HTTP define as regras de comunicação entre o cliente e servidor na internet;
+
+- Na internet sempre tem um cliente e um servidor
+- Entre o cliente e o servidor precisam haver regras de comunicação
+- As regras são definidas dentro de um protocolo
+- HTTP é o protocolo mais importante na internet
+
+### AULA 2
+
+- Sempre há um cliente, sempre há um servidor e o protocolo http segue esse modelo (client-server);
+- Navegar é o cliente;
+- O site é o servidor;
+- O protocolo http segue o modelo client-server
+- HTTP define algumas regras de comunicação entre cliente e servidor;
+- HTTPS é a versão segura do protocolo http;
+- http é texto puro;
+- Usando o protocolo http signfica que enviamos os nossos dados na rede em texto puro, quando logamos em um site e informamos nossa senha, com o http esse dado é enviado como texto puro;
+- O navegador não se comunica diretamente com o site;
+- o navegador primeiro se comunica com o roteador (wi-fi, modem), depois para o servidor do provedor de rede, dai vai para a nuvem do site, a hospedagem do site até chegar no site;
+- Cada um desses intermediários, que não controlamos, poderia interceptar esses dados usando http (texto puro);
+- https é seguro;
+- Empresas confirmar a segurança do site através de certificados digitais;
+- Certificados digitais têm data validade;
+- Trafegar os dados de forma segura é resolvida através da criptografia;
+- Enviar os dados de forma criptografada;
+- O certificado confirma a identidade (segurança) e contém a chave pública de criptografia;
+- O navegador usa uma chave pública, o certificado criptografa os dados e envia os dados criptografados;
+- Quando chega no site (servidor) é utilizado uma chave privada;
+- Chave publica é usada para criptografar os dados que o navegador vai enviar;
+- No lado do servidor é necessário descriptografar os dados;
+- São usadas chaves assímetricas - uma chave pública para criptografar e outra chave privada para descriptografar;
+- Dados que foram criptografados pela chave pública só podem ser descriptografados pela chave privada e vice-versa, se é criptografado pela chave privada só pode ser descriptografado pela chave pública;
+- HTTP não usa criptografia;
+
+- só com HTTPs a web é segura
+- HTTPs significa usar um certificado digital do servidor
+- o certificado prova a identidade e tem validade
+- o certificado possui uma chave publica
+- a chave é utilizada pelo navegador para criptografar os dados
+
+### AULA 3
+
+
+
