@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Ifs encadeados</title>
+	</head>
+	<body>
+		Exercicio extra de ifs encadeados
+		<script>
+		//se o salário mensal for maior que 0 e menor que 1000, imprime "o bonus é 5%" no console
+		//se não cair na condição anterior e o salário mensal for menor que 2000, imprime "o bonus é 10%" no console
+		//se não cair na condição anterior, imprime "o bonus é 15%" no console
+		
+		var ehEstagiario = true;
+		var ehClt = false;
+
+		if(ehEstagiario || ehClt) {
+			var salarioMensal = 500;
+
+			if(salarioMensal > 0 && salarioMensal < 1000){
+				var bonus = salarioMensal * 0.05;
+				console.log("o bonus eh 5%");
+				console.log(bonus);
+			}else if(salarioMensal < 2000){
+				var bonus = salarioMensal * 0.10;
+				console.log("o bonus eh 10%");
+				console.log(bonus);
+			}else{
+				var bonus = salarioMensal * 0.15;
+				console.log("o bonus eh 15%");
+				console.log(bonus);
+			}
+		}
+		
+
+		//testando a tipagem dinamica
+		var nome = "Leonardo";
+		console.log(typeof nome);
+
+		nome = 10;
+		console.log(typeof nome); 
+
+		nome = "20"
+		console.log(typeof nome); 
+
+		</script>
+	</body>
+</html>

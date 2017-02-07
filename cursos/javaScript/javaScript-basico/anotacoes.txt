@@ -2677,5 +2677,236 @@ Console imprime em caixa alta
 Console imprime em caixa alta! Como aprendemos, usando diretamente o atributo do evento no elemento DOM, apenas a última função será executada.
 O interessante nesse exemplo é que usamos o this. Se lembra disso? Dentro da função o this representa o elemento do DOM que foi associado com o elemento, no nosso o <p> com a id texto. Por isso podemos chamar .textContent e pegar o valor do elemento. Tudo bem?
 
+############### 7. Conhecendo o querySelector e adicionando novos pacientes ###############
+
+Script para adicionar um paciente
+Agora que nós já temos uma boa base de Javascript, está na hora de implementar uma nova funcionalidade no nosso sistema utilizando tudo o que aprendemos durante o curso!
+
+Repare que temos um formulário em nossa página que ainda não funciona: o de adicionar pacientes. A ideia agora é fazer essa funcionalidade em nosso sistema! Para essa funcionalidade, crie um arquivo com nome adiciona.js e importe-o em seu index.html logo abaixo do calcula-imc.js:
+
+<script src="calcula-imc.js"></script>
+<script src="adiciona.js"></script>
+Montando a estrutura de um paciente
+O que queremos no fim das contas é simplesmente adicionar um novo paciente em nossa tabela, representado por um <tr>, por exemplo:
+
+<tr class="paciente">
+    <td class="info-nome">Stuart</td>
+    <td class="info-peso">50</td>
+    <td class="info-altura">1.50</td>
+    <td class="info-imc"></td>
+</tr>
+Então a primeira coisa que precisamos fazer é montar esse elemento no nosso Javascript, o que podemos fazer simplesmente criando uma variável que tenha uma string com toda essa estrutura:
+
+var novoPaciente = "<tr class='paciente'>"+
+            "<td class='info-nome'>Stuart</td>"+
+            "<td class='info-peso'>50</td>"+
+            "<td class='info-altura'>1.50</td>"+
+            "<td class='info-imc'></td>"+
+         "</tr>";
+Agora já temos um novo paciente, mas ele só é uma variável em nosso Javascript! O que queremos é que ele seja uma linha em nossa tabela, certo? Então, primeiro, vamos selecionar a nossa tabela! Nós já vimos anteriormente como selecionar um elemento a partir do nome da tag, basta utilizar a função getElementsByTagName e pegar o primeiro elemento:
+
+var todosPacientes = document.getElementsByTagName("table")[0];
+Mas é meio chato ter que ficar decorando essas funções para selecionar elementos do nosso DOM, certo? Seria mais legal se eu só precisasse decorar uma função, e isso é possível!
+
+Nas versões mais atuais dos navegadores, temos uma função chamada querySelector, que recebe como argumento um seletor. Esse seletor será responsável por dizer como queremos selecionar um elemento: se é por tag, classe, id, etc.
+
+Diferente das funções que vimos até agora, o querySelector sempre retornará um elemento, mesmo se você tiver o selecionando a partir de uma tag ou uma classe, por tanto, podemos selecionar uma tabela simplesmente passando o seletor table:
+
+var todosPacientes = document.querySelector("table");
+Pronto! Temos nossa tabela!
+
+Caso queira selecionar mais de um elemento, os navegadores também disponibilizam uma função chamada querySelectorAll, que sempre retornará um Array de elementos!
+
+Adicionando o novo paciente à nossa tabela
+Agora que já temos nossa tabela, basta adicionarmos o novo paciente, ou seja, concatenar o novoPaciente ao conteúdo da tabela todosPacientes:
+
+todosPacientes.textContent = todosPacientes.textContent + novoPaciente;
+Mas note que, ao fazermos isso, o nosso HTML não está sendo interpretado: transformamos toda a nossa tabela em texto puro! Isso acontece por que o atributo textConent supõe que você só passará texto para ele, e não HTML. Para adicionar um texto em formato de HTML, temos que usar o atributo innerHTML, sendo assim basta substituir o textContent do código anterior:
+
+todosPacientes.innerHTML = todosPacientes.innerHTML + novoPaciente;
+Note que tudo que estamos fazendo é concatenar o novo <tr> ao fim do conteúdo atual da tabela de pacientes, por ser algo muito comum de se fazer, o Javascript já disponibiliza o operador +=, que faz exatemente isso! Podemos re-escrever o nosso código da seguinte maneira:
+
+todosPacientes.innerHTML += novoPaciente;
+Adicionando nosso novo comportamento ao botão de adicionar contato
+Agora sim, adicionamos um novo paciente à nossa tabela! Mas estamos fazendo isso assim que nossa página é carregada e estamos sempre adicionando o mesmo paciente, não é isso que queremos, o que queremos é adicionar um paciente apenas quando o usuário submeter o formulário, ou seja, quando ele clicar no botão de adicionar paciente!
+
+Para isso, primeiro temos de selecionar o nosso botão, poderíamos selecioná-lo pela tag <button>, mas é provável que tenhamos mais <button>s conforme nosso projeto evolui, certo? Vamos então adicionar um id a ele para temos certeza de que estamos selecionando o botão correto!
+
+<button id="adicionar-paciente" class="botao bto-principal">Adicionar</button>
+Agora precisamos selecioná-lo a partir do id, para isso usaremos novamente o querySelector, a única diferença será que, no seletor, você terá de usar o símbolo # para indicar que você quer buscar por um id, e não pelo nome de uma tag:
+
+var botao = document.querySelector("#adicionar-paciente");
+Além do # para selecionar por id, existe também o .(ponto), para selecionar por classes. Poderíamos selecionar todos os elementos que possuem classe info-nome do seguinte modo: document.querySelectorAll(".info-nome").
+
+Agora que já temos nosso botão, basta ouvir o evento click e executar o nosso código de adicionar um contato à tabela:
+
+var botao = document.querySelector("#adicionar-paciente");
+botao.addEventListener("click", function(){
+
+    var novoPaciente = "<tr class='paciente'>"+
+                          "<td class='info-nome'>Stuart</td>"+
+                          "<td class='info-peso'>50</td>"+
+                          "<td class='info-altura'>1.50</td>"+
+                          "<td class='info-imc'></td>"+
+                       "</tr>";
+    var todosPacientes = document.querySelector("table");
+    todosPacientes.innerHTML += novoPaciente;
+
+});
+Impedindo o navegador de mudar de página
+Note que ao clicar no botão, apesar de o novo paciente ser adicionado a nossa página é recarregada! Isso acontece pois esse é o comportamento padrão de um botão dentro de um <form>: submeter para algum endereço! Como a nossa tag <form> não está especificando o endereço para onde ele deve ser enviado, ele é submetido para a página atual, fazendo com que ela seja recarregada!
+
+Nós não queremos que o botão tenha o comportamento padrão dele, ou seja, queremos prevenir o comportamento padrão, para isso precisamos chamar a função event.preventDefault() no início da função que estamos adicionando no botão:
+
+var botao = document.querySelector("#adicionar-paciente");
+botao.addEventListener("click", function(){
+
+    event.preventDefault(); // impede comportamento padrão
+
+    // resto do código de adicionar paciente
+});
+Mas espere, em nenhum momento nós declaramos uma variável chamada event, certo? Para termos acesso a ela, precisamos fazer a nossa função recebê-la como parâmetro!
+
+var botao = document.querySelector("#adicionar-paciente");
+botao.addEventListener("click", function(event){
+
+    event.preventDefault(); // impede comportamento padrão
+
+    // resto do código de adicionar paciente
+});
+Agora que estamos recebendo event como parâmetro, o navegador vai se virar para disponibilizar esse objeto para nós. A partir do event, além de impedir o comportamento padrão do navegador, temos diversas informações sobre o evento disparado, como por exemplo: qual foi o elemento clicado(target), as coordenadas do clique(x e y), etc.
+
+Pegando informações do formulário
+Legal, agora estamos adicionando um novo paciente quando o usuário clica no botão de adicionar paciente, mas estamos ignorando completamente as informações que o usuário digita! Estamos criando sempre um paciente chamado Stuart que pesa 50kg e tem 1.50 de altura!
+
+Para pegar as informações do formulário, vamos analizar sua estrutura:
+
+<form>
+    <fieldset>
+        <label for="nome">Nome:</label>
+        <input id="campo-nome" type="text" placeholder="digite o nome do seu paciente">
+    </fieldset>
+    <fieldset class="campo-medio">
+        <label for="peso">Peso:</label>
+        <input id="campo-peso" type="text" placeholder="digite o peso do seu paciente">
+    </fieldset>
+    <fieldset class="campo-medio">
+        <label for="altura">Altura:</label>
+        <input id="campo-altura" type="text" placeholder="digite a altura do seu paciente">
+    </fieldset>
+    <button id="adicionar-paciente" class="botao bto-principal">Adicionar</button>
+</form>
+Note que temos apenas três campos dos quais queremos pegar o valor digitado, esses três campos(<input>s) possuem os ids: campo-nome, campo-peso e campo-altura. Vamos selecioná-los então:
+
+var botao = document.querySelector("#adicionar-paciente");
+botao.addEventListener("click", function(event){
+
+    event.preventDefault(); // impede comportamento padrão
+
+    var campoNome = document.querySelector("#campo-nome");
+    var campoPeso = document.querySelector("#campo-peso");
+    var campoAltura = document.querySelector("#campo-altura");
+
+
+    // resto do código de adicionar paciente
+});
+Agora já temos nossos elementos, precisamos apenas pegar o conteúdo dos campos, o que podemos fazer utilizando o atributo value destes, por exemplo: campoNome.value, e utilizá-los no lugar dos valores que estavam fixos antes(Stuart, 50 e 1.50):
+
+var botao = document.querySelector("#adicionar-paciente");
+botao.addEventListener("click", function(event){
+
+    event.preventDefault(); // impede comportamento padrão
+
+    var campoNome = document.querySelector("#campo-nome");
+    var campoPeso = document.querySelector("#campo-peso");
+    var campoAltura = document.querySelector("#campo-altura");
+
+
+    var novoPaciente = "<tr class='paciente'>"+
+                          "<td class='info-nome'>"+campoNome.value+"</td>"+
+                          "<td class='info-peso'>"+campoPeso.value+"</td>"+
+                          "<td class='info-altura'>"+campoAltura.value+"</td>"+
+                          "<td class='info-imc'></td>"+
+                       "</tr>";
+    var todosPacientes = document.querySelector("table");
+    todosPacientes.innerHTML += novoPaciente;
+});
+Limpando formulário
+Pronto! Agora já estamos adicionando um paciente a partir de nosso formulário, mas note que, se quisermos adicionar outro paciente, vamos ter que limpar todo o nosso formulário manualmente, o que pode ser bastante chato e trabalhoso dependendo da quantidade de campos. Para evitar isso, vamos limpar os três campos ao final de nossa função, para isso basta atribuir uma string vazia ao value de nossos elementos:
+
+campoNome.value = "";
+campoPeso.value = "";
+campoAltura.value = "";
+Confira como ficou nosso código inteiro:
+
+var botao = document.querySelector("#adicionar-paciente");
+botao.addEventListener("click", function(e){
+    e.preventDefault();
+
+    var campoNome = document.querySelector("#campo-nome");
+    var campoPeso = document.querySelector("#campo-peso");
+    var campoAltura = document.querySelector("#campo-altura");
+
+    var novoPaciente = "<tr class='paciente'>"+
+                "<td class='info-nome'>"+campoNome.value+"</td>"+
+                "<td class='info-peso'>"+campoPeso.value+"</td>"+
+                "<td class='info-altura'>"+campoAltura.value+"</td>"+
+                "<td class='info-imc'></td>"+
+             "</tr>";
+
+    var todosPacientes = document.querySelector("table");
+    todosPacientes.innerHTML +=  novoPaciente;
+
+    campoNome.value = "";
+    campoPeso.value = "";
+    campoAltura.value = "";
+});
+
+Qual é o atributo que devemos usar para ler o texto que o usuário digitou no campo input?
+
+value
+
+Devemos usar o atributo value, por exemplo:
+var campoNome = document.querySelector("#campo-nome");
+console.log(campoNome.value);
+O mesmo atributo podemos usar também para preencher o input da tela, basta atribuir um valor:
+
+campoNome.value = "outro valor";
+
+Vimos na aula e no exercício anterior a função querySelector para encontrar um elemento no DOM.
+Qual é a vantagem da função querySelector?
+
+É uma função apenas, tanto faz se queremos procurar um elemento pela id, classname ou tagname.
+Você se lembra da função especifica para procurar um elemento pela ID?
+var elemento = document.getElementById("campo-nome");
+E pelo nome da Tag?
+
+var elemento = document.getElementsByTagName("table")[0]; //temos que pegar o primeiro elemento do lista
+E pelo nome da classe CSS?
+
+var elemento = document.getElementsByClassName("info-nome")[0]; //aqui tbm, primeiro elemento do lista
+Temos 3 funções distintas para procurar um elemento no DOM. A função querySelector une tudo isso e oferece uma única interface para a busca. Também não há essa pegadinha de acessar o primeiro elemento da lista ([0]), pois o querySelector sempre devolve o primeiro elemento encontrado (se quisermos todos os elementos tem querySelectorAll).
+
+Além disso, o querySelector usa a mesma sintaxe do CSS. No CSS definimos quais estilos queremos aplicar para quais elementos. Ou seja, selecionamos elementos para associar um estilo. Esses selectores CSS seguem uma sintaxe bem simples, que a função querySelector também usa:
+
+#id - para buscar pela ID
+.classe - para buscar pela classe
+tagname - para buscar pelo tag
+Por exemplo, procurando pela ID do elemento:
+
+var elemento = document.querySelector("#campo-nome");
+Pelo nome da classe:
+
+var elemento = document.querySelector(".info-nome");
+Pelo nome da tag:
+
+var elemento = document.querySelector("table");
+
+Dado um objeto event qual é a função que desabilita todos os eventos padrões?
+
+A função para desabilitar todos os events padrões de um elemento é:
+event.preventDefault();
+Isso pode ser útil para evitar que um link chame uma URL ou um formulário submeta a requisição.
+
 
 
