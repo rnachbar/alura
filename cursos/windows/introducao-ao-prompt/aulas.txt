@@ -1,0 +1,51 @@
+### Aula 1
+
+- Abrir prompt de comando do windows - iniciar e buscar por cmd / windows + R e digitar cmd;
+- O prompt sempre abre no disco C: e na pasta do seu usuário;
+- Tab completa o nome dos arquivo/diretório;
+
+- echo imprime no prompt;
+echo Olá Mundo!
+
+- listar pastas e arquivos do diretório atual;
+dir
+
+- alterar pasta, trocar de pasta, (change direct);
+cd desktop
+
+- criar pasta;
+mkdir dicas
+
+- mover arquivos, move arquivo pasta;
+move dicas.txt dicas
+
+- abrir arquivo de texto;
+type dicas.txt
+
+- escrever no arquivo;
+echo O comando cd alterna entre pastas! > dica4.txt
+
+- voltar pastas (. é o diretório atual, .. é o diretório acima);
+cd ..
+
+- copiar arquivos, copy arquivo nome_da_copia;
+copy source.gif copia.gif
+
+- renomear arquivos;
+rename copia.gif copiaRenomeada.gif
+
+- remover arquivo;
+del copiaRenomeada.gif
+
+- limpar a tela do prompt;
+cls
+
+- exibe conteudo;
+type variaveis.txt
+
+- exibir organização das pastas e subpastas;
+tree
+
+
+
+

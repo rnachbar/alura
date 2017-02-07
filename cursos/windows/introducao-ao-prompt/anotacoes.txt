@@ -1,0 +1,307 @@
+############### 1. Os primeiros comandos no prompt ############### 
+
+Você já desenvolveu usando Windows como sistema operacional?
+Este treinamento foi criado para o aluno que usa Windows e tem pouca ou nenhuma experiência no Prompt do Windows . Veremos os comandos principais do Prompt para lidar com diretórios, arquivos, e mexer nas variáveis de ambiente.
+
+O grande objetivo é que o aluno saiba instalar e configurar as ferramentas utilizadas em vários outros treinamentos da plataforma Alura. Para quem já desenvolve usando Windows é muito provável que este treinamento seja básico demais.
+
+Por que usar um terminal? Mouse dá choque!
+Aqui no Alura usaremos várias ferramentas na linha de comando! Usar a linha de comando significa que não teremos uma interface gráfica bonita, e o mouse não vai funcionar! E pode acreditar , dá para fazer muita coisa sem usar o mouse ou toques na tela.
+
+Mas ai vem a pergunta, por que eu preciso aprender isso? Bom, muitas ferramentas no setor de desenvolvimento não possuem uma interface gráfica, pois elas devem funcionar em qualquer computador, inclusive nos computadores que não possuem essa interface, como por exemplo os computadores na nuvem.
+
+Outra razão, e talvez a mais importante, é que as ferramentas na linha de comando podem ser controlados facilmente através de scripts, ou seja outras ferramentas. Isso é relacionado com a automação, ensinando as máquinas a fazerem vários passos automaticamente, e muito mais rápido do que a gente consegue com o mouse em mãos.
+
+Enfim, o desenvolvedor de hoje em dia precisa dominar alguns comandos da linha de comando para se dar bem no desenvolvimento e também aqui na plataforma Alura! Vamos lá? Bora aprender?
+
+Abrir o Prompt de comando
+O primeiro passo é abrir um terminal (ou console). No mundo Windows esse terminal se chama Prompt de comando ou abreviando cmd. Para abrir um novo terminal devemos ir em Todos os Programas, Acessórios e depois no Prompt de Comando , aí abrirá uma tela preta linda :).
+
+Obs: Outra forma de abrir o Prompt é clicar no Botão Iniciar e no campo de pesquisa digitar Prompt ou cmd:
+
+
+
+
+
+A partir dessa tela podemos interagir com o sistema operacional escrevendo comandos! Vamos ver como navegar entre pastas, criar novas pastas, ler, executar, copiar e mover arquivos e muito mais. Vamos tentar?
+
+Obs: O termo prompt se refere ao sinal >
+
+Lembrando: O Prompt também é chamado de cmd , terminal ou console. Todos estes são sinônimos nesse contexto.
+
+No mundo do desenvolvimento qualquer nova tecnologia que você aprende começa com o Oi Mundo para te dar um boas vindas nessa tecnologia. Aqui não será diferente! Com um terminal aberto digite:
+
+echo Oi Mundo
+
+
+Você já deve saber o que o comando echo faz. Sim, imprime no terminal, mas ainda não é muito útil para gente, né?
+
+Listando arquivos
+Vamos dar uma olhada com mais carinho no que aconteceu. Ao abrir o prompt, ele automaticamente inicia na sua pasta pessoal. Repare que antes do cursor aparece o caminho da pasta atual seguido pelo prompt (>), que aqui é:
+
+C:\Users\caelum>
+O C: é a partição principal nesse computador. Pode ser que você tenha outras instaladas como o D:, mas o prompt sempre começa no C:, seguido pelo a pasta Users e na sub-pasta caelum. A contra barra \ é o sinal separador de diretórios na linha de comando, ok?
+
+Já que o Prompt está pedindo que a gente execute algo vamos listar todos os arquivos através do comando dir. Escreva no prompt:
+
+dir
+
+
+Recebemos uma lista dos arquivos e pastas existentes. Então através do dir sempre sabemos o que se encontra na pasta atual do prompt, ok?
+
+Navegando entre diretórios
+Vimos o comando dir, que mostra todo o conteúdo da pasta atual. Vamos entrar em uma subpasta e depois re-executar o comando. Podemos mudar a pasta com o comando cd (change directory) seguido do nome da subpasta:
+
+cd Documents
+Depois liste novamente:
+
+dir
+
+
+Vamos voltar para o diretório anterior. Em outras palavras, vamos subir na hierarquia de diretórios, ir uma pasta para cima. Novamente o comando cd tem esse papel mas agora seguido por ..:
+
+cd ..
+dir
+
+
+Criando diretórios
+Voltamos para a pasta do seu usuário, mas será que a gente também pode criar novos diretórios nela? A resposta é sim e o comando que faz a mágica se chama mkdir (make directory). Vamos criar um nova pasta com o nome de codigo:
+
+mkdir codigo
+dir
+
+
+Ao listar podemos ver a nossa pasta criada, ótimo!
+
+Será que podemos entrar nessa pasta? Lógico! E você já sabe o comando: cd codigo.
+
+Ao executar dir nós vemos duas coisas estranhas. Tem um diretório que se chama . e um outro ... O que é isto?
+
+Bom o . se refere ao diretório atual, onde nos estamos. Por exemplo, podemos passar para o comando dir o diretório que queremos listar:
+
+dir C:\Users\caelum\codigo`
+Mas já que estamos nessa pasta podemos usar:
+
+dir .
+
+
+ou mais fácil ainda:
+
+dir
+Tudo bem até aqui? Agora tente executar dir .. . O resultado deve ser familiar para você, o comando deve listar o conteúdo do diretório logo a cima!
+
+
+
+Atenção: Já vou te dar uma dica, de desenvolvedor para desenvolvedor. Evite os acentos e espaços nos nomes de arquivos e diretórios. Muitas ferramentas de desenvolvimento não se dão bem com esses caracteres. Por exemplo o Django do mundo Python gera vários problemas e dificulta demais o trabalho. Evite isso o máximo possível!
+
+Muitos desenvolvedores na Alura usam o caractere _ invés do espaço na hora de dar nomes para diretórios. Por exemplo:
+
+mkdir codigo_java
+Removendo diretórios
+Vamos remover a pasta codigo_java e criar um sub-diretório que se chama java apenas. Para remover um diretório existe o comando rmdir:
+
+rmdir codigo_java
+
+
+e para criar a pasta nova:
+
+mkdir java
+
+
+Limpando o terminal
+Com o tempo, o terminal vai ficar poluído com comandos antigos, que tiram o foco e dificultam a legibilidade. Por isso existe um comando para limpar a tela que se chama cls (clear screen). Vamos testar:
+
+cls
+Ótimo, melhor continuar com tela a limpa!
+
+Trabalhando com arquivos
+Já podemos criar, apagar diretórios e navegar entre eles na linha de comando. Isso já vai nos ajudar muito nos treinamentos do Alura, pode acreditar. No entanto também é preciso saber como lidar com arquivos. Claro que nada substitui um editor de texto de verdade mas em alguns casos é uma boa ajuda poder mexer com arquivos na linha de comando.
+
+Vamos criar um arquivo rapidinho. Você se lembra do comando echo? Vamos testá-lo:
+
+echo Oi Mundo > saida.txt
+O que isso faz?? Calma, o comando echo você já conhece, mas o resto? Talvez você reparou que não apareceu nenhuma saída no terminal! Toda a saída foi gravada no arquivo saida.txt. Então o caractere > pega a saída de um comando e a grava no arquivo indicado (ou repassa para outro comando). Digite dir para ver o arquivo recém criado:
+
+dir
+
+
+Deve aparecer o arquivo saida.txt. Mas como posso ver o conteúdo desse arquivo? Fechar o terminal e abrir um editor de texto não vale :) Claro que há um comando para isso, e ele se chama type, então digite:
+
+type saida.txt
+
+
+Vamos testar novamente, mas antes disto vamos limpar o nosso terminal (cls). Primeiro apagaremos o arquivo antigo, o comando que faz isso se chama del:
+
+del saida.txt
+
+
+E agora vamos criar um novo arquivo, novamente usando o comando echo para imprimir o nosso texto e o > para salvá-lo em um arquivo:
+
+echo Bem-vindo a Alura > saida.txt
+Usando o type para mostrar o conteúdo do arquivo...
+
+type saida.txt
+Movendo e copiando arquivos
+Gostamos tanto do nosso arquivo que queremos criar uma cópia. Isso é muito fácil de se fazer, e eu acho até mais fácil do que usando o mouse. Vamos lá:
+
+copy saida.txt saida2.txt
+Ótimo, o comando copy (copy) gera então uma cópia do arquivo. Vamos verificar o conteúdo desse arquivo:
+
+type saida2.txt
+
+
+Ok beleza, funcionou como esperado, mas eu não gostei do nome. Ainda bem que podemos renomear facilmente o arquivo:
+
+rename saida2.txt mensagem.txt
+O comando rename altera o nome dos arquivos! Aliás, o comando rename não só serve para arquivos como também para pastas. A mesma regra aplica para o comando move que move um arquivo ou pasta para outro lugar, por exemplo:
+
+move mensagem.txt ..
+
+
+Nesse comando movemos o arquivo mensagem.txt um diretório a cima, indicado pelo ...
+
+Agora você já pode comemorar parcialmente. Esse conhecimento já vai ter ajudar muito. Melhor ainda se você fizer os exercícios.
+
+No próximo capítulo veremos como mexer nas variáveis de ambiente, e ai sim você conseguirá configurar o Java, Ruby ou Python pela linha de comando!
+
+O que aprendemos
+para que serve o Prompt
+criar (mkdir) e remover (rmdir) diretórios
+copiar (copy) e apagar arquivos (del)
+imprimir no prompt com o comando echo
+saber a diferença entre . e ..
+criar arquivos com >
+ver o conteúdo do arquivo (type)
+mover pastas e arquivos (move)
+renomear diretórios e arquivos (rename)
+
+Qual sinal/caractere é utilizado na linha de comando para separar os diretórios?
+
+O caractere correto é o contra-barra: \
+O caractere > tem o significado de prompt (o convite de escrever um comando no terminal).
+
+O caractere : faz parte da partição, por exemplo: C:
+
+A barra / é utilizada como separador no mundo Unix, mas também funciona no mundo Windows! Você pode fazer o teste agora! Abra um prompt:
+
+cd C:
+cd Users/caelum
+Substitua caelum pelo nome do seu usuário!
+
+Cada comando possui uma pequena ajuda no terminal, basta digitar help <nome do comando>, por exemplo:
+help dir
+Nesse caso aparecem as opções do comando dir para personalizar a visualização (entre outras informações).
+
+Para que existe a opção /O? Tente descobrir usando o comando help!
+
+A opção /O existe para ordenar a saída do comando dir e possui mais parâmetros para definir qual ordem queremos, por exemplo:
+Ordenando pelo tamanho (S-Size):
+
+dir /O:S
+Ou ordenando pela data:
+
+dir /O:D
+Pelo comando dir podemos também mostrar o conteúdo de um diretório que não é o atual. Por exemplo, para ordenar pela data e mostrar o conteúdo do diretório C: digite:
+
+dir /O:D C:\
+Você pode inverter a ordem dos parâmetros do comando dir para obter o mesmo resultado:
+
+dir C:\ /O:D
+
+Com qual comando podemos trocar a pasta na linha de comando?
+
+O comando para trocar de pasta é cd (change directory), por exemplo
+cd C:\
+Também podemos definir o caminho:
+
+cd C:\Documentos\workspaces
+(Claro que essa pasta deve existir para funcionar)
+
+Escrevendo comandos no terminal vai poluir a tela e de vez em quando é preciso limpá-la. Qual era o comando que executava esta função mesmo?
+
+O comando correto é cls que é a abreviação de clear screen.
+
+Vimos na aula o comando dir para mostrar o conteúdo de um diretório.
+Se você executa dir no prompt sempre aparecem mais dois diretórios estranhos: . e ..
+
+Qual é o significado de . e ..?
+
+. se refere ao diretório atual, .. se refere ao diretório logo acima na hierarquia.
+Você pode testar isso e mostrar o conteúdo do diretório atual usando o .:
+
+dir .
+Nesse caso podemos omitir o . já que é o padrão do comando dir.
+
+Análogo podemos usar ..:
+
+dir ..
+Que mostra o conteúdo da pasta logo acima na hierarquia de diretórios.
+
+O . e .. também funcionam com outros comando como o cd
+
+Qual caracter é utilizado para redirecionar a saída de um comando?
+
+O caracter > redireciona a saída de um comando.
+Por exemplo, podemos gravar a saída do comando set em um arquivo:
+
+set > variaveis.txt
+E para mostrar o conteúdo basta digitar:
+
+type variaveis.txt
+
+Vimos neste capítulo do treinamento que podemos criar um arquivo utilizando o sinal >, mas e se quisermos adicionar mais linhas a um arquivo de texto já existente, por exemplo para guardar o resultado de diversas execuções de um programa em um único arquivo?
+Para isto existe o >>, quando colocamos o sinal de maior duas vezes o Prompt entende que só deve criar um arquivo novo quando o arquivo que pedimos não existir! Caso ele já exista, ele adiciona o novo conteúdo ao final do arquivo, sem sobrescreve-lo!
+
+Veja só como funciona:
+
+Digamos que primeiro criamos um novo arquivo de texto com o nosso conhecido comando echo :
+
+echo Ola mundo > arquivo.txt
+
+Ao abrirmos nosso arquivo.txt , vemos o texto que esperávamos:
+
+type arquivo.txt
+
+//arquivo.txt
+Ola Mundo
+Porém se agora desejarmos adicionar um novo texto abaixo de "Ola Mundo"? Utilizamos o '>>'!
+
+Desta forma:
+
+echo Novos dados! >> arquivo.txt
+
+Quando abrimos nosso arquivo.txt, vemos que o texto foi adicionado corretamente:
+
+type arquivo.txt
+
+//arquivo.txt
+Ola Mundo
+Novos dados!
+
+Utilizamos o >> quando queremos adicionar um texto a um arquivo que já existe, sem sobrescreve-lo. Se tentarmos utilizar o >> em um arquivo que ainda não existe, ele terá o mesmo comportamento do >, criando assim um arquivo novo e colocando o texto lá dentro.
+
+Você já reparou que quando abrimos o prompt ele sempre abre na mesma pasta? Essa é a pasta do seu usuário, onde a maioria das pessoas salvam os Documentos, Fotos e Videos. Lá também ficam os arquivos particulares do seu usuário , como de configuração dos programas específicos e favoritos do seu navegador. A grande vantagem de cada usuário ter sua pasta é que temos uma separação dos dados do sistema e dos dados de cada usuário, facilitando assim o backup dos dados dos usuários caso seja necessário e aumentando a segurança também.
+A pasta do seu usuário é conhecida como pasta Home, e essa nomenclatura é adotada por muitos desenvolvedores quando querem se referir a pasta do usuário, independentemente do sistema operacional.
+
+A pasta home é a pasta que é aberta quando abrimos o prompt. Ela possui arquivos de configuração dos programas do usuário e também arquivos pessoais. O nome "home" é adotado em vários locais, para se referenciar a pasta do usuário, e é comum essa pasta existir em todos os sistemas operacionais.
+
+Vamos fazer mais um teste! No prompt digite o comando tree:
+
+Dependendo do diretório atual podem aparecer muitas informações mas repare que o comando tree mostra as pastas e subpasta organizado em uma árvore.
+
+O tree pode ser útil para entender a estrutura de um projeto. Muitas vezes você precisa baixar um projeto na Alura para importar alguns arquivos iniciais. Com o comando tree você já pode ver facilmente como o projeto está organizado! Muito útil :)
+
+O comando more funciona de um jeito semelhante ao comando type, com a diferença de exibir página por página do arquivo no terminal, em vez de mostra-lo todo de uma vez.
+O seu uso é análogo ao comando type, podendo ser chamado assim:
+
+more arquivo.txt
+
+Ele exibirá uma página de cada vez do arquivo, sendo muito útil quando queremos exibir arquivos de texto com várias linhas para ir lendo lentamente, em vez de abri-lo todo no terminal de uma vez. Um exemplo disso é quando queremos ler os logs de uma aplicação que está em um servidor na nuvem, neste caso é preciso ler grandes arquivos de texto linha a linha, para identificar um bug ou realizar algum teste.
+
+Agora que você já conhece o comando more e um exemplo prático de sua aplicação, vou lhe mostrar como controlar a exibição das páginas:
+Para passar de página em página, utilize a tecla espaço do seu teclado.
+Para passar de linha a linha, utilize a tecla enter do seu teclado.
+Para sair da exibição do comando, sem chegar ao final do arquivo utilize a tecla q do seu teclado.
+Como você já sabe , sempre que quiser aprender mais sobre um comando, pode utilizar o help, então caso tenha a curiosidade de aprender ainda mais sobre o comando more, é só digitar help more no terminal!
+
+
