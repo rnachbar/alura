@@ -1,36 +1,50 @@
-var trsPacientes = document.getElementsByClassName("paciente");
+var botao = document.getElementById("calcula-imcs");
+// atributo onclick só aceita uma função
+// botao.onclick = calculaTodosImcs; // não chama a função, o próprio navegadro chama a função no clique
 
-percorreArray(trsPacientes, function(pacienteTr) {
-	// pegando o elemento
-	var tdNome = pacienteTr.getElementsByClassName("info-nome")[0];
-	var tdPeso = pacienteTr.getElementsByClassName("info-peso")[0];
-	var tdAltura = pacienteTr.getElementsByClassName("info-altura")[0];
+// para chamar duas funções no mesmo evento, addEventListener adiciona eventos
+botao.addEventListener("click", function() {
 
-	var pacienteAtual = {
-		// pegando o conteudo com o textContent
-		nome : tdNome.textContent,
-		peso : tdPeso.textContent,
-		altura : tdAltura.textContent,
-		// função anonima
-		pegaImc : function() {
-			// this pega do objeto atual
-			if (this.altura != 0) {
-				// js executa as contas da esquerda para a direita
-				var imc = this.peso / (this.altura * this.altura);
-				return imc;
-			} else {
-				console.log("Não executei por que altura eh igual a zero");
+	var trsPacientes = document.getElementsByClassName("paciente");
+
+	percorreArray(trsPacientes, function(pacienteTr) {
+		// pegando o elemento
+		var tdNome = pacienteTr.getElementsByClassName("info-nome")[0];
+		var tdPeso = pacienteTr.getElementsByClassName("info-peso")[0];
+		var tdAltura = pacienteTr.getElementsByClassName("info-altura")[0];
+
+		var pacienteAtual = {
+			// pegando o conteudo com o textContent
+			nome : tdNome.textContent,
+			peso : tdPeso.textContent,
+			altura : tdAltura.textContent,
+			// função anonima
+			pegaImc : function() {
+				// this pega do objeto atual
+				if (this.altura != 0) {
+					// js executa as contas da esquerda para a direita
+					var imc = this.peso / (this.altura * this.altura);
+					return imc;
+				} else {
+					console.log("Não executei por que altura eh igual a zero");
+				}
 			}
 		}
-	}
 
-	var imc = pacienteAtual.pegaImc();
+		var imc = pacienteAtual.pegaImc();
 
-	var tdImc = pacienteTr.getElementsByClassName("info-imc")[0];
-	tdImc.textContent = imc; //atualizando o elemento com o IMC calculado
-	console.log(imc);
+		var tdImc = pacienteTr.getElementsByClassName("info-imc")[0];
+		tdImc.textContent = imc; //atualizando o elemento com o IMC calculado
+		console.log(imc);
+
+	});
 
 });
+
+botao.addEventListener("click", function() {
+	console.log("Calculando Imcs");
+})
+
 
 /* Sessão de comentários
 

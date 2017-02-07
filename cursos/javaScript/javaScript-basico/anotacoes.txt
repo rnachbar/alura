@@ -2000,4 +2000,682 @@ Para deixar completo, tbm segue o arquivo index.html:
     </body>                    
 </html>
 
+Temos as seguintes afirmativas sobre funções em Javascript:
+A) Uma função é um bloco de código que pode ser guardado para ser chamado assim que desejarmos, contanto que saibamos seu nome. Contudo, não é necessário sabermos a sua implementação.
+
+B) A seguinte declaração de função é válida:
+
+// declara a função
+function exibeAlerta() {
+   alert('Olá');
+}
+
+exibeAlerta(); // chama a função
+C) A convenção é criarmos funções no padrão camelCase.
+
+D) Javascript é uma linguagem funcional, por isso dominar funções é condição fundamental para criar aplicações mais complexas.
+
+Sobre as afirmativas anteriores, podemos afirmar que:
+
+Todas são verdadeiras
+A linguagem JavaScript apesar de possuir características de linguagem procedurais como a cláusula for e blocos ela se aproxima muito mais de linguagens como Lisp e Schema, justamente por funções serem tratadas especialmente nesta linguagem e ainda por possuir closures. Inclusive Douglas Crockford, grande expoente da linguagem nos diz que podemos estar nos enganando em considerar esta linguagem como uma linguagem procedural:
+JavaScript's C-like syntax, including curly braces and the clunky for statement, makes it appear to be an ordinary procedural language. This is misleading because JavaScript has more in common with functional languages like Lisp or Scheme than with C or Java. It has arrays instead of lists and objects instead of property lists. Functions are first class. It has closures. You get lambdas without having to balance all those parens. (http://www.crockford.com/javascript/javascript.html)
+
+O navegador tem como por padrão executar todo o nosso código Javascript assim que o encontra, mas nem sempre isso é interessante. Por exemplo, podemos querer executar um código apenas quando alguma ação for realizada por um usuário e por aí vai. Interessante, não? Imagine exibirmos um alerta quando o usuário clicar em um botão? Pois é, mas o princípio para entender esse processo é o estudo de funções.
+
+Uma função (ou funcionalidade, se ficar mais claro para você) é um bloco de código que é carregado pelo navegador, mas que não é executado automaticamente. Digamos que o navegador guarda a função em algum lugar para mais tarde alguém chamá-la. Mas para que alguém a chame (chamar significa, executá-la) precisa saber seu nome. É por isso que a declaração de uma função é:
+
+function nomeDaFuncaoQueVoceEscolheu( ) {
+     alert('Minha funcionalidade é apenas exibir o alerta');
+}
+Quando a função é carregada, nada acontece, mas se chamamos a função pelo seu nome, executamos todo aquele código do bloco da função:
+
+function nomeDaFuncaoQueVoceEscolheu( ) {
+     alert('Minha funcionalidade é apenas exibir o alerta');
+}
+
+nomeDaFuncaoQueVoceEscolheu( );
+É através de nomeDaFuncaoQueVoceEscolheu( ) que executamos tudo que está dentro do bloco (entre { e } ) da função. Inclusive podemos chamar a função mais de uma vez:
+
+function nomeDaFuncaoQueVoceEscolheu( ) {
+     alert('Minha funcionalidade é apenas exibir o alerta');
+}
+
+nomeDaFuncaoQueVoceEscolheu( );
+nomeDaFuncaoQueVoceEscolheu( );
+nomeDaFuncaoQueVoceEscolheu( );
+No exemplo acima, executaremos o bloco da função três vezes, porque a chamamos três vezes!
+
+Mais uma vez, pense que essa função pode ser chamada assim que alguém clicar em um botão e o que acontecerá? Um alerta será exibido. Está ansioso para aprender isso? Muita calma primeiro, estude bastante funções que é a primeira condição para que isso aconteça.
+
+Aliás, há uma convenção no nome de funções assim como nos nomes das variáveis, usamos o padrão camelCase. Sendo assim, toda função começa em letra minúscula e cada palavra que forma o nome da função tem apenas a primeira letra em maiúsculo, lembrando (se você bebeu muito guaraná para abstrair) a corcova de um camelo.
+
+Então, antes de continuar lembre-se:
+
+Função precisa ter um nome para sabermos como chamá-la depois
+Todo código dentro do seu bloco só é executado quando a chamarmos, inclusive a função pode ser chamada quantas vezes quisermos
+Funções são o coração do Javascript, o que lhe dá poder. Aos poucos você aprenderá a fazer mais com funções.
+
+Recordar é viver, vejamos a seguinte função:
+function imprimeFraseEntreAsteriscos() {
+
+    alert( '***' +  'Era uma vez um leão'  + '***' );
+}
+Sabemos que toda função declarada com um nome precisa ser chamada para executar tudo que foi definida dentro do bloco. Sendo assim, fazemos:
+
+imprimeFraseEntreAsteriscos()
+A instrução acima exibirá um alerta com o texto "Era uma vez um leão", que é o resultado da concatenação de strings. Mas se quisermos fazer a mesma coisa com outra frase, por exemplo, "Todos amam o leão"? Teremos ir até a nossa função e alterá-la e realizarmos todo esse processo para novos nomes. Trabalhoso não, sem falar que você pode cometer algum erro de digitação, principalmente na concatenação de strings.
+
+Aí eu te pergunto: no bloco da função, o que queremos que varie toda vez que ela for chamada? O nome, claro! Aprendemos que variável é tudo aquilo que varia (talvez, se você respondesse isso em uma prova tiraria zero, mas aqui tira 10), sendo assim, que tal trocarmos frase fixa por uma variável?
+
+function imprimeFraseEntreAsteriscos() {
+
+    alert( '***' +  frase + '***' );
+}
+Ótimo, mas você deve estar se perguntando, de onde vem o valor dessa variável? É um buraco dentro da nossa função, tornando-a incompleta. Em um mundo perfeito, eu queria muito que aquela variável ganhasse como valor o texto, ou tecnicamente falando, a string que eu passar para função quando eu chamá-la.
+
+Já sabemos chamar uma função, certo? Só que dessa vez eu quero fazer assim:
+
+ imprimeFraseEntreAsteriscos('Era uma vez um leão!');
+ imprimeFraseEntreAsteriscos('Todos amam o leão');
+ imprimeFraseEntreAsteriscos('Ninguém ama o leão');
+Para cada vez que eu chamar a função, eu quero que no alerta saia aquela String que forneci quando chamei (executei) a função.
+
+Qual das opções abaixo possui a alternativa correta que altera nossa função imprimeFraseEntreAsteriscos preparando-a para receber o texto que desejarmos?
+
+function imprimeFraseEntreAsteriscos(frase) {
+
+    alert( '***' +  frase + '***' );
+}
+
+A resposta correta é:
+function imprimeFraseEntreAsteriscos(frase) {
+
+    alert( '***' +  frase + '***' );
+}
+Veja que quando declaramos uma função, no final do seu nome usamos (), porém, se algum nome aparece dentro dos parênteses, significa que a função está esperando receber algo para que possa completar seu trabalho. No exemplo acima temos (frase). Entenda frase aqui como uma variável, mas de onde vem seu valor? O valor da variável é recebido quando chamamos a função como no seguinte exemplo:
+
+imprimeFraseEntreAsteriscos('Era uma vez um gato guerreiro');
+No exemplo acima, a variável frase da função receberá 'Era uma vez um gato guerreiro'. Agora, dentro da função, quando a variável for utilizada será considerado este valor. Podemos chamar quantas vezes quisermos nossa função e passar quantas frases assim desejarmos.
+
+Qual das opções representam formas válidas de se declarar uma função em Javascript (selecione apenas uma)?
+
+function nome(){...};
+
+Vimos na aula a seguinte forma:
+function nome(){...};
+Funções podem receber parâmetros (argumentos) e podem ter um (apenas um) retorno. Vimos isso na função calculaImc:
+
+function calculaImc(paciente){
+    if(paciente.altura != 0){
+        var imc = paciente.peso / (paciente.altura * paciente.altura);
+        return imc; //retornando imc
+    } else{
+
+        console("Não posso dividir por zero!");
+    }
+}
+Para chamar essa função basta usar o nome e passar o parâmetro:
+
+var imc = calculaImc(pacienteAtual); //pacienteAtual deve existir
+Há uma alternativa para declarar a mesma função:
+
+var calculaImc = function(paciente){
+    if(paciente.altura != 0){
+        var imc = paciente.peso / (paciente.altura * paciente.altura);
+        return imc; //retornando imc
+    } else{
+
+        console("Não posso dividir por zero!");
+    }
+}
+Na hora de chamar não tem diferença!
+
+Rita decidiu fixar seu conhecimento sobre funções, inclusive aquelas que não possuem nomes, as funções anônimas.
+Primeiro, ela criou um array de números. Em seguida, inspirada no que aprendeu durante a aula, criou a função percorreArray:
+
+<script>
+
+
+function percorreArray(array) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        console.log(array[i]);
+    }
+
+}
+
+var numeros = [1,2,3,4,5,6];
+percorreArray(numeros);
+</script>
+Veja que a função percorreArray recebe um parâmetro apenas, o array a ser iterado. Dentro da função há um código fixo que imprime cada número do array no console. Inclusive, você pode testar esse código em seu navegador criando o arquivo super-teste.html.
+
+O amigo de Rita, Bernado questionou a praticidade do código. Apesar de percorreArray ter uma função bem atribuída que é percorrer o array que lhe foi passado como parâmetro, ela também define o comportamento a ser aplicado em cada elemento iterado do array.
+
+Rita ficou na defensiva por um instante até Bernardo indagar como ela faria para que percorreArray imprimisse, por exemplo, apenas os números ímpares, ou quem sabe os números pares.
+
+Rita então explicou que teria que copiar e colar a função percorreArray, mas como não podem haver nomes de funções iguais ela fez o seguinte:
+
+<script>
+
+function percorreArray1(array) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        console.log(array[i]);
+    }
+
+}
+
+function percorreArray2(array) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        // se o módulo da divisão por dois for 0, o número é par
+        if( array[i] % 2 == 0) {
+            console.log(array[i]);
+        }
+    }
+
+}
+
+var numeros = [1,2,3,4,5,6];
+percorreArray1(numeros);
+percorreArray2(numeros);
+
+</script>
+Bernardo achou isso um absurdo, porque ela estaria repetindo todo o código de percorreArray, no caso aquele for definido na função. Bernardo lembrou que um dos princípios da programação é não repetir código e tentar fazer com que nosso código possa ser reaproveitado em outras situações.
+
+Rita, desacreditando no que Bernado disse pediu para que ele então alterasse o código de uma maneira que o código da função percorreArray pudesse ser reaproveitada nos dois casos acima. Bernardo então pediu licença e reescreveu a função percorreArray da seguinte maneira:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        comportamento();
+    }
+
+}
+</script>
+Rita perguntou porque ele havia adicionado um novo parâmetro na função. Bernardo disse que a instrução que vai lidar com os itens do array dentro de percorreArray pode variar, então ele passará essa função como parâmetro para o método percorreArray. Os olhos de Rita brilharam e ela lembrou que funções são cidadãos de primeira classe, inclusive podem ser passadas como parâmetro.
+
+Bernado continou e criou mais dua funções, a imprimeApenasPares e imprimeQualquerNumero:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        comportamento();
+    }
+
+}
+
+function imprimeApenasPares(numero) {
+
+    if(numero % 2 == 0) {
+        console.log(numero);
+    }
+}
+
+function imprimeQualquerNumero(numero) {
+
+    console.log(numero);
+}
+
+var numeros = [1,2,3,4,5,6];
+</script>
+Bernado pediu primeiro para que Rita testasse as duas funções, carregando a página a chamando cada função passado um número. Ela fez assim no console do Chrome:
+
+imprimeApenasPares(2); // imprimiu 2
+imprimeApenasPares(1); // não imprimiu nada
+imprimeQualquerNumero(1) // imprimiu 1
+Rita entendeu que cada função recebe um mesmo parâmetro, um número, mas se ele será impresso ou não varia de função para função. Uma imprime apenas números pares recebidos e a outra qualquer número recebido. Ela não entendeu a relação dessas funções com a função percorreArray.
+
+Funções como parâmetro
+Bernardo fez o seguinte no código:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        comportamento();
+    }
+
+}
+
+function imprimeApenasPares(numero) {
+
+    if(numero % 2 == 0) {
+        console.log(numero);
+    }
+}
+
+function imprimeQualquerNumero(numero) {
+
+    console.log(numero);
+}
+
+var numeros = [1,2,3,4,5,6];
+
+percorreArray(numeros, imprimeApenasPares);
+percorreArray(numeros, imprimeQualquerNumero);
+
+</script>
+Antes dele rodar o código os olhos de Rita brilharam e ela gritou pedindo que ele não rodasse o código que havia um erro. Bernardo sorrindo, perguntou para ela que erro era esse.
+
+Rita disse que entendeu a necessidade do segundo parâmetro de percorreArray. Ela entendeu que a única coisa que varia em percorreArray é o comportamento aplicado ao item, ou seja, o que será realizado com o item que esta sendo iterado. Ela entendeu que quando Bernardo passou imprimeApenasParescomo segundo parâmetro para percorreArray, dentro da função percorreArray o parâmetro comportamento passou a ser a função passada como parâmetro. Então Rita explicou que, se comportamento em percorreArray é uma função, no caso imprimeApenasPares, a função imprimeApenasPares deve receber um parâmetro e dentro de percorreArray Bernardo apenas a chamou sem passar qualquer valor.
+
+Bernardo disse que fez isso de propósito e pediu para que Rita corrige o código. Ela fez assim:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        // veja que a função agora esta sendo chamada recebendo um parâmetro
+        comportamento(array[i]);
+    }
+
+}
+
+function imprimeApenasPares(numero) {
+
+    if(numero % 2 == 0) {
+        console.log(numero);
+    }
+}
+
+function imprimeQualquerNumero(numero) {
+
+    console.log(numero);
+}
+
+var numeros = [1,2,3,4,5,6];
+
+percorreArray(numeros, imprimeApenasPares);
+percorreArray(numeros, imprimeQualquerNumero);
+
+</script>
+Rita agradeceu Bernardo e ainda explicou o seguinte. Na primeira chamada de percorreArray, estamos passando um array e uma função, essa função será o comportamento usado por percorreArray. Como a primeira imprime apenas números pares, o for de percorreArray só imprimirá números pares. Na segunda chamada de percorreArray, o segundo parâmetro agora é a função imprimeQualquerNumero. Essa função, quando chamada dentro de percorreArrray imprimirá todos os itens do array, pois não faz teste algum.
+
+Funções anônimas
+Quando Bernardo esta indo embora, Rita pulou da cadeira e disse que poderia melhorar ainda mais o código.
+
+Ela disse que nem seria necessário declarar as funções imprimeApenasPares, muito menos imprimeQualquerNumero. Dessa vez, quem arregalou os olhos foi Bernardo.
+
+Ela primeiro removeu os nomes das funções imprimeApenaPares e imprimeQualquerNumero:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        // veja que a função agora esta sendo chamada recebendo um parâmetro
+        comportamento(array[i]);
+    }
+
+}
+
+// função sem nome (anônima)
+function (numero) {
+
+    if(numero % 2 == 0) {
+        console.log(numero);
+    }
+}
+
+// função sem nome (anônima)
+
+function (numero) {
+
+    console.log(numero);
+}
+
+var numeros = [1,2,3,4,5,6];
+
+percorreArray(numeros, imprimeApenasPares);
+percorreArray(numeros, imprimeQualquerNumero);
+
+</script>
+Bernardo sorriu e disse que o código do jeito que está não funciona, porque só podemos usar funções anônimas, que nada mais são do que funções que não recebem nome em uma variável ou quando passamos elas diretamente como parâmetro. Rita deu uma piscadinha para Bernardo e fez a última alteração:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        // veja que a função agora esta sendo chamada recebendo um parâmetro
+        comportamento(array[i]);
+    }
+
+}
+
+var numeros = [1,2,3,4,5,6];
+
+percorreArray(numeros, function (numero) {
+
+    if(numero % 2 == 0) {
+        console.log(numero);
+    }
+
+});
+
+percorreArray(numeros, function (numero) {
+
+    console.log(numero);
+});
+
+</script>
+Bernardo, arregalando os olhos disse que o código faz sentido total. Veja que a declaração das funções, exceto seus nomes (por isso são anônimas) foram passadas direto como segundo parâmetro para a função. O resultado é o mesmo que antes, pois o parâmetro comportamento será a função passada como parâmetro.
+
+Bernardo ainda fez um teste para imprimir apenas números ímpares:
+
+<script>
+
+function percorreArray(array, comportamento) {
+
+    for(var i = 0; i < array.length; i++) {
+
+        // veja que a função agora esta sendo chamada recebendo um parâmetro
+        comportamento(array[i]);
+    }
+
+}
+
+var numeros = [1,2,3,4,5,6];
+
+percorreArray(numeros, function (numero) {
+
+    if(numero % 2 == 0) {
+        console.log(numero);
+    }
+
+});
+
+percorreArray(numeros, function (numero) {
+
+    console.log(numero);
+});
+
+percorreArray(numeros, function (numero) {
+
+    if(numero % 2 != 0) {
+        console.log(numero);
+    };
+});
+
+</script>
+No final, Bernardo convidou Rita para ir ao cinema, mas ela se recusou.
+
+No arquivo percorre.js faremos loop e chamaremos a função que recebemos como segundo parâmetro:
+//arquivo percorre.js
+
+function percorreArray(trsPacientes, comportamento) {
+
+    for(var posicaoAtual = 0; posicaoAtual <= trsPacientes.length - 1; posicaoAtual++){
+
+        var pacienteTrAtual = trsPacientes[posicaoAtual];
+        comportamento(pacienteTrAtual);//função é executada
+    }
+}
+E no arquivo calcula-imc.js chamaremos a função percorreArray.
+
+No código abaixo declaramos a função que imprime o IMC explicitamente. Também estamos usando a função montaPaciente do desafio anterior:
+
+//arquivo calcula-imc.js
+
+var trsPacientes = document.getElementsByClassName("paciente");
+
+percorreArray(trsPacientes, imprimeEModificaTdDeImc);
+
+function imprimeEModificaTdDeImc(pacienteTr){
+
+    var pacienteAtual = montaPaciente(pacienteTr);    
+    var imc = pacienteAtual.pegaImc();
+
+    var tdImc = pacienteTr.getElementsByClassName("info-imc")[0]; 
+    tdImc.textContent = imc;
+
+    console.log(imc);
+}
+
+function montaPaciente(pacienteTr){
+    var tdNome = pacienteTr.getElementsByClassName("info-nome")[0]; 
+    var tdPeso = pacienteTr.getElementsByClassName("info-peso")[0]; 
+    var tdAltura = pacienteTr.getElementsByClassName("info-altura")[0];
+
+    var paciente = {
+        nome : tdNome.textContent, 
+        peso : tdPeso.textContent, 
+        altura : tdAltura.textContent,
+        pegaImc: function() {
+
+            if(this.altura != 0){
+                var imc = this.peso / (this.altura * this.altura);
+                return imc;
+            } else{
+
+                console("Não posso dividir por zero!");
+            }
+        }
+    }
+    return paciente;
+}
+Como vimos na aula não é preciso declarar essa função imprimeEModificaTdDeImc explicitamente. Aproveite e use uma função anônima!
+
+Isso já é um belo código Javascript!
+
+
+############### 6. Eventos ###############
+
+O que são eventos?
+É comum, quando estamos programando em Javascript, querer adicionar um comportamento ao clique de um elemento, ao usuário passar o mouse em cima de um elemento, quando o texto de um <input> for alterado e etc, estas ações são chamadas de eventos, que serão disparados em determinado momento.
+
+Nesse capítulo aprenderemos a como podemos ouvir um evento e executar uma ação a partir dele.
+
+Calculando o IMC a partir de um clique
+Até agora nós fomos capazes de calcular o IMC de nossos pacientes assim que a página fosse carregada, mas seria mais legal ainda se nós tivéssemos um botão "Calcular IMCs" que, só após ser clicado, preencheria a nossa tabela com os IMCs dos respectivos pacientes.
+
+Para começar então, vamos analisar o código da nossa tabela e botão:
+
+<table>
+    <tr>
+        <th>Nome</th>
+        <th>Peso</th>
+        <th>Altura</th>
+        <th>IMC</th>
+    </tr>
+    <tr>
+        <td id="nome-1">Leonardo</td>
+        <td id="peso-1">50.0</td>
+        <td id="altura-1">1.60</td>
+        <td id="imc-1"></td>
+    </tr>
+    <tr>
+        <td id="nome-2">Paulo</td>
+        <td id="peso-2">100</td>
+        <td id="altura-2">2.00</td>
+        <td id="imc-2"></td>
+    </tr>
+</table>
+<button id="calcular-imcs" class="botao">Calcular IMCs</button>
+Neste momento, ao clicar em nosso botão, nada acontecerá, isso por que ainda não estamos ouvindo o clique dele!
+
+Como ouvir eventos?
+Para começarmos a ouvir o clique de nosso botão, vamos utilizar o atributo onclick do html, que receber como argumento um código Javascript a ser executado, podemos testar isso utilizando a função alert do javascript.
+
+<button onclick="alert('Calculando Imcs')" id="calcular-imcs" class="botao">Calcular IMCs</button>
+Mas isso não irá calcular realmente os imcs dos pacientes, para fazer isso precisamos invocar uma função que pode se chamar, por exemplo, calculaTodosImcs:
+
+<button onclick="calculaTodosImcs()" id="calcular-imcs" class="botao">Calcular IMCs</button>
+Porém, para funcionar, precisamos envolver nosso código Javascript em uma função com esse nome:
+
+function calculaTodosImcs(){
+    //pega trsPacientes
+    //pega trsPrsPacientes
+    percorreArray(trsPacientes, function(trAtual){
+        //monta paciente
+        var imc = paciente.pegaImc(); // pega o imc do paciente atual
+        var trDoImc = trDoPaciente.getElementsByClassName("info-imc")[0];
+        imcTd.textContent = imc; // atualiza imc
+        console.log(imc); // imprime o imc do paciente atual    
+    }); 
+}
+Legal, agora estamos chamando essa função no clique do botão. Mas espere! Note que estamos colocando Javascript no meio de nosso html, o que é uma má prática.
+
+O ideal seria que nosso Javascript ficasse totalmente separado da nossa estrutura html, para isso teremos que ouvir o evento do botão sem utilizar o atributo onclick.
+
+Precisamos então manipular um elemento no nosso script, lembra de como fazemos isso? Isso mesmo! Precisamos selecioná-lo!
+
+var botao = document.getElementById("calcular-imc");
+Legal, agora já temos nosso botão, mas falta ouvirmos o clique nele, para isso usaremos o atributo onclick, que recebe uma função. Note que, dessa vez, estamos fazendo isso apenas no Javascript:
+
+var botao = document.getElementById("calcular-imc");
+botao.onclick = calculaTodosImcs();
+Pronto! Agora se alguém clicar no botão, uma mensagem dizendo "Alguém clicou no botão!" aparecerá no console!
+
+O problema de se utilizar essa abordagem é que nós só conseguimos adicionar uma função por evento, ou seja, não conseguimos efetuar mais de uma função no clique de um usuário.
+
+Por exemplo, se atribuirmos duas vezes uma função ao atributo onclick do botão, como no seguinte código, somente a ultima delas será invocada ao se clicar no botão:
+
+var botao = document.getElementById("calcular-imc");
+botao.onclick = calculaTodosImcs;
+botao.onclick = function(){
+    console.log("Calculando imcs");
+};
+Para resolver esse problema podemos utilizar a função addEventListener, presente em navegadores modernos. Essa função recebe dois parâmetros: o evento que se quer ouvir e a ação que deseja fazer:
+
+var botao = document.getElementById("calcular-imc");
+
+botao.addEventListener("click", function(){
+    console.log("Alguém clicou no botão!");
+});
+
+botao.addEventListener("click", function(){
+    console.log("Essa é outra função");
+});
+Deste modo podemos executar varias funções no mesmo evento! Note que quem vai executar essa função é o próprio navegador ao detectar o evento de clique. Esse tipo de função anônima que passamos como argumento para ser executada após determinada ação é denominada função de callback
+
+Usando o evento mouseover
+Além do evento de clique("click"), ainda temos outros que poderemos usar, por exemplo:
+
+dblclick (clique duplo)
+mouseover (ao passar o mouse por cima de um elemento)
+keydown (ao pressionar uma tecla)
+Entre outros
+
+Com isso nós podemos, por exemplo, alterar a cor de um <tr> ao passarmos o mouse por cima dele, para isso vamos primeiro selecionar todos os <tr>s, lembre-se de que a função getElementsByTagName retorna sempre um Array
+
+var trs = document.getElementsByTagName("tr");
+Agora precisamos escutar o evento mouseover em cada um dos trs, portanto precisamos percorrer o nosso Array, lembre-se de que nós temos a função percorreArray, que faz exatamente isso:
+
+var trs = document.getElementsByTagName("tr");
+percorreArray(trs, function(trAtual){
+    // ouve o evento no trAtual    
+})
+Agora basta ouvir o evento no trAtual e passar a função que queremos executar:
+
+var trs = document.getElementsByTagName("tr");
+percorreArray(trs, function(trAtual){
+    trAtual.addEventListener("mouseover", function(){ 
+        //aqui queremos pintar a tr de cinza
+    });
+Legal, estamos escutando o evento, agora precisamos escrever o código para pintar a <tr> que o usuário passou o mouse de cinza, essa tr pode ser acessada através da palavra reservada this dentro da função de callback. Para pintá-la, então, basta mudar o atributo bgcolor dela para grey, o que pode ser feito a partir da função setAttribute:
+
+var trs = document.getElementsByTagName("tr");
+percorreArray(trs, function(trAtual){
+    trAtual.addEventListener("mouseover", function(){ 
+        this.setAttribute("bgcolor", "grey");
+    });
+});
+Alterando o DOM a partir de um evento.
+Agora que já sabemos como ouvir eventos em elementos, podemos finalmente chamar a nossa função que calcula os IMCs no clique do botão. Para isso, basta passarmos a nossa função como segundo parâmetro do addEventListener:
+
+function calculaTodosImcs(){
+    //pega trsPacientes
+    percorreArray(trsPacientes, function(paciente){
+        //monta paciente
+        var imc = paciente.pegaImc(); // pega o imc do paciente atual
+        var trDoImc = trDoPaciente.getElementsByClassName("info-imc")[0];
+        imcTd.textContent = imc; // atualiza imc
+        console.log(imc); // imprime o imc do paciente atual    
+    }); 
+}
+
+var botao = document.getElementById("calcular-imc");
+
+botao.addEventListener("click", calculaTodosImcs);
+Perceba que, o que queremos é que o próprio navegador invoque a nossa função ao evento ser acionado, portanto, nós não a invocamos ao passá-la como parâmetro!
+
+Eventos são uma forma de chamar um código JavaScript:
+a) quando algo no navegador acontece (página carregada ou descarrega, mudança no tamanho etc).
+b) quando algo no banco de dados acontece (insert, update ou delete de registros)
+c) para fazer uma requisição HTTP.
+d) quando o usuário interage com a tela (clique no botão, inputs etc)
+Quais das afirmações acima são verdadeiras?
+
+a) e d) são verdadeiras
+
+As afirmações a) e d) estão corretas!
+a) Verdadeira ... quando algo no navegador acontece (página carregada ou descarrega, mudança no tamanho etc).
+
+Com eventos podemos facilmente reagir quando a página foi carregada ou fechada!
+
+b) Falsa ... quando algo no banco de dados acontece (insert, update ou delete de registros)
+
+JavaScript é executado no navegador, normalmente tem nada a ver com o banco de dados. (ok ok, existem bancos que também usam JavaScript, mas isso não é o foco do curso. Para os curiosos, um banco famoso que usa JavaScript é o MongoDB).
+
+c) Falsa ... para fazer uma requisição HTTP.
+
+Para executar uma requisição HTTP com JavaScript devemos usar AJAX. Até podemos colocar esse código AJAX dentro de uma função que é chamada através de um evento mas AJAX e eventos são coisas diferentes. Veremos AJAX nos cursos de jQuery e Angular dessa trilha.
+
+d) Verdadeira ... quando o usuário interage com a tela (botão, inputs etc)
+
+Uso clássico de eventos. O usuário faz algo na tela (clique, aperta tecla, usa mouse etc) e é preciso executar algum código.
+
+Tudo ok?
+
+Alguns outros eventos famosos que poderíamos ouvir seriam:
+dblclick (clique duplo)
+mouseover (ao passar o mouse por cima de um elemento)
+keydown (ao pressionar uma tecla)
+Na página da MDN tem uma lista completa de todos os eventos. São muitos!
+
+https://developer.mozilla.org/en-US/docs/Web/Events
+
+Veja o HTML bem simples:
+<html>
+ <body>
+    <p id="texto">JavaScript: Programando na linguagem da web</p>
+    <script type="text/javascript" src="eventos.js"></script>
+ <body>
+</html>
+E o arquivo eventos.js:
+
+var pTexto = document.getElementById("texto");
+
+pTexto.onmouseover = function() {
+    console.log(this.textContent);
+}
+
+pTexto.onmouseover = function() {
+    console.log(this.textContent.toUpperCase());
+}
+Ai vem a pergunta: Quando o usuário passa com o mouse em cima do texto do parágrafo, o console imprime em caixa alta ou baixa?
+
+Console imprime em caixa alta
+Console imprime em caixa alta! Como aprendemos, usando diretamente o atributo do evento no elemento DOM, apenas a última função será executada.
+O interessante nesse exemplo é que usamos o this. Se lembra disso? Dentro da função o this representa o elemento do DOM que foi associado com o elemento, no nosso o <p> com a id texto. Por isso podemos chamar .textContent e pegar o valor do elemento. Tudo bem?
+
+
 
