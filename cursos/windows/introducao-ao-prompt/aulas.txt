@@ -46,6 +46,22 @@ type variaveis.txt
 - exibir organização das pastas e subpastas;
 tree
 
+### Aula 2
 
+- CMDER (http://cmder.net/);
+- CMDER pode alterar fonte;
+- CMDER ctrl + t -> nova aba;
+- Scripts são arquivos de texto com uma lista de comando para serem executadas;
 
+- criando script (extensão .bat);
+echo cls > limpatela.bat
+
+- executar script;
+limpatela.bat
+
+- copiar pastas e subdiretorios;
+xcopy /e /y
+
+- esperar o usuário interagir;
+pause
 

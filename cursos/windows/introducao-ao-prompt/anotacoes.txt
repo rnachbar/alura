@@ -19,10 +19,6 @@ O primeiro passo é abrir um terminal (ou console). No mundo Windows esse termin
 
 Obs: Outra forma de abrir o Prompt é clicar no Botão Iniciar e no campo de pesquisa digitar Prompt ou cmd:
 
-
-
-
-
 A partir dessa tela podemos interagir com o sistema operacional escrevendo comandos! Vamos ver como navegar entre pastas, criar novas pastas, ler, executar, copiar e mover arquivos e muito mais. Vamos tentar?
 
 Obs: O termo prompt se refere ao sinal >
@@ -303,5 +299,196 @@ Para passar de página em página, utilize a tecla espaço do seu teclado.
 Para passar de linha a linha, utilize a tecla enter do seu teclado.
 Para sair da exibição do comando, sem chegar ao final do arquivo utilize a tecla q do seu teclado.
 Como você já sabe , sempre que quiser aprender mais sobre um comando, pode utilizar o help, então caso tenha a curiosidade de aprender ainda mais sobre o comando more, é só digitar help more no terminal!
+
+############### 2. Um novo prompt e executando scripts ############### 
+
+Terminal só em preto e branco?
+No último capítulo vimos como usar o terminal/prompt e os comandos principais para lidar com arquivos e diretórios. Vimos comandos como dir, del ou cd. Vamos continuar usando o prompt, mas antes de aprender novos comandos, instalaremos uma versão um pouco mais amigável para nós, humanos. Há uma variação do terminal que se chama cmder, a qual deixa a linha de comando colorida e com algumas facilidades. Nada te impede de continuar com o terminal antigo, no entanto vamos instalar o cmder para melhorar a visualização dos comandos.
+
+Instalação do cmder
+Para instalar o cmder devemos primeiro baixar o ZIP no site: http://cmder.net
+
+
+
+Escolha a versão mini e depois extraia o ZIP.
+
+
+
+Para abrir o novo terminal do Cmder basta entrar na pasta do cmder e dar um duplo-clique no executável. Isso faz com que abra um novo terminal, e veja que já está colorido! A diferença é sutil, mas vai nos ajudar mais para frente.
+
+
+
+Para saber mais sobre Git: Aqui usaremos a versão mínima do cmder mas para quem está interessado em usar o GIT já pode baixar a versão full também. O Git é um sistema de versão para código fonte. Ele ajuda gerenciar esse código fonte. Isso significa, sincronizar o trabalho de vários desenvolvedores no mesmo projeto. O Git mantém um histórico das alterações e cria automaticamente backups. Na Alura temos um treinamento focado nessa ferramenta poderosa: https://www.alura.com.br/course/PM-89
+
+Meu primeiro script
+Uma das motivações para aprender os comandos no terminal é a automação de tarefas, isto é, fazer várias coisas repetitivas mais facilmente. Uma das tarefas de um desenvolvedor é criar um backup de arquivos. Vamos, então, criar um pequeno script para "backupear" os arquivos. Tudo executado na linha de comando, ok?
+
+Os scripts no mundo Windows não são nada mais do que arquivos de texto com a extensão bat. bat significa batch, em português "lote". Ou seja, com esse script é possível executar vários comandos em lote.
+
+Vamos criar um arquivo batch, na linha de comando:
+
+echo cls > script.bat
+Repare que o comando não foi executado ainda, gravamos apenas o comando cls no arquivo script.bat.
+
+
+
+E como posso executar o script? Basta digitar:
+
+script.bat
+O script foi chamado e todos os comandos dentro dele foram executados sequencialmente! Como resultado, a tela está limpa! Fantástico :)
+
+Processamento em lote
+O arquivo tem a extensão .bat (batch, lote) não por acaso, pois podemos executar mais que um comando em sequência. Vamos abrir o arquivo script.bat em um editor de texto. Vou usar um bem simples.
+
+Já que podemos executar qualquer comando, adicionaremos depois do cls um echo para perguntar se ele realmente quer continuar:
+
+cls
+echo Realmente quer fazer backup?
+E para parar a execução podemos adicionar o comando pause:
+
+cls
+echo Realmente quer fazer backup?
+pause
+
+
+O comando pause faz com que o usuário do script precise confirmar a continuação da execução do script. Vamos testar uma vez para deixar mais claro:
+
+
+
+Isto nos permite dar a opção do usuário abortar a execução do script caso ele não deseje continuar, através do atalho CTRL + C ou simplesmente fechando o terminal.
+
+Ótimo, já é um bom início. Agora vamos limpar a tela com cls, adicionar uma mensagem para o usuário saber que vamos iniciar o backup e preparar a pasta do backup através do script, indo para a pasta home do nosso usuário e criando o diretório de backup:
+
+cls
+echo Realmente quer fazer backup?
+pause
+
+cls
+echo ok, fazendo backup...
+cd C:\Users\caelum
+mkdir backup
+Todos esses comandos já conhecemos e agora podemos copiar os arquivos da pasta codigo para a pasta backup. O problema ainda é que o comando copy é muito simples e não consegue copiar pastas e sub-pastas. Ainda bem que existe o irmão gêmeo dele, o xcopy. O xcopy copia pastas e sub-pastas desde que usamos os parâmetros /E (para copiar subpastas) e /Y (para confirmar automaticamente a sobrescrita de arquivos). Sabendo disso podemos escrever:
+
+cls
+echo Realmente quer fazer backup?
+pause
+
+cls
+echo ok, fazendo backup...
+cd C:\Users\caelum
+mkdir backup
+
+xcopy /E /Y "C:\Users\caelum\codigo"  "C:\Users\caelum\backup"
+Agora no fim do script podemos listar os arquivo da pasta backup:
+
+cls
+echo Realmente quer fazer backup?
+pause
+
+cls
+echo ok, fazendo backup...
+cd C:\Users\caelum
+mkdir backup
+
+xcopy /E /Y "C:\Users\caelum\codigo" "C:\Users\caelum\backup"  
+
+echo Listando os arquivos do backup
+dir C:\Users\caelum\backup
+Pronto! Agora nosso script realiza o backup da pasta codigo como desejávamos!
+
+Repare que o script é nada mais de um conjunto de comandos pequenos para realizar uma tarefa maior.
+
+O que aprendemos?
+Instalar o cmder para usar no local do prompt padrão.
+Como criar um script no Windows (.bat).
+Como executar scripts .bat.
+O comando xcopy, para copiar pastas e sub-pastas.
+O comando pause, para esperar uma interação do usuário com o terminal.
+A criar um script de backup, para automatizar uma tarefa repetitiva.
+
+Para que usamos um script na aula?
+
+Para automatizar tarefas na linha de comando!
+O batch script é um arquivo simples que agrupa uma serie de comandos, normalmente utilizado para automatizar tarefas cotidianas. Um arquivo batch (.bat) é um script que é executado sequencialmente pelo prompt (um comando depois do outro).
+No desenvolvimento usamos scripts de diversas formas. Por exemplo, para limpar uma máquina antes de instalar arquivos novos, guiar o usuário pela instalação, preparar arquivos de configuração e importar dados dentro da aplicação ou de um banco de dados. E é claro, o exemplo clássico de um script para automatizar o backup!
+
+Tente executar o comando seguinte pelo prompt:
+echo %date%
+Isso deve imprimir a data atual. Agora crie um pequeno script (por exemplo chamado de data.bat) que imprime a data atual!
+
+Você também pode imprimir a hora: echo %time%
+Adicione isso no seu script! O script fica:
+
+echo %date%
+echo %time%
+Os scripts podem ser muito mais poderosos. Até é possível programar dentro deles, criar menus, acessar a rede e muito mais. Aqui estamos focados para guiar você melhor na plataforma Alura. Normalmente, os recursos mais avançados são utilizados pelos administradores de infraestrutura.
+
+E para não esquecer o mundo Linux: esses pequenos scripts de automação são muito mais frequentes no Linux e Unix. Lá se chamam de shell script mas tem o mesmo propósito, automatizar tarefas!
+
+Como vimos neste capítulo, o comando xcopy serve para copiar pastas e subdiretórios, mas apenas se executado com um argumento específico. Que argumento é esse ?
+
+/E
+O argumento que deve ser passado para o xcopy é o /E/. Este argumento indica ao xcopy que ele deve copiar todas as pastas e sub-pastas, incluindo as que estão vazias.
+Então para copiar uma pasta e seus subdiretórios devemos fazer assim:
+
+xcopy /E C:/Users/caelum/origem C:/Users/caelum/destino
+
+Se você reparar na execução do simples script abaixo:
+cls
+echo Dia de hoje:
+echo %date%
+echo Hora atual:
+echo %time%
+Ele é exibido desta maneira no prompt: Exemplo com echo on
+
+Você pode notar que é exibido duas vezes cada mensagem, uma vez exibindo o comando e outra na saída dele, pois quando executamos um script no prompt, ele exibe o nome do comando que está dentro do script e o seu resultado. Para desabilitar essa exibição dos comandos na hora de executar um script, devemos começar o script com o comando @echo off, ficando desta maneira:
+
+@echo off
+cls
+echo Dia de hoje:
+echo %date%
+echo Hora atual:
+echo %time%
+Deixando a execução do nosso script assim:
+
+Exemplo com echo off
+
+Muito mais limpo, não é mesmo?
+
+O comando @echo off faz com que os comandos que estão nos scripts não apareçam durante sua execução, mostrando apenas seus resultados.
+É útil quando queremos deixar a execução dos scripts mais limpas, ou quando temos alguma informação sensível no script que não desejamos que usuário veja.
+
+Qual a funcionalidade do comando pause ?
+
+Ele espera por uma interação do usuário no terminal, para poder dar sequência aos possíveis próximos comandos.
+
+O comando pause espera por uma interação do usuário com o terminal, pausando o script em que ele foi chamado. Ele serve para o usuário ter tempo de confirmar se quer mesmo continuar executando o script atual ou se deseja abortar a sua execução.
+Para dar continuidade a execução do script, basta apertar qualquer tecla, mas para aborta-lo é preciso utilizar o atalho CTRL + C ou fechar o terminal que chamou o script.
+
+Para saber mais: Facilidades do cmder
+Além do terminal colorido o cmder trás algumas funcionalidades extras no terminal que ajudam muito o dia a dia do desenvolvedor, vamos dar uma olhada em algumas delas!
+
+Copiar e Colar
+Se você já tentou copiar e colar no prompt do Windows pode ter reparado que é extremamente trabalhoso, precisando que usar o mouse para essa tarefa que é tão trivial. Uma das facilidades que o cmder nos trás é que agora é possível colar no Prompt com um atalho do teclado, basta apertamos CTRL + V. Bem mais prático, não acha? (Caso este atalho não funcione com você, experimente utilizar o CTRL + SHIFT+ V, pois dependendo da configuração do seu teclado o atalho pode mudar!)
+
+Para copiarmos qualquer coisa que está no terminal, basta apenas selecionarmos ela com o mouse! Isso mesmo, ao selecionar o conteúdo ele vai automaticamente para a área de transferência, podendo ser colado em qualquer lugar!
+
+Múltiplas abas
+Quando estamos trabalhado em um projeto, é muito comum precisarmos navegar entre várias pastas diferentes ou ter que executar múltiplos comandos simultaneamente. Quando utilizamos o prompt tradicional do Windows, muitos desenvolvedores acabam abrindo diversas instâncias do mesmo, para não ter que ficar trocando de diretório toda hora, mas isso acaba gerando uma confusão pois temos que usar o ALT + TAB repetidas vezes para trocar entre os prompts abertos e as aplicações que utilizamos para desenvolvimento.
+
+No cmder, nós temos uma solução para esse problema, as famosas abas! Inspirado nas abas que temos hoje nos navegadores, o cmder implementou algo bem semelhante. Podemos ter várias instâncias do cmder, lado a lado, organizada por abas. Para criar uma aba, basta utilizarmos o atalho de teclado CTRL + T e dar um ENTER para confirmar. Ele abre uma aba com um terminal novinho para nós! Isso ajuda muito na produtividade! Para alternar entre abas, é só usar o atalho CTRL + TAB que ele troca para a próxima aba, ficando muito fácil ter um terminal em cada pasta que necessita de atenção, um para o consultar o banco de dados e uma para acessar um possível servidor na nuvem!
+
+Configurações extras
+O cmder é terminal extremamente personalizável, se você usar o atalho Windows + ALT + P , você abrirá as configurações dele, indo na parte de Features, você verá que é possível alterar quase tudo do terminal. Lá tem configuração das cores que ele utiliza, do nível de transparência, do tipo de cursor e muitas outras coisas que podem deixar o terminal do seu jeito.
+
+Ele também tem como exportar e importar as configurações, então caso um dia você precise formatar ou trocar de computador, você pode levar as suas configurações com você.
+
+Explore um pouco este menu e deixe o cmder do seu jeito!
+
+O cmder é um terminal que além de ser mais bonito, traz diversas novas funcionalidades para ajudar a vida dos desenvolvedores. Vale a pena gastar uns minutinhos se acostumando com ele, pois este tempo gasto facilmente retornará em produtividade quando estiver trabalhando em alguma aplicação!
+
+
+
+
 
 
