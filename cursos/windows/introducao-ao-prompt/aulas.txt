@@ -65,3 +65,19 @@ xcopy /e /y
 - esperar o usuário interagir;
 pause
 
+### Aula 3
+
+- Variavel de ambiente PATH é onde o windows olha para poder executar qualquer executavel de qualquer lugar;
+
+- ver conteudo da variavel PATH;
+echo %PATH%
+
+- alterar varivel PATH, adicionando nosso bin;
+set PATH=%PATH%;C:\Users\Raphael Nachbar\Desktop\bin
+
+- o comando set só funciona temporariamente, só enquanto o cmd estiver aberto;
+
+- para alterar permanentemente usar o comando setx (usar no cmd do windows no modo administrador);
+
+- infos do processador
+echo %processor_architecture%

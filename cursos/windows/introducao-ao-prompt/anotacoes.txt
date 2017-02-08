@@ -487,8 +487,406 @@ Explore um pouco este menu e deixe o cmder do seu jeito!
 
 O cmder é um terminal que além de ser mais bonito, traz diversas novas funcionalidades para ajudar a vida dos desenvolvedores. Vale a pena gastar uns minutinhos se acostumando com ele, pois este tempo gasto facilmente retornará em produtividade quando estiver trabalhando em alguma aplicação!
 
+############### 3.  Variáveis de ambiente e instalação do JDK ############### 
+
+Executando script de todo lugar: PATH
+No capítulo anterior nosso script de backup estava funcionando, mas ainda tem um probleminha. Para poder chamar o script, devemos estar com o terminal na mesma pasta onde se encontra o script. Tem que ser possível executar o script a partir de qualquer pasta, não acha?
+
+Vejamos como fazer para isso funcionar. Quando a gente executa algum comando no terminal, o Windows procura esse comando em lugares específicos. Pense que qualquer comando, como dir ou cd, também são pequenos scripts (essa é uma visão pouco simplificada , mas vale a analogia). Ou seja, o Windows precisa encontrar esses scripts, certo? E, para ajudá-lo, já existem alguns caminhos padrões que o Windows fica varrendo para achar esses pequenos scripts. Esse local padrão,aonde se encontram os caminhos para os scripts é o famoso PATH.
+
+Acessando a variável PATH
+Esses caminhos ficam salvos dentro de uma variável do sistema com o nome PATH. E podemos imprimir esses caminhos no prompt:
+
+echo PATH
+Opa! Só imprimiu PATH. Esqueci uma coisa: se quisermos ver o conteúdo da variável PATH devemos colocar um simbolo de % antes e depois, ficando assim:
+
+echo %PATH%
+Agora sim! Aparecem um monte de caminhos de diretórios onde o Windows procura executáveis e scripts. Repare que cada caminho está separado por um ponto e vírgula:
+
+Path=C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x86;C:\Program Files (x86)\Intel\OpenCL SDK\2.0\bin\x64
+
+
+Alterando o PATH pelo prompt
+A nossa tarefa é adicionar a pasta onde se encontra o nosso script de backup no PATH . Assim o Windows também vai poder achar o nosso script. Vou te dar mais uma dica, essa pasta com os executáveis/scripts normalmente é chamada de bin. Nem sempre é assim, mas a maioria das ferramentas seguem esse padrão.
+
+Então vamos criar uma pasta bin e jogar o nosso script lá dentro. Digite cd %HOME% para voltar na pasta raiz do usuário e crie o diretório bin com o mkdire em sequência movendo o nosso script para dentro da pasta bin com o comando move:
+
+cd
+mkdir bin
+move script.bat bin
+
+
+Ótimo!
+
+Agora respire fundo, pois temos que alterar a variável PATH para adicionar o nosso novo diretório (C:\Users\caelum\bin). A ideia é que precisamos redefinir o PATH para também incluir o nosso diretório. Baseado no conteúdo do que exibimos da variável PATH, podemos ver que temos que adicioná-lo ao final, separando por ponto e vírgula do resto. Em outras palavras:
+
+set PATH=%PATH%;C:\Users\caelum\bin
+Alteramos a variável PATH com o comando set, baseado no PATH existente (%PATH%) adicionando o novo diretório (C:\Users\caelum\bin), usando o caractere separador ;. Será que funcionou? Podemos verificar isso facilmente imprimindo o PATH na linha de comando:
+
+echo %PATH%
+
+
+Lá no final temos o nosso diretório, ou seja, na teoria, o Windows vai encontrar o nosso script. Façamos o teste:
+
+script.bat
+Podemos comemorar porque o Windows encontrou o nosso script!!
+
+Variáveis de ambiente
+Vimos rapidamente o comando set, que serviu para alterar a variável PATH. Existem muitos mais variáveis além da PATH, e ainda deram um nome bonito para elas: Variáveis de ambiente.
+
+O interessante é que o comando set também mostra TODAS essas variáveis! Como? Digite:
+
+set
+
+
+Repare que existem variáveis que guardam o nome do computador, do usuário, da arquitetura do computador e muito mais. Até podemos criar novas variáveis e veremos que algumas plataformas de desenvolvimento (por exemplo Java) exigem a criação de variáveis próprias.
+
+Para criar uma variável própria, também utilizamos o comando set, fazendo assim:
+
+// Criando a variável PASTA_CÓDIGO
+set PASTA_CODIGO=C:\Users\caelum\codigo
+Você pode testar digitando set ou echo %PASTA_CODIGO%
 
 
 
+Variáveis permanentes
+Parece tudo ótimo, mas faça um teste: feche e reabra o terminal. Agora digite echo %PASTA_CODIGO%. Não funcionou! Para nossa surpresa, a variável que acabamos de criar parou de funcionar! O terminal esqueceu as variáveis :( Esqueceu até da nossa alteração da variável PATH!
 
+Infelizmente as nossas variáveis só são lembradas enquanto o terminal está aberto. Mas queremos deixar essas configurações permantes e existe um modo para isto. A solução é um comando bem parecido com o set, o setx que realmente salva o PATH de maneira permanente, porém como este comando altera as variáveis do sistema permanentemente, ele é especial e precisa ser executado no prompt de comando tradicional do windows.
+
+O comando setx é praticamente igual ao set, só que não tem um = nem um ; e separamos o caminho com aspas. Outro detalhe muito importante é adicionar o argumento /M no final do setx, que indica que queremos alterar uma variável do sistema.
+
+setx PATH "%PATH%;C:\Users\caelum\bin" /M
+
+
+Obtivemos um erro! A alteração das variáveis do sistema é algo tão importante no sistema operacional, que o prompt de comando em modo normal não tem permissão para mexer nelas, nós precisamos do prompt em modo administrador. E para abrir o prompt no modo administrador é algo bem simples, basta clicarmos com o botão direito do mouse e ir em Executar como administrador.
+
+
+
+Dá até pra ver no topo da janela que o prompt mudou para o modo Administrador, agora é só executar nosso comando setx:
+
+
+
+Agora sim nosso PATH foi alterado.
+
+Existe também uma forma de alterar o PATH pela interface gráfica mas isso fica para os exercícios!
+
+Instalando nossa primeira linguagem
+Agora que temos conhecimento de como manipular as variáveis de ambiente do Windows, instalar e configurar uma nova linguagem ou ferramenta é algo bem fácil! Vamos instalar o Java do zero para ver como é exemplo disso:
+
+O primeiro passo é baixar o JDK pelo site, acesse: http://www.oracle.com/technetwork/java/
+
+
+
+Dentro dos Top Downloads, escolha o Java SE. Na nova página clique no icone Java (Java Platform (JDK))
+
+http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+
+
+Agora temos que escolher o JDK adequado para a versão do nosso sistema operacional! A versão é a para Windows, claro, mas mesmo assim há duas opções: Um download para x86 e outro para 64bit. E agora?
+
+
+
+Escolhendo o JDK para sua arquitetura do processador
+Essas duas opções são relacionadas com a arquitetura do processador. Para descobrir qual é a opção correta podemos usar o nosso prompt! Abra o terminal e digite:
+
+echo %PROCESSOR_ARCHITECTURE%
+
+
+Agora deve aparecer x86 ou AMD64 (ou IA64). Tudo que tem 64 no final indica que o Windows é de 64 bits, já o x86 indica que é de 32 bits. Beleza, já sabemos a arquitetura e qual download do Java escolher!
+
+Instalando o JDK
+Escolha então o JDK (Java Development Kit) certo e, depois de ter aceitado a licença, podemos finalmente baixar o JDK. Baixe o arquivo .exe, que é algo como java-8xxx-windows-xxx.exe.
+
+Execute o arquivo java-8xxx-windows-xxx.exe e passe pelo Wizard de instalação (pode instalar tudo, incluindo o source, não desmarque nada).
+
+
+
+Repare que o diretório de instalação é C:\Program Files\Java\jdk1.8.0_65. Vamos lembrar disso!
+
+O registro de sua VM (Virtual Machine) no site da Oracle é opcional.
+
+Testando Java no prompt e configuração do PATH
+Chegou o momento de ver no prompt se o Java realmente foi instalado corretamente. Vamos abrir o cmder ou o cmd e testar, digite:
+
+java -version
+Deve aparecer:
+
+java version "1.8.0_66"
+Java(TM) SE Runtime Environment (build 1.8.0_66-b18)
+Java HotSpot(TM) Client VM (build 25.66-b18, mixed mode, sharing)
+Funcionou? Se funcionou pode ficar feliz pois o instalador já adicionou a pasta bin do Java no PATH!. Mas vamos testar também o compilador do Java:
+
+javac -version
+Não funcionou:
+
+'javac' is not recognized as an internal or external command,
+operable program or batch file.
+
+
+Hum, vamos verificar o PATH:
+
+echo %PATH%
+
+
+Não encontramos nada sobre o nosso jdk1.8.0, mas tem um caminho suspeito:
+
+C:\ProgramData\Oracle\Java\javapath
+Vamos verificar esse caminho:
+
+dir C:\ProgramData\Oracle\Java\javapath
+
+16/12/2015  18:46    <DIR>          .
+16/12/2015  18:46    <DIR>          ..
+16/12/2015  18:46    <SYMLINK>      java.exe [C:\Program Files\Java\jre1.8.0_65\bin\java.exe]
+16/12/2015  18:46    <SYMLINK>      javaw.exe [C:\Program Files\Java\jre1.8.0_65\bin\javaw.exe]
+16/12/2015  18:46    <SYMLINK>      javaws.exe [C:\Program Files\Java\jre1.8.0_65\bin\javaws.exe]
+               3 File(s)              0 bytes
+               2 Dir(s)     541.597.696 bytes free
+
+
+Repare que nessa pasta não tem nada do javac. Devemos adicionar ao PATH a pasta onde se encontra o javac. Nós já sabemos a pasta de instalação do JDK:
+
+dir  "C:\Program Files\Java\jdk1.8.0_65"
+ Directory of C:\Program Files\Java\jdk1.8.0_65
+
+16/12/2015  18:47    <DIR>          .
+16/12/2015  18:47    <DIR>          ..
+16/12/2015  18:45    <DIR>          bin
+06/10/2015  17:46             3.244 COPYRIGHT
+
+\\ muito mais infos ...
+
+
+Obs: Usamos aspas duplas pois tem um espaço no caminho.
+
+Logo no início encontramos a pasta bin. Agora só falta adicionar ao PATH:
+
+setx PATH "%PATH%;C:\Program Files\Java\jdk1.8.0_65\bin" /M
+
+
+Fechando e abrindo o terminal podemos testar novamente o comando:
+
+javac -version
+  javac 1.8.0_65
+
+
+Problema resolvido!
+
+Criando o JAVA_HOME
+O Java já está funcionado na linha de comando, mas existem outras ferramentas do mundo Java que também querem saber onde o Java foi instalado. E essas ferramentas acreditam tanto que a gente instalou o Java que elas simplesmente assumem a existência de uma variável de ambiente com nome JAVA_HOME.
+
+Ok, tudo bem, vamos criar essa variável usando o setx, já para a deixarmos permanente. Só devemos ter um cuidado: o JAVA_HOME aponta para o diretório raiz do Java (sem a pasta bin):
+
+setx JAVA_HOME "C:\Program Files\Java\jdk1.8.0_65" /M
+
+
+Fechando e abrindo o terminal, podemos testar a variável:
+
+echo %JAVA_HOME%
+ C:\Program Files\Java\jdk1.8.0_65
+
+
+O que aprendemos
+O que são as variáveis de ambiente
+Mostrar as variáveis de ambiente pelo comando set
+A importância da variável PATH
+Alterar a variável PATH com set e setx
+Criar novas variáveis de ambiente
+Descobrir a arquitetura do sistema (32bit ou 64bit)
+Instalar o JDK do Java
+Configurar o PATH para usar o comando javac no prompt
+Configurar a JAVA_HOME
+
+Como neste capítulo e exercícios vamos alterar bastante o PATH do Windows, é bom criarmos um arquivo de backup do seu PATH original, antes de começarmos a alterá-lo, assim caso você faça alguma modificação por engano você conseguirá restaurá-lo para sua versão que funcionava.
+Então antes de executar qualquer alteração do seu PATH, execute o comando abaixo para salvar um backup:
+
+echo %PATH% > backupPATH.txt
+Salve o arquivo backupPATH.txt em um local seguro que você vá se lembrar!
+
+É sempre importante guardamos informações importantes do sistema, antes de qualquer modificação. Neste capítulo você vai aprender a alterar o PATH tanto através da linha de comando como a ferramenta visual RapidEE no exercício extra, mas mesmo assim é sempre bom estar preparado para o pior caso você encontre algum bug!
+
+Qual comando mostra todas as variáveis de ambiente na linha de comando?
+
+O comando set mostra todas as variáveis na linha de comando:
+set
+Como vimos o set também serve para alterar uma variável existente ou criar um nova, por exemplo:
+
+set EAD=Alura
+Lembrando que esta alteração só dura enquanto o terminal estiver aberto!
+
+No exercício anterior vimos como criar uma nova variável de ambiente:
+set EAD=Alura
+Como podemos imprimir o conteúdo dessa variável no prompt?
+
+Para acessar a variável devemos usar %NOME_DA_VAR%, no nosso caso:
+echo %EAD%
+É muito comum construir um caminho a partir de variáveis já existentes. Por exemplo, já existe uma variável com o nome USERPROFILE que guarda o caminho para pasta home do usuário. No meu computador é:
+
+echo %USERPROFILE%
+C:\Users\caelum
+O home do usuário é C:\Users\caelum. Sabendo dessa variável podemos navegar para nossa pasta de código usando:
+
+cd %USERPROFILE%/codigo
+Teste isso agora! Assim podemos construir um caminho baseado nessa variável, ok?
+
+Qual é diferença entre set e setx, já que os dois comandos podem alterar variáveis de ambiente?
+
+As variáveis alteradas pelo set servem apenas enquanto o prompt está aberto,já o setx altera permanentemente!
+
+A diferença é que o setx altera as variáveis permanentemente, enquanto o set serve apenas enquanto o terminal está aberto. Lembrando que devemos sempre o usar o setx com a flag /M se quisermos que a alteração seja permanente.
+Outra diferença é que com o comando set podemos imprimir todas as variáveis de ambiente.
+
+Para configurar uma variável de ambiente permanente, devemos usar o comando setx.
+O comando setx deve ser usado sempre no prompt de comando original do Windows, e sempre em modo de administrador.
+
+Seu uso correto fica assim:
+
+setx PASTA_CODIGO "C:\Users\caelum\codigos" /M
+
+O setx não possui o sinal de igual, e o conteúdo da variável deve ficar entre aspas. Não podemos esquecer também da importante flag /M, que indica que estamos criando uma variável do sistema.
+
+Sobre as afirmativas abaixo, julgue quais são as verdadeiras:
+1- Sem a flag /M o comando setx não altera as variáveis do sistema.
+
+2- A variável de ambiente que contém a arquitetura do seu sistema é a SYSTEM_ARCHITECTURE .
+
+3- Utilizar apenas o comando setx puro no prompt exibe todas as variáveis de sistema.
+
+4- Uma outra maneira de exibirmos a variável PATH é através do comando set PATH.
+
+Comentando as afirmativas:
+O comando setx necessita da flag /M para alterar as variáveis do sistema, então a primeira afirmativa é verdadeira.
+
+A variável de ambiente que contém a arquitetura do sistema é a PROCESSOR_ARCHITECTURE e não a SYSTEM_ARCHITECTURE, então a segunda afirmativa é falsa.
+
+O comando que exibe todas as variáveis de ambiente quando executado sozinho é o set e não o setx, então a terceira afirmativa é falsa
+
+E por último, se você testou no seu Cmder, um outro jeito de exibir uma variável de ambiente é utilizando o comando set e o nome da variável em seguida, como no caso do set PATH, logo a quarta afirmativa é verdadeira.
+
+O que nos deixa com a resposta:
+
+Apenas as afirmativas 1 e 4 são verdadeiras.
+
+E aí, acertou ?
+
+Podemos alterar as variáveis de ambiente, como o PATH pela interface gráfica do Windows. Vou mostrar como:
+Clique no ícone Pesquisar e digite Painel de Controle
+Clique em -> Painel de Controle -> Sistema de Segurança -> Sistema-> Configurações Avançadas
+Na aba Avançado das Propriedades do sistema clique em Variáveis de Ambiente,
+Em Variáveis do Sistema localize PATH e clique nele.
+Na janela Editar você pode modificar o PATH adicionando a localização da classe para o valor de PATH.
+Para ver as alterações feitas no PATH é preciso reabrir o mesmo (não precisa reiniciar).
+
+Depois de todos esses cliques e janelas diferentes (que até mudam entre versões do Windows) você não acha mais fácil usar o comando setx?
+Claro que vai muito pelo gosto mas um pouco de conhecimento sobre o prompt ajuda no dia a dia do desenvolvedor. Saiba que você está preparado para instalar e configurar as ferramentas mais comuns no Windows.
+
+Vamos continuar?
+
+Vimos no video que há duas versões do JDK (Java Development Kit), para 32bit (x86) e 64bit.
+Usamos a variável de ambiente PROCESSOR_ARCHITECTURE para descobrir a arquitetura do sistema:
+
+echo %PROCESSOR_ARCHITECTURE%
+
+
+No entanto, existe uma alternativa na linha de comando para descobrir a arquitetura do processador. Tente executar no prompt do cmder:
+
+wmic OS get OSArchitecture
+E a saída é até um pouco mais bonita:
+
+Tente executar o último comando no cmder!
+
+wmic é um comando que dá acesso ao Windows Management Instrumentation. O wmic é mais importante para administradores de infraestrutura e possui muito mais funções. Para gente basta saber se é 32bit ou 64bit!
+
+Bom, já que estamos usando o Windows, será que não tem uma forma de descobrir a arquitetura através do Windows mesmo? Ou seja, sem o prompt?
+Claro que tem, mas vai dar um pouco mais trabalho :)
+
+Acesse o Painel de Controle (ou Configurações no Windows 10) e clique no Sistema para Ver o nome do computador. Depois clique no Sobre. Nessa tela também encontramos a informação sobre x86 (32bit) ou x64 (64bit).
+
+Dica: Se seu teclado tiver a tecla Pause, pode usar o atalho Windows + Pause.
+
+Isso é um bom exemplo que mostra o poder do prompt. Dá muito mais trabalho navegar entre as janelas do que digitar um comando no prompt. Outra vantagem do prompt é que esses comandos mudam com muito menos frequência do que as janelas do Windows.
+A grande desvantagem é que não podemos exigir do um usuário comum executar comandos no prompt. Mas a gente, sendo ou se tornando desenvolvedor, pode encarar a linha de comando!
+
+Como se chama a variável de ambiente que algumas ferramentas do mundo Java exigem?
+
+É o JAVA_HOME!
+Algumas ferramentas precisam dessa variável de ambiente para encontrar as bibliotecas do Java. Alguns exemplos de ferramentas são: ANT, Maven, Gradle ou Tomcat. Não se preocupe se você não conhece nenhuma dessas ferramentas. Para isso há outros treinamentos nas trilhas Java.
+
+Você pode verificar a existência da variável pelo comando:
+
+echo %JAVA_HOME%
+Ou simplesmente imprimir todas as variáveis pelo comando set.
+
+Quais comandos devemos utilizar no terminal para verificar se possuímos o Java e o compilador de Java no computador, mostrando com as suas versões ?
+
+Para verificarmos a versão do Java e de seu compilador, devemos utilizar os comandos java -version e javac -version, respectivamente.
+Vale lembrar também que devemos verificar se a variável de ambiente JAVA_HOME está configurada, já que muitas ferramentas do Java dependem dela. Fazemos isso através do comando:
+
+echo %JAVA_HOME%
+
+Unindo o que aprendemos nos capítulos anteriores com o nosso conhecimento atual sobre como configurar o Java, qual é o comando correto para configurar a variável de ambiente JAVA_HOME, supondo que tenhamos instalado o Java na pasta C:\Program Files\Java\jdk1.8.0_65 ?
+
+setx JAVA_HOME "C:\Program Files\Java\jdk1.8.0_65" /M
+
+Como queremos que a variável JAVA_HOME seja permanente, devemos usar o comando setx. E lembrando que o comando setx não utiliza o sinal de =, então a resposta correta seria: setx JAVA_HOME "C:\Program Files\Java\jdk1.8.0_65" /M
+
+Como você viu neste capítulo, no Windows nós temos diversas váriaveis de ambiente, que nos fornecem várias informações diferentes sobre o nosso sistema. Vimos que para altera-las, podemos utilizar o prompt de comando, mas agora quero lhe mostrar um pequeno programa que nos permite altera-las de um modo um pouco mais visual. Este programa é RapidEE:
+Programa RapidEE
+
+Ele é um editor de variáveis de ambiente, que usa a interface gráfica para exibir tanto as váriaveis ambientes do sistema (lado esquerdo), como as variáveis ambientes do usuário (lado direito).
+
+Para fazer sua instalação, basta acessar o site http://www.rapidee.com/en/download e escolher a opção Download RapidEE_setup.exe.
+
+Programa RapidEE Download
+
+A instalação é bastante simples, bastando apenas seguir o instalador.
+
+Com ele instalado, podemos fazer as operações como editar, modificar e criar novas variáveis atráves de sua interface.
+
+Criando novas variáveis
+Para adicionar uma nova variável, basta clicar com o botão direito e selecionar Add Variable. Aperecerá uma caixinha com o nome da váriavel que você deseja criar, e a opção de selecionar o contéudo como uma String normal ou Expanded String. A diferença é que devemos usar Expanded String quando queremos usar uma váriavel que refêrencia outra, por exemplo caso queiramos criar uma váriavel chamada PASTA_TEMP , que tenha o valor %TEMP% , referenciado o valor da váriavel TEMP.
+
+Editando variavéis
+Para editar o valor de alguma variável, basta expandir seu conteúdo clicando no simbolo de + ao lado do nome dela, e dar um duplo clique no valor que desejámos alterar. Editando variáveis
+
+Adicionando novos valores
+Para adicionar novos valores, clicamos com o botão direito na variável que queremos alterar e selecionamos a opção Add value.... Podemos escrever o caminho na mão, como faziamos no prompt, ou selecionar entre as opções Insert directory path... e Insert file path... , para inserir uma pasta ou um arquivo, respectivamente, através do sistema de janelas do Windows.
+
+Inserindo variáveis
+
+Removendo duplicatas e variáveis em branco
+Quando estamos alterando o PATH, podemos cometer algum erro , como inserir duas vezes a mesma variável ou inserir uma variável em branco, e isto é um pouco difícil de detectar quando estamos na linha de comando, pois se o PATH for muito grande, pode ficar difícil de notar algum descuido nosso.
+
+Ferramenta CleanUpPaths
+
+O RapidEE tem uma função que corrige isto automaticamente para gente, é a Cleanup Paths , que remove valores repetidos e valores em branco. Para usa-la basta clicar com o botão direito em cima de uma variável e seleciona-la, veja só:
+
+Ferramenta CleanUpPaths
+
+Repare que na imagem acima, temos a pasta C:\Users\caelum\bin adicionada diversas vezes, e inclusive temos um valor em branco. Vamos corrigir isto com o Cleanup Paths :
+
+Path Limpo
+
+Bem fácil de organizar nosso PATH, não é mesmo ?
+
+Detectando caminhos inválidos.
+Um outro erro bastante comum quando estamos instalando programas ou alterando a variável PATH é que acabamos criando certos caminhos inválidos. O rapidEE detecta isto para a gente e coloca esses caminhos em vermelho:
+
+Caminho Inválido
+
+Ficando muito fácil de identificá-lo, agora basta selecionarmos o caminho inválido e apagá-lo com a tecla delete do seu teclado :) .
+
+Salve suas modifcações!
+Uma coisa importante ao utilizar a ferramente rapidEE é lembrar de salvar as alterações antes de fecha-la, clicando no pequeno ícone de salvar da barra de ferramentas dele.
+
+Botão salvar
+
+Ele dá um pequeno aviso caso você tente fechar sem salvar, mas é bom te informar com antecedência para você não se esquecer!
+
+Como você já deve ter notado, é muito importante ter o conhecimento dos comandos do prompt, porém para quem é iniciante neste mundo existem essas ferramentas visuais que nos dão um suporte caso não estejamos totalmente confiantes nas alterações que fizemos pelo prompt.
+O rapidEE além de nos permitir visualizar nossas variáveis de ambiente, também é muito útil para debugar problemas na variável PATH , removendo suas entradas duplicadas com o Cleanup Path e marcando em vermelho as entradas inválidas que por acaso podem ter sido adicionadas lá sem querer. Afinal, até os desenvolvedores mais experientes cometem erros, não é mesmo ?
+
+Guarde mais este conhecimento na sua caixa de ferramentas mental que tenho certeza que um dia ele pode vir a ser útil com você :)
 
