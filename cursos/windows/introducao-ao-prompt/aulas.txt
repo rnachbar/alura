@@ -81,3 +81,56 @@ set PATH=%PATH%;C:\Users\Raphael Nachbar\Desktop\bin
 
 - infos do processador
 echo %processor_architecture%
+
+### Aula 4
+
+- Gerenciador de pacotes do windows;
+https://chocolatey.org/
+
+### Aula 5
+
+- cmder completo vem com comandos do linux;
+
+- pasta home linux;
+cd ~
+
+- listar repositórios;
+	windows: 	dir
+	linux: 		ls
+
+- listar todos arquivos (arquivos ocultos);
+	linux: ls -al
+
+- limpar a tela;
+	windows: 	cls
+	linux: 		clear
+
+- copiar;
+	windows: 	copy
+	linux: 		cp
+
+- criar pasta;
+	windows: 	mkdir
+	linux: 		mkdir
+
+- mover;
+	windows: 	move
+	linux: 		mv
+
+- deletar;
+	windows: 	del
+	linux: 		rm
+
+- mostrar o conteudo do arquivo;
+	windows: 	type
+	linux: 		cat
+
+- busca no conteudo
+	linux: grep
+
+- conctando saidas (vai buscar Doc na listagem pedida);
+	linux: ls -al | grep Doc
+
+- encontrar, buscar;
+	linux: find .
+

@@ -1,4 +1,4 @@
-############### 1. Os primeiros comandos no prompt ############### 
+############### 1. Os primeiros comandos no prompt ###############
 
 Você já desenvolveu usando Windows como sistema operacional?
 Este treinamento foi criado para o aluno que usa Windows e tem pouca ou nenhuma experiência no Prompt do Windows . Veremos os comandos principais do Prompt para lidar com diretórios, arquivos, e mexer nas variáveis de ambiente.
@@ -889,4 +889,364 @@ Como você já deve ter notado, é muito importante ter o conhecimento dos coman
 O rapidEE além de nos permitir visualizar nossas variáveis de ambiente, também é muito útil para debugar problemas na variável PATH , removendo suas entradas duplicadas com o Cleanup Path e marcando em vermelho as entradas inválidas que por acaso podem ter sido adicionadas lá sem querer. Afinal, até os desenvolvedores mais experientes cometem erros, não é mesmo ?
 
 Guarde mais este conhecimento na sua caixa de ferramentas mental que tenho certeza que um dia ele pode vir a ser útil com você :)
+
+############### 4. Gerenciando pacotes com Chocolatey ###############
+
+Instalando o chocolatey
+1- O primeiro passo para a instalação do chocolatey é abrir o cmd em modo administrativo, ou seja precisamos clicar com o botão direito em cima dele em seguida clicar em executar como adminsitrador:
+
+Abrindo cmd em modo administrativo
+
+2- Em seguida precisamos colar o código de instalação do chocolatey no prompt em modo de administardor. Copie e cole a instrução abaixo em seu prompt e dê um enter:
+
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+Colando o código de instalação do chocolatey
+
+Agora você deve aguardar um pouco, pois a instalação do chocolatey pode ser um pouco demorada pois ele baixa todas as dependências do site.
+
+3- Repare que o cholatey avisa em amarelo que precisamos fechar e abrir o prompt para que o chocalatey funcione após a instalação. Aviso do chocolatey
+
+4- O fim da instalação é quando você visualizar a tela abaixo: Final da instalação do chocolatey.
+
+5- Ao final da instalação você deve fechar e abrir o prompt novamente em modo de administrador, para que possamos usar o chocolatey. Faço isto novamente:
+
+Abrindo cmd em modo administrativo
+
+6- Para verificar se ocorreu tudo bem com a instalação, execute um simples comando do chocolatey, como o comando choco -v que verifica a versão dele:
+
+Chocolatey instalado com sucesso
+
+Se a versão apareceu como na imagem acima, significa que você conseguiu instalar o chocolatey com sucesso!
+
+É valido lembrar também que sempre que você quiser utilizar o chocolatey você deve abrir o prompt de comando em modo administrativo.
+
+Play Store para Windows
+Hoje de manhã eu instalei um novo aplicativo em meu celular. Eu uso Android e, como de costume, acessei o Play Store do Google, procurei pelo aplicativo e pedi para instalar. Foi muito fácil!
+
+Agora tenho algumas perguntas: na hora de instalar o aplicativo no Android é preciso acessar o site do fabricante do aplicativo para baixar? Não. Usamos o Play Store sempre. Uma outra pergunta: para instalar o aplicativo corretamente é preciso configurar o PATH ou uma outra variável de ambiente? Claro que não, isso é feito automaticamente!
+
+Então a pergunta final é: Por que não faremos a mesma coisa na hora de instalar as ferramentas e aplicativos no Windows? Não seria muito melhor para o usuário final? Com certeza, e a noticia boa é que existe algo parecido com o Play Store no Windows também! Nesse "store" não há todas os aplicativos do mundo que poderiam rodar no Windows, mas lá está maioria das ferramentas e aplicativos para o desenvolvedor.
+
+Gerenciador de pacote
+A ideia de se ter uma ajuda para instalar um software no sistema operacional é muito antiga e não foi inventada pelo Google ou pela Apple. No mundo Linux existem há décadas aplicativos que se preocupam com a instalação e administração de outros aplicativos. Esses aplicativos são os Gerenciadores de Pacote ou, em inglês, Package Managers. Então sempre que queremos instalar um software vamos utilizar um gerenciador de pacotes. Ele que se preocupe com o download do software, como e onde extrair, qual é a pasta certa de instalação, qual versão e quais são as dependências. É muito muito útil!
+
+Chocolatey, um gerenciador de pacote para Windows
+Chocolatey é uma ferramenta para a linha de comandos para instalar e administrar softwares. Ele segue a mesma ideia dos package-managers, como apt-get, rpm, entre vários outros no mercado. A grande diferença é que o Chocolatey é para Windows! Para aqueles não familiarizados com o APT / Debian, pense no Chocolatey como um instalador silencioso global para aplicativos e ferramentas.
+
+
+
+No mundo Windows, o Chocolatey ficou muito popular entre desenvolvedores. O site dele é o https://github.com/chocolatey/choco/wiki e lá também encontramos informações como instalá-lo: https://github.com/chocolatey/choco/wiki/Installation .
+
+
+
+Na seção Commmand Line encontraremos o comando para instalar o Chocolatey:
+
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+O comando pode dar um frio na barriga, mas na verdade ele não faz nada além de usar o PowerShell (aquele outro prompt mais poderoso para admins de infraestrutura) para baixar o instalador e colocar a pasta bin no PATH - só que tudo em uma linha só.
+
+Vamos abrir o cmd, mas dessa vez com os privilégios de um administrador.
+
+Botão direito em cima do executável do cmd e Executar como administrador. Depois da confirmação, abre-se o terminal.
+
+
+
+Com o terminal aberto, vamos colar o comando para instalar o Chocolatey:
+
+@powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+
+Obs: A instalação do Chocolatey pode demorar um pouco, pois é necessário baixar todas as dependências. Mas vale a pena a espera!
+
+Trabalhando com Chocolatey
+Uma vez que o Chocolatey foi instalado, podemos usá-lo para instalar Java, Ruby, Python ou qualquer outro pacote que ele dá suporte. Há mais de 3000 pacotes disponíveis. A sintaxe básica é:
+
+choco install <nome-do-pacote>
+Mas como vou saber o nome do pacote? Vamos dar uma olhada no site: https://chocolatey.org/
+
+No menu principal já existe um link que vai nos ajudar: Packages.
+
+
+
+Ao clicar no link encontramos uma busca. Vamos buscar por Python. O resultado mostra o nome do pacote encontrado e o comando para instalá-lo:
+
+
+
+Por exemplo, para instalar o Python 2.7 usamos :
+
+choco install  python2
+Para Python 3.4
+
+choco install  python3
+O comando choco baixa, instala e configura o ambiente! Fácil não?
+
+Vamos ver mais um exemplo, instalando nodejs. Novamente vamos pesquisar:
+
+
+
+A única versão encontrada é o 5.x. Para quem conhece um pouco sobre o Node JS, sabe que as versões ímpares tem um tempo de suporte menor do que as versões pares. Por isso, é muito comum usar a versão 4. Mas como vou instalar essa versão um pouco mais antiga? Vamos seguir o link da versão atual:
+
+https://chocolatey.org/packages/nodejs.install
+
+Navegando um pouco para baixo encontramos um histórico de versões, e lá podemos ver a última versão 4:
+
+
+
+Clicando na versão 4.2.2 encontramos o comando para instalá-la:
+
+choco install nodejs.install -version 4.2.2
+Repare aquela flag -version que indica a versão. Agora estamos aptos a instalar qualquer pacote do Chocolatey!
+
+Dica: Ao instalar um pacote, o Chocolatey pede uma confirmação, podemos indicar que queremos confirmar já no comando inicial, por exemplo
+
+choco install -y nodejs.install -version 4.2.2
+Removendo um pacote
+Remover um pacote é tão fácil quanto instalar, basta digitar:
+
+choco uninstall <nome_do_pacote>
+Abaixo seguem os comando para instalar as plataformas mais comuns de desenvolvimento. Divirta-se com o Chocolatey!
+
+Instalando JDK 8
+choco install -y jdk8
+Instalando JDK 7
+choco install -y jdk7
+Instalando Python 2.7
+choco install -y python2
+Instalando Python 3
+choco install -y python
+Instalando nodejs 4
+choco install -y nodejs.install -version 4.2.2
+Instalando Ruby e Rubygems
+C:\> choco install -y ruby rubygems
+Como o Rails possui muitas dependências, foi criado um instalador independente do Chocolatey que facilita mais ainda a instalação:
+
+http://railsinstaller.org/en
+
+Instalando Git
+choco install -y git
+Instalando MySQL
+choco install -y mysql
+Instalando PHP
+choco install -y php
+O que aprendemos?
+O que é um gerenciador de pacotes.
+Instalar o chocolatey, o gerenciador de pacotes para o Windows.
+Como instalar programas e ferramentas com apenas um comando.
+Especificar a versão correta dos programas.
+Remover pacotes com o chocolatey.
+Como instalar a JDK, python, Node, Ruby, Git, PHP e muitos outros.
+
+Qual comando devemos utilizar quando queremos instalar um programa com o gerenciado de pacotes chocolatey?
+
+choco install <nome_do_pacote>
+Apesar da ferramenta se chamar chocolatey, para usá-la na linha de comando devemos usar o comando choco, que é até bem mais fácil de digitar. Então, para fazer uma instalação usando o chocolatey, devemos utilizar o:
+choco install <nome_do_pacote>
+
+Vimos que é bem fácil instalar um programa através do chocolatey, mas e se desejarmos escolher uma versão específica do programa, qual dos comandos abaixo nos atende?
+
+Tanto a opção: choco install <nome-do-pacote> -version <versão-do-pacote> quanto a opção: choco install -version <versão-do-pacote> <nome-do-pacote> estão corretas. Para instalarmos uma versão específica de um programa, devemos utilizar a flag -version e em seguida a versão que desejamos.O nome do pacote pode vir antes ou depois.
+
+Quando estamos instalando um programa com o comando choco install , podemos utilizar a flag -y ao final do comando. Descreva no campo abaixo o que esta flag faz quando é utilizada em conjunto do comando choco install.
+
+Quando instalamos um pacote com o choco install , ele pede algumas confirmações , que devemos aceitar para poder confirmar que queremos realizar a instalação. A flag -y faz com que essas confirmações sejam aceitas automaticamente, fazendo com que não tenhamos que nos preocupar em verificar a instalação e aceitar repetidas vezes as confirmações.
+
+Qual o único pré-requisito que devemos cumprir quando queremos instalar um novo pacote com o Chocolatey?
+
+Executar o prompt em modo de administrador.
+Quando queremos instalar algo com o Chocolatey o único cuidado que devemos ter é executar o prompt em modo de administrador, pois como estamos instalando pacotes são necessárias certas permissões que só o prompt em modo de administrador possui.
+Lembrando que os comandos do Chocolatey funcionam tanto no Cmder quanto no prompt de comando normal do Windows, é questão de gosto! E a flag -y é opcional no comando choco install nome-do-pacote, só que sem ela vamos ter que aceitar as perguntas que o Chocolatey faz manualmente.
+
+O Chocolatey possui um comando para remover os pacotes instalados previamente, com o nome muito parecido com o comando de instalação. Digamos que tenhamos instalado o pacote python2, qual comando nós devemos utilizar para remover o pacote ?
+
+Para desinstalar um pacote podemos usar o comando choco uninstall nome-do-pacote, no nosso caso ficando:
+choco uninstall python2
+
+A remoção do pacote é tão rápida quanto a instalação :)
+
+E caso você não se lembre todos os pacotes que tem instalados em seu computador, o comando choco list -l exibe-os para você!
+
+Vimos no treinamento que podemos verificar os pacotes disponíveis baixados através do site do chocolatey, porém também é possível fazer isto pela linha de comando! O comando choco list lista todos os pacotes que podem ser instalados pelo chocolatey mas antes de executa-lo tome cuidado por quê o chocolatey possui milhares de pacotes e seu computador vai passar um bom tempo listando-os! Para executar uma busca por pacotes mais específica, podemos utilizar o comando choco list com um nome do pacote que queremos buscar, por exemplo:
+choco list git
+
+Isto nos exibirá diversos pacotes que tem possuem git no nome ou em suas dependências! Bem mais fácil do que procurar o pacote desejado em uma lista gigantesca, não é mesmo?
+
+Pacotes locais
+Uma outra opção de uso do choco list é para listar os pacotes locais que foram instalados pelo chocolatey, para isso basta usarmos a flag -l deste modo:
+
+choco list -l Ele exibe uma lista de todos os pacotes do seu computador! Muito útil quando queremos saber quais pacotes e suas versões que possuímos instalados.
+
+choco search ?
+Você pode acabar encontrando na internet pessoas utilizando o choco search para fazer buscas, de um jeito muito semelhante ao que foi ensinado aqui, e se perguntando qual é a diferença. A resposta é: Nenhuma! O choco search é um comando análogo ao choco list e ambos fazem a mesma coisa debaixo dos panos. Eles são intercambiáveis entre si e tudo que você pode passar como argumento em um, pode usar no outro também! Então não se preocupe, os dois fazem a mesma coisa :)
+
+Podemos usar o comando choco list para exibir tanto os pacotes que possuímos instalados localmente, quanto os disponíveis para serem instalados. Lembrando sempre de colocar o nome do pacote que você quer buscar, quando for buscar por um pacote que quer instalar:
+choco list <nome_do_pacote>
+
+Para listar os pacotes localmente usamos a flag -l, por exemplo executando choco list -l no meu computador trouxe o resultado:
+
+chocolatey 0.9.9.11
+git 2.6.4
+git.install 2.6.4
+jdk7 7.0.79.1
+jdk8 8.0.66
+nodejs 5.3.0
+nodejs.install 4.2.2
+ruby 2.1.6
+E lembre-se que o choco search é análogo ao choco list , os dois fazem a mesma coisa!
+
+O mundo Windows demorou muito para usar um gerenciador de pacote mas hoje em dia até existe um gerenciador nativo. Nativo significa que vem configurado com o Windows, mas apenas com Windows 10. O Gerenciador se chama OneGet e deve ser utilizado no PowerShell do Windows.
+Mais informações sobre o OneGet na página do projeto:
+
+https://github.com/OneGet/oneget/wiki/cmdlets
+
+Assim como existe o chocolatey para Windows, no mundo Linux nós temos o apt-get. O apt-get também um gerenciador de pacotes, e inclusive foi ele que inspirou a criação do chocolatey. Ele já vem por padrão nas distribuições mais comuns do Linux, como o Ubuntu e o Mint e do mesmo modo do chocolatey, facilita muito nossa vida quando queremos instalar programas no Linux
+Já quando desenvolvemos aplicações, por exemplo usando Java, é muito comum usarmos código (dependências) de outros desenvolvedores no nosso código para ajudar em alguma tarefa. No mundo Java possuímos algumas ferramentas que nos ajudam a baixar e a lidar com essas dependências como o maven, ivy e o gradle. Elas agilizam o processo de desenvolvimento, já que com um pequeno código, qualquer desenvolvedor que baixar nossa aplicação pode baixar as dependências do mesmo e ter o projeto funcionando rapidamente.
+
+Como desenvolvedor, é bom ter conhecimento das diversas ferramentas que existem por aí para facilitar nossa vida. Os gerenciadores de dependência são apenas um tipo delas, e mesmo não utilizando todas elas no dia a dia, é uma boa prática estar sempre atualizado em relação as tecnologias dos sistemas operacionais e linguagens mais comuns do mercado.
+
+############### 5. Comandos do Linux bash no Windows ###############
+
+Nos treinamentos do Alura a grande maioria dos instrutores não usa Windows. Realmente, os sistemas UNIX são mais populares entre os desenvolvedores. Então você precisa se preocupar em instalar alguma distribuição Linux? Claro que não, o Windows vai te atender muito bem!
+A popularidade dos sistemas UNIX entre os desenvolvedores é porque a Microsoft, por muitos anos, não deu muito valor ao mundo do software de código aberto e ficou apenas focado em seus produtos. Por isso, os desenvolvedores usaram alternativas para poder utilizar open source. Isso mudou e hoje em dia a Microsoft é uma das empresas comprometidas com o mundo open source. Ou seja, as ferramentas e plataformas de código aberto vão funcionar no Windows também.
+
+Neste capítulo quero mostrar para você as diferenças entre o terminal do mundo UNIX e o do mundo Windows. Vamos lá?
+
+Instalando Cmder com Chocolatey
+Vou abrir o nosso velho prompt do Windows para instalar o Cmder por Chocolatey. Nós já tínhamos baixado o Cmder no capítulo anterior, mas sem o Chocolatey. O pacote tem o mesmo nome da aplicação, então basta digitar:
+
+choco install cmder
+Já podemos abrir o Cmder. Fechando e reabrindo o prompt, digite:
+
+cmder
+Comandos Bash no Windows
+Nós gostamos do Cmder pois dá uma cor para o terminal, porém ele vai além disso. O Cmder simula os comandos do mundo UNIX no Windows! Ou seja, além de ser um prompt do Windows também podemos executar os principais comandos da BASH (assim se chama o interpretador de comandos no mundo UNIX).
+
+Vamos deixar o prompt e o Cmder aberto para comparar os dois.
+
+A navegação entre as pastas é praticamente igual no mundo Windows e UNIX. A principal diferença é que no Windows usamos \ e no UNIX /. Mas repare que no Cmder e até no prompt a barra funciona.
+
+Porém existe uma diferença de nomenclatura que faz com que um comando não funcione no Cmder: no mundo UNIX o caractere ~ significa a pasta pessoal ou home. Então não podemos testar isso nesse ambiente, Mas vocês sabem agora que cd ~ navega para pasta home do usuário.
+
+Listando arquivos
+Outra diferença é como listar o conteúdo de uma pasta. No prompt vimos o dir mas no mundo UNIX usa-se o comando ls (ls de listar). Vamos testar no cmder:
+
+ls
+Também há duas opções (flags) muito úteis para listar todos os arquivos incluindo os escondidos, além de mostrar todos os atributos de um arquivo:
+
+ls -al
+
+
+Esses comandos são muito utilizados nos videos de outros cursos.
+
+Copiando, movendo e removendo arquivos
+No prompt usamos os comando copy, move, del e rmdir. No mundo UNIX é bem parecido e temos cp, mv, rm e rmdir. Vamos testar rapidinho no Cmder:
+
+ls > saida.txt
+cp saida.txt saida2.txt
+rm saida.txt
+mv saida2.txt codigo
+cd codigo
+ls
+mkdir teste
+rmdir teste
+
+
+Perfeito! O Cmder dá suporte aos mesmos comandos do mundo UNIX!
+
+Mostrando o conteúdo
+Para mostrar o conteúdo na linha de comando já aprendemos o comando type. O comando mais comum no UNIX é cat. Vamos testar:
+
+ls -al > arquivos.txt
+
+
+O comando cat também funciona no cmder!
+
+Buscando por palavras
+Há um comando muito útil para encontrar uma palavra dentro de um texto maior. Esse comando se chama grep, só que ele não existe no prompt! Será que o Cmder conhece? Vamos testar:
+
+grep
+Aparentemente funciona. Vamos testar listar todos os arquivos para depois encontrar a palavra Doc
+
+ls -al | grep Doc
+Repare que usamos um | para passar a saída do comando ls -al para o comando grep. Isso não só funciona com o comando ls, mas também com todos os outros comandos que possuem uma saída.
+
+Resumindo
+Se em alguma aula o professor estiver usando um terminal, saiba que o Cmder vai atender você. Podemos usar os mesmos comandos do professor, mesmo usando Windows. Assim fica muito mais fácil de acompanhar os videos no Alura. Vamos praticar um pouco?
+
+O que aprendemos?
+Comandos do Linux bash no Windows
+Como habilitar os comandos do Linux bash no Windows
+Como instalar a versão completa do Cmder
+Os comandos ls, rm, rmdir, mv, cp, cat.
+As diferenças entre os comandos de Windows e de Linux
+Buscar dados com o comando grep
+
+Qual dos comandos abaixo não funciona no prompt padrão do Windows?
+
+O comando ls não funciona no prompt padrão do Windows! O ls é a abreviação para listar e mostra tudo o conteúdo de uma pasta.
+Por exemplo, podemos listar e ordenar pela data de modificação:
+
+ls -lt
+Podemos mostrar o tamanho dos arquivos e kB e MB:
+
+ls -lth
+E ordenar pelo tamanho:
+
+ls -lSh
+São muitas as opções, e você pode ver todas elas usando:
+
+ls --help
+
+E agora contrário: Qual dos comandos abaixo funciona no Windows prompt padrão?
+
+type
+O comando type é um dos comandos clássicos do prompt do Windows, ou seja funciona sem problemas nenhum e mostra o conteúdo de um arquivo:
+type arquivo.txt
+Todos os outros comandos só vão funcionar no cmder.
+
+Com qual comando podemos buscar na linha de comando dentro de um texto?
+Dica: O comando só vai funcionar no cmder pois vem do mundo UNIX.
+
+O comando grep procura na entrada de dados, mostrando as linhas onde foi encontrado a palavra em questão, por exemplo:
+ls -al | grep Documentos
+Nesse exemplo combinamos ls -al com grep. Usamos o | para juntar os comando.O sinal | também é chamado de pipe.
+
+ls -al lista todo o conteúdo da pasta atual e passa isso como entrada para o comando grep. Em cada linha dessa entrada o grep procura a palavra Documentos.
+
+Podemos combinar o grep com outros comando como o cat:
+
+ls -al > arquivo.txt
+cat arquivo.txt | grep Documentos
+
+Qual comando no UNIX exibe o conteúdo de um arquivo no terminal ?
+(Dica: é um comando parecido com o type do windows)
+
+O comando cat serve para exibir um arquivo no terminal. Ele se parece com o comando type do Windows, então ao fazer:
+cat arquivo.txt
+
+O conteúdo do arquivo.txt é exibido na tela do terminal.
+
+Sabemos que o comando ls lista os arquivos do diretório atual, porém não lista os arquivos ocultos. Com que flag devemos chamar o comando ls para listar todos os arquivos do diretório, inclusive os ocultos?
+
+ls -al
+Para listar todos os arquivos do diretório atual, devemos utilizar a flag -al ("a" de all e "l" de list) , assim todos os arquivos serão exibidos em formato de lista.
+Por curiosidade:
+
+A flag -hl transforma as unidades de tamanho em um formato mais amigável, por exemplo 4K em vez de 4096.
+
+A flag -rl lista os arquivos em ordem reversa a normal.
+
+A flag -sl lista os arquivos por ordem de tamanho.
+
+Usando a flag --help do comando ls você pode ver várias outras opções de como listar seus arquivos!
+
+Como o cmder é um prompt muito versátil, nada mais justo do que ter um jeito fácil de acessá-lo, não é mesmo? Para isso, vamos criar um atalho para a versão full do cmder que instalamos neste capítulo. Assim evitamos aquele processo de abrir o prompt de comando tradicional para chamar o cmder.
+Primeiro, vá na pasta C:\tools\cmder\. Lá você deve encontrar a versão full do cmder, que foi instalado pelo chocolatey. Para criar um atalho dela, basta clicar com o botão direito do mouse no ícone do cmder, e depois ir em Enviar para , selecionando Área de Trabalho (criar atalho) em seguida.
+
+atalho-cmder
+
+Outra opção é deixá-lo fixado na barra de tarefas. Quando você estiver executando o cmder, clique com o botão direito no ícone dele que fica na barra do menu iniciar e clique em Fixar na barra de tarefas, assim, mesmo que você feche-o , ele estará logo ali embaixo, sendo bem rápido de acessar.
+
+atalho-cmder
+
+Pronto! Agora temos a versão full do cmder disponível na Área de trabalho e na barra de tarefas.
+
 
