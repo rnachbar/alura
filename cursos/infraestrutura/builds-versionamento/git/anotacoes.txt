@@ -1,0 +1,465 @@
+GIT - trabalho em equipe com controle e segurança
+GIT - Controle de versão distribuído
+Com o GIT se ganha histórico de versões
+
+git diff - exibe as diferenças entre arquivos
+git blame - mostra as alterações linha por linha
+
+GITHUB - plataforma online onde se pode hospedar o código com o controle de versão do git
+
+Criar usuário e senha: https://github.com
+
+git clone copia os arquivos para o seu computador
+git clone url_do_repositorio_que_o_github_fornece
+
+############### 1. Introdução ao controle de versões com Git ###############
+
+Quando iniciamos um novo projeto, uma das primeiras perguntas que surge é: onde os arquivos desse projeto ficarão armazenados?. É necessário, principalmente quando trabalhamos em conjunto com outros desenvolvedores, que o projeto esteja armazenado em um local que esteja acessível a todos os membros da equipe, com as respectivas permissões para que os mesmos sejam alterados, para que novos arquivos sejam criados e que arquivos existentes possam ser excluídos.
+
+Tendo em vista esse cenário, podemos definir que qualquer computador, numa rede onde todos os membros da equipe tenham acesso, é candidato a "local do projeto". Mas, e se ocorrer algum problema com esse computador como, por exemplo, alguma falha em seu hardware?
+
+Então podemos pensar em armazenar os arquivos do projeto em um servidor, com redundância de dispositivos de armazenamento e backups constantes. Uma pasta compartilhada na rede em uma máquina mais segura do que uma estação de trabalho torna-se uma opção melhor. Agora temos um local propício para que o projeto seja armazenado com segurança e acesso para toda a equipe, inclusive com backups constantes que permitem que recuperemos arquivos excluídos acidentalmente. Podemos chamar esse local de repositório de código.
+
+Apesar dessa segurança adicional, ficamos um pouco restritos quanto a recuperar arquivos excluídos, não temos como desfazer alterações no nosso projeto seletivamente e também não temos informações suficientes sobre o projeto para saber exatamente qual versão desse arquivo eu devo recuperar do backup?. Podemos criar um histórico (log) textual e adicioná-lo como parte do projeto. Agora perceba que ficamos com um ambiente com requisitos demais para um simples "local de armazenamento de projeto".
+
+Pensando nesse problema foram criadas ferramentas de controle de versão e esse curso apresentará uma das mais utilizadas hoje em dia, o Git. O Git é utilizado em muitos projetos de código aberto no mundo todo. Um dos maiores e mais importantes é o kernel do Linux. É possível, porém, utilizá-lo para projetos privados com todas as restrições e permissões de acesso necessárias.
+
+Uma grande vantagem do Git é a existência de ferramentas comerciais de hospedagem de código na Web. A maior provedora de hospedagem de repositórios Git, abertos ou privados, hoje é o Github (http://www.github.com/). Ele permite criar gratuitamente repositórios abertos.
+
+Para que seja possível utilizar o Git teremos que instalá-lo. O Git é uma ferramenta baseada em linha de comando, ou seja, realizamos as operações de controle dos arquivos pelo prompt de comando. Se você é adepto de ferramentas gráficas não se preocupe, existem algumas opções para facilitar seu trabalho e vamos conhecê-las no decorrer do curso.
+
+Iniciaremos o curso utilizando o Git no prompt de comando, para que seja possível demonstrar suas funcionalidades que, de certa maneira, são mascaradas em botões e opções de menus nas ferramentas gráficas. O uso do Git no prompt de comando será muito importante para detalhar suas capacidades.
+
+Download e instalação do Git
+A instalação do Git é diferente para cada sistema operacional. A seguir, mostraremos como todo o processo é feito em cada um deles. Caso você já tenha o Git instalado, clique aqui para ir direto ao uso do Git.
+
+Windows
+Para instalar o Git, iniciaremos acessando a página http://msysgit.github.io/ e baixando o instalador do msysgit. O instalador da versão mais recente, no momento da escrita, é o Git-1.9.5-preview20141217.exe. Uma vez baixado, basta executar o programa e seguir as instruções (caso haja uma tela de instalação que não esteja aqui, pode aceitar com as opções padrão).
+
+Na primeira tela de boas vindas, apenas clique em Next:
+
+Instalação Windows: passo 1
+
+Na próxima tela, indique o diretório onde deseja instalar o Git em seu computador:
+
+Instalação Windows: passo 2
+
+Em seguida, indique quais utilitários serão instalados junto do Git. Marque todas as opções, exceto "git-cheetah shell extension", como mostrado na imagem a seguir:
+
+Instalação Windows: passo 3
+
+A seguir, defina o nome do menu do Git para o menu Iniciar do Windows:
+
+Instalação Windows: passo 4
+
+O msysgit instala por padrão em seu computador um programa próprio chamado Git Bash, onde é possível manipular os repositórios de arquivos que trabalharemos no futuro. Caso você prefira, é possível usar o próprio prompt do Windows. Basta, na próxima janela, marcar a opção "Run Git from the Windows Command Prompt", como indicado na imagem a seguir:
+
+Instalação Windows: passo 5
+
+Na janela a seguir, indique que queremos que as quebras de linha sejam consideradas da mesma maneira, independente do sistema operacional trabalhado. Para isso, marque a primeira opção:
+
+Instalação Windows: passo 6
+
+Nesse instante, a cópia dos arquivos será feita para o computador, e em seguida a mensagem de que a instalação foi finalizada aparecerá:
+
+Instalação Windows: passo 7
+
+MacOS
+Para instalar o Git no Mac OS X (Snow Leopard ou superior), há um instalador pronto. Basta baixá-lo em http://code.google.com/p/git-osx-installer/downloads/list?can=3. Na listagem, selecione o arquivo git-1.7.7.3-intel-universal-snow-leopard.dmg.
+
+Após baixá-lo, basta clicar duas vezes para ter acesso ao pacote de instalação. Agora é só clicar duas vezes no arquivo "git-1.7.7.3-intel-universal-snow-leopard.pkg" (de acordo com a versão encontrada no momento da escrita) para iniciar o processo de instalação:
+
+Instalação OS X: passo 1
+
+Na tela seguinte, selecione a opção "Instalar para todos os usuários desse computador" para continuar:
+
+Instalação OS X: passo 2
+
+Depois é só prosseguir com a instalação padrão.
+
+Instalação OS X: passo 3
+
+Instalação OS X: passo 4
+
+Para testar a instalação, abra a aplicação "Terminal" e digite o comando git. A saída deve ser similar à imagem:
+
+Instalação OS X: passo 5
+
+Opcionalmente, é possível configurar o Terminal para completar os comandos do Git ao pressionarmos a tecla "tab", além de mostrar na linha de comando se a pasta atual está sendo rastreada pelo Git. Para isso é necessário adicionar as seguintes linhas ao arquivo de perfil do usuário para o prompt de comando, habitualmente encontrado na pasta home do usuário com o nome de .bash_profile (ou .bashrc).
+
+Adicione as seguintes linhas ao fim do arquivo:
+
+if [ -f /usr/local/git/contrib/completion/git-completion.bash ]; then
+    . /usr/local/git/contrib/completion/git-completion.bash
+fi
+GIT_PS1_SHOWDIRTYSTATE=true
+
+PS1='\u@\h:\w $(__git_ps1 "(%s)")\$ '
+Ao iniciar uma nova janela ou aba do Terminal, as alterações estarão aplicadas. Caso queira aplicar as alterações imediatamente no Terminal digite source ~/.bash_profile.
+
+Obs.: Caso tenha efetuado a instalação do GIT via Homebrew (http://brew.sh/), alterar o endereço do arquivo git-completion.bash para /usr/local/Cellar/git/*/etc/bash_completion.d/git-completion.bash.
+
+Linux
+Em qualquer sistema Linux, podemos utilizar o gerenciador de pacotes da respectiva distribuição para instalar o Git. No Ubuntu e no Debian, por exemplo, basta instalar o pacote git-core para ter o Git instalado. No Fedora, o pacote git. E no Gentoo, o pacote dev-util/git.
+
+Portanto, por exemplo, para fazer a instalação do Git no Ubuntu, basta executar o comando:
+
+sudo apt-get install openssl git-core
+Siga as instruções do prompt de comando, primeiro confirmando a instalação dos pacotes e suas dependências, depois confirmando a instalação do pacote git-core, como demonstrado na imagem:
+
+Instalação no Linux 1
+
+É possível testar se o Git foi corretamente instalado rodando o comando git no prompt de comando:
+
+git
+A saída deve ser uma mensagem de ajuda, similar à demonstrada na imagem:
+
+Instalação no Linux 2
+
+Ao instalar o Git, um script de ajuda que completa os comandos do Git no terminal é instalado, juntamente com um script que demonstra na linha de comando se estamos em um diretório que é um projeto rastreado pelo Git. Para ativá-los, é necessário modificar o arquivo de perfil do prompt de comando. Normalmente esse arquivo encontra-se na pasta home do usuário e chama-se .bash_profile (em alguns casos .bashrc ou .zshrc).
+
+Caso nenhum dos arquivos citados exista, crie-o; caso exista, adicione as seguintes linhas ao final dele:
+
+if [ -f /etc/bash_completion.d/git ]; then
+    . /etc/bash_completion.d/git
+fi
+GIT_PS1_SHOWDIRTYSTATE=true
+
+PS1='\u@\h:\w $(__git_ps1 "(%s)")\$ '
+Salve o arquivo. A partir de agora, caso estivermos em uma pasta rastreada pelo Git no prompt de comando, seremos informados. Para ativar as alterações imediatamente, execute o comando source informando o arquivo de perfil que alteramos:
+
+source ~/.bash_profile
+Criando conta no Github
+Agora que temos o Git instalado, podemos utilizar os serviços do Github. Primeiro precisamos criar uma conta. Para isso acessamos a página https://github.com/plans, escolhemos o tipo de conta que queremos criar e prosseguimos preenchendo os formulários pedidos.
+
+Depois de criada nossa conta, precisamos gerar uma senha (chave de segurança) que será responsável por identificar nossa máquina quando fizermos as interações entre nosso projeto e o serviço do Github. Caso não exista essa configuração entre nossa máquina e a conta do Github, o acesso ao serviço pelos comandos do Git será negado.
+
+O processo de criação da chave de segurança é similar em todos os sistemas operacionais: basta abrir o prompt de comando (no caso do Windows, é necessário abrir o Git Bash) e inserir o seguinte comando:
+
+ssh-keygen -t rsa -C "seu_email@provedor.com"
+Lembre-se de substituir seu_email@provedor.com pelo seu endereço real de email. A resposta do terminal vai perguntar em qual local do seu disco você quer salvar sua chave de segurança. Para evitar problemas, mantenha a opção padrão. Em algumas versões, pode ser necessário incluir também a opção -b 2048 ou -b 4096 para indicar o tamanho da chave a ser gerada.
+
+A seguir, será solicitada a entrada de uma senha para a chave de segurança. Caso o computador seja público ou compartilhado, é recomendado que sua chave esteja protegida por uma senha. Caso contrário, recomendamos que a senha seja ignorada, bastando pressionar Enter ao ser solicitada a senha e a confirmação de senha.
+
+Ao término do processo você deve ver uma mensagem similar à seguinte:
+
+Your identification has been saved in /Users/seu_usuario/.ssh/id_rsa.
+Your public key has been saved in /Users/seu_usuario/.ssh/id_rsa.pub.
+The key fingerprint is:
+01:0f:f4:3b:ca:85:d6:17:a1:7d:f0:68:9d:f0:a2:db seu_email@provedor.com
+The key's randomart image is:
++--[ RSA 2048]----+
+|     .+   +      |
+|       = o O .   |
+|        = * *    |
+|       o = +     |
+|      o S .      |
+|     o o =       |
+|      o . E      |
+|                 |
+|                 |
++-----------------+
+Com isso, dois arquivos serão gerados: a sua chave privada e a sua chave pública, conforme pode ser visto na imagem a seguir:
+
+Arquivo chave
+
+Agora será necessário realizar o login no http://github.com e seguir para as configurações do seu perfil. Siga "Settings", "SSH and GPG keys" e "New SSH key".
+
+Insira na caixa de texto o conteúdo do seu arquivo id_rsa.pub. O local exato do arquivo foi informado na saída do processo de criação da chave. Cole-o exatamente como ele está, sem adição de espaços ou quebras de linha. Para isso, abra-o no editor de textos simples do seu sistema operacional (TextEditor, Bloco de Notas, GEdit), como pode ser visto na figura a seguir:
+
+Cópia da chave no Github
+
+Agora você tem o Git instalado em sua máquina, uma conta no Github e as configurações necessárias para utlizar o serviço com segurança.
+
+Copiando o projeto para sua máquina: o comando clone
+Iniciaremos o curso trabalhando em um repositório já existente. Para podermos fazer isso, nós temos que copiá-lo para nossa máquina. O repositório que vamos copiar está hospedado no Github. Para garantir que vamos adquirir todos os arquivos necessários, utilizaremos o comando git clone que, além de copiar os arquivos do projeto, traz todos os arquivos necessários para que o controle de versão dos arquivos continue sendo feito.
+
+Abra o prompt de comando do computador e navegue até uma pasta que será a pasta "pai" do seu repositório local, por exemplo:
+
+cd Documentos/Projetos
+Lembre-se de que você pode escolher o local mais conveniente para você em seu computador. Agora vamos executar o comando que copiará o repositório para essa pasta:
+
+git clone https://github.com/jcfonsecagit/repositorio.git
+Esse comando clone criará uma pasta com o mesmo nome padrão do repositório (que no caso é "repositorio") e copiará para esse diretório todos os arquivos que estavam disponíveis nele.
+
+Nosso projeto de exemplo contém páginas HTML. Para visualizar o projeto basta abrir o arquivo index.html em qualquer navegador (Chrome, Firefox, Internet Explorer, entre outros).
+
+Você pode ver os arquivos do projeto navegando para a pasta "repositorio" e listando os arquivos no prompt de comando:
+
+cd repositorio
+ls
+Controle geral de versões: o comando tag
+Uma situação comum no desenvolvimento de um projeto de software é que, conforme ele vai evoluindo, vai ganhando novos releases e, consequentemente, novas versões. Com isso o software passa a ter a versão 1.0, 1.1, 2.0, 3.0 e assim por diante.
+
+O Git nos permite, sempre que desejarmos, adicionarmos um marcador no repositório. Então, em determinado momento do projeto, é possível marcar o estado atual do repositório como a versão 1.0. Esse processo de adicionar um marcador, que habitualmente é o número da versão, é chamado de tag. É possível criar tags com o qualquer nome, para que não fiquemos presos a um determinado padrão de nomenclatura de versões. Isso nos permite inclusive marcarmos o repositório como "v0.1a", "v0.1b" com a finalidade de definirmos versões preliminares, de acordo com a necessidade do projeto atual.
+
+Mas como é possível visualizar as tags existentes num projeto? No Git, é possível listar todas as Tags existentes em um projeto através do comando tag:
+
+git tag
+Feito isso, como podemos fazer para voltar o repositório para alguma dessas versões? Por exemplo, queremos visualizar como o nosso projeto, junto com todos os seus arquivos html, estava na versão v0.1. Para isso, basta dizer ao git que queremos buscar a versão v0.1. Chamamos esse processo de checkout e podemos executá-lo com o comando a seguir:
+
+git checkout v0.1
+Abrindo a página html novamente, podemos verificar como ela estava na versão v0.1.
+
+Como saber o que mudou nos arquivos?
+E se entre a versão v0.2 e a v0.1 surgiu um bug? Como descobrir o que mudou entre elas para isolar onde pode estar o bug? As ferramentas de controle de versão possuem tarefas específicas para mostrar a diferença (diff) entre duas versões de qualquer elemento do projeto, podendo ser um arquivo, um diretorio etc. No nosso caso, queremos ver as diferenças entre a versão v0.2 e a v0.1, o que conseguimos com o Git através do comando git diff, onde indicamos entre quais versões desejamos visualizar as diferenças.
+
+git diff v0.1 v0.2
+Com isso, serão mostradas as linhas existentes numa versão que não aparecem na outra versão. Também serão mostradas as alterações efetuadas entre as versões selecionadas.
+
+Como descobrir quem realizou as alterações em um arquivo linha a linha?
+Dentro do projeto, é comum encontrar linhas de código cuja compreensão não é imediata. Como descobrir o motivo pelo qual uma linha foi alterada ou o motivo para que ela tenha sido implementada de uma determinada maneira? Se analisando apenas o contexto não é possível compreender o motivo, que tal falar com o responsável por aquela modificação?
+
+O Git nos fornece uma funcionalidade onde podemos consultar quem foi o autor de cada linha de um arquivo através do comando git blame:
+
+git blame index.html
+Para sair do blame, basta apertar a tecla q
+
+Conclusão
+Como vimos através dessa apresentação simples de apenas alguns comandos disponíveis no Git, temos uma ferramenta que permite muito mais segurança no controle de alterações de arquivos de um projeto. A utilidade dessa ferramenta é indiscutível: com ela, é possível realizar com facilidade alguns controles que antes eram muito trabalhosos ou até mesmo impossíveis de se fazer quando trabalhamos simplesmente com pastas compartilhadas em uma máquina ou servidor.
+
+Durante este curso, aprenderemos outros comandos que o Git nos fornece para solucionar diversos problemas desde o trabalho básico de criação de um repositório, commits, branches, conflitos, como trabalhar no repositório sem conexão com a internet, trabalhar em diferentes implementações simultaneamente num mesmo projeto, modificação de um arquivo por mais de uma pessoa simultaneamente no projeto e tratar os conflitos, entre outros.
+
+Agora que você aprendeu um pouco sobre o que é o Git, selecione quais das alternativas a seguir descrevem suas funções e características.
+
+Manter um histórico das alterações feitas no projeto.
+Cada alteração que você faz fica gravada em um histórico, podendo ser visualizada e restaurada a qualquer instante.
+
+Marcar diferentes versões para o seu projeto.
+O Git permite que você marque um dado estado do seu projeto com uma etiqueta, que pode ser usada para determinar uma versão dele.
+
+Organizar o sistema de trabalho em equipe, centralizando os arquivos em um servidor.
+Uma das funções do Git é centralizar os arquivos de trabalho, impedindo que haja confusão sobre o que foi e não foi modificado por cada um.
+
+Selecione as alternativas que descrevem as funções e características do Github, como visto em aula.
+
+Já inclui o controle de versão do Git.
+Do mesmo modo que aquele servidor que vimos em aula, o Github mantém a integridade do código quando há diversos desenvolvedores trabalhando ao mesmo tempo.
+
+É uma plataforma online na qual você pode hospedar o seu código fonte.
+Do mesmo modo que aquele servidor que vimos em aula, o Github hospeda o código fonte do seu projeto.
+
+Para clonar um repositório do Github, basta usar o comando git clone URL, substituindo URL pelo endereço de clonagem do Github. Como vimos em aula, o endereço de clonagem pode ser encontrado na página do repositório, ou adicionando-se o final .git ao endereço da página do repositório.
+Por exemplo: o projeto repositório é visualizável pela página https://github.com/jcfonsecagit/repositorio. Basta adicionar .git ao final para obter a URL para clonagem.
+
+Faça o teste! Clone o projeto com o comando a seguir e depois veja que arquivos foram copiados para o seu computador!
+
+git clone https://github.com/jcfonsecagit/repositorio.git
+
+Ao clonar um repositório, o Git vai te mostrar o progresso e enfim uma mensagem de sucesso, mais ou menos assim:
+$ git clone https://github.com/jcfonsecagit/repositorio.git
+Cloning into 'repositorio'...
+remote: Counting objects: 18, done.
+remote: Total 18 (delta 0), reused 0 (delta 0), pack-reused 18
+Unpacking objects: 100% (18/18), done.
+$
+Para navegar pelo repositório, basta entrar no diretório criado, que pode ser visto entre aspas na primeira linha da saída ali acima, Cloning into 'repositorio'..., então basta usar o comando cd repositorio e então visualizar os arquivos que foram baixados com o comando ls.
+
+A saída deve ser mais ou menos assim:
+
+$ cd repositorio
+$ ls
+index.html
+$
+
+Vimos no video um comando que pode mostrar as versões do nosso projeto.
+Utilize e descubra: quantas tags de versões existem no projeto repositorio?
+
+2
+Isso! Para visualizar as tags de um projeto, basta entrar no diretório do repositório e digitar o comando git tag. Neste projeto há duas versões: v0.1 e v0.2. A saída do comando vai a seguir:
+$ git tag
+v0.1
+v0.2
+$
+
+Para trocar de versão para a 0.1, qual o comando que devemos utilizar?
+
+$ git checkout v0.1
+Isso mesmo! A opção checkout altera seu repositório local fazendo com que seus arquivos fiquem no mesmo estado em que estavam quando a tag v0.1 foram criados!
+
+Para ver a diferença entre dois pontos do projeto, no caso duas versões, usamos a opção diff do git. Use o comando e escolha a opção que representa o que foi alterado da versão 0.1 pra 0.2.
+
+A frase <h3>Versão 0.1</h3> foi removida.
+Isso mesmo! Ao rodar o comando git diff v0.1 v0.2 vemos as alterações entre uma versão e a outra. No caso, a frase está com um símbolo - na frente, indicando que esta foi removida da versão 0.1 pra 0.2.
+
+############### 2. O ciclo básico do Git ###############
+
+Inicialização de um repositório
+O Git é uma ferramenta de controle de versão baseada no sistema de arquivos, ou seja, podemos fazer a associação de uma pasta diretamente a um repositório. Então, vamos criar um novo diretório que conterá os arquivos do nosso projeto:
+
+mkdir curso-git
+cd curso-git
+Mas, como essa é uma pasta como qualquer outra em nosso computador, será que o git já sabe que ela conterá os arquivos do nosso projeto? Como indicar que essa pasta será o nosso futuro repositório? Isso é feito a partir do seguinte comando:
+
+git init
+Será exibida uma mensagem similar a: Initialized empty Git repository in /diretorio/repositorio/do/git E pronto. Já temos um repositório.
+
+Adicionando arquivos ao repositório
+Agora começaremos o nosso projeto em si. Faremos um projeto que conterá páginas HTML. Então, vamos criar o primeiro arquivo, uma simples página HTML vazia chamado index.html:
+
+<html>
+    <head>
+    </head>
+    <body>
+    </body>
+</html>
+Já temos o nosso primeiro arquivo em nosso projeto. Mas, será que o git já sabe que o arquivo criado pertence ao repositório? Para tal, podemos verificar quais os arquivos que pertencem ao nosso repositório. Isso pode ser feito digitando o comando:
+
+git ls-files
+E aí? Retornou algo? Nada? Onde está o nosso arquivo? Como fazemos para adiciona-lo no repositório? Para confirmar, podemos verificar o estado dos arquivos do nosso projeto:
+
+git status
+E teremos como saída:
+
+# On branch master
+#
+# Initial commit
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#  index.html
+Com isso, podemos verificar que o nosso arquivo está na condição de Untracked files, isto é, ele não está na lista de arquivos cujas alterações serão rastreadas, ou controladas. Isso acontece porque o Git não sabe que deve controlar as alterações deste arquivo, ou seja, que ele deva fazer o track. Então, como dizemos ao Git que ele deve realizar o track? Isso é feito a partir do comando git add passando o nome do arquivo do qual o Git deve fazer o track. No nosso caso, queremos adicionar o arquivo index.html ao repositório:
+
+git add index.html
+Vamos verificar novamente o estado dos arquivos do nosso repositório com o comando git status:
+
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+#   (use "git rm --cached <file>..." to unstage)
+#
+#  new file:   index.html
+#
+Vemos que o nosso arquivo passou para condição de Changes to be committed, isto é, na lista de arquivos que estão prontos para o commit. Mas o que é commit? Toda vez que terminamos de realizar as alterações nos arquivos de um projeto, precisamos "entregar" essas alterações, isto é, realizar um commit. E somente as alterações que estiverem sob a condição de "Changes to be commited" é que serão entregues.
+
+Agora, podemos realizar o primeiro commit do nosso projeto. Mas como é que o Git sabe quem é o responsável pelo commit? Na seção anterior, vimos o comando git blame, o qual mostrava os responsáveis por cada linha de código. Nós precisamos informar ao Git o nosso nome e e-mail. Isso é feito com os seguintes comandos:
+
+git config user.name "João Carlos Fonseca"
+git config user.email "jcfonsecagit@gmail.com"
+Com isso, o usuário João Carlos Fonseca será o responsável pelas alterações no repositório atual. Porém, se quisermos fazer isso para outros repositórios, temos que dar o mesmo comando toda vez? Felizmente, o Git nos fornece a opção de definir um nome de usuário e e-mail para todo o sistema, isto é, deixando esta configuração global:
+
+git config --global user.name "João Carlos Fonseca"
+git config --global user.email "jcfonsecagit@gmail.com"
+Caso essa configuração não seja efetuada, o Git vai determinar o nome de usuário atual do terminal como o autor das alterações. É importante que essa configuração seja feita para que seja mais fácil encontrar suas próprias alterações e facilitar a comunicação entre os membros do time caso haja alguma dúvida sobre um código feito por outra pessoa.
+
+Agora sim, estamos prontos para executar o nosso primeiro commit do projeto. Para que isso aconteça, devemos executar:
+
+git commit -m "Início do projeto"
+Com isso, realizamos o primeiro commit do sistema. A flag "-m", indica que o conteúdo a seguir é a mensagem que será utilizada para descrever o que está sendo feito no commit. Verificando os estados dos arquivos do nosso sistema com o comando git status, verificamos que não há nenhuma alteração em nosso projeto.
+
+# On branch master
+nothing to commit (working directory clean)
+Alterando o projeto
+Vamos continuar o nosso projeto modificando o arquivo index.html:
+
+<html>
+    <head>
+    </head>         
+    <body>          
+        <h1>Git</h1>
+        <h2>Trabalhando em Equipe com Controle e Segurança</h2>
+
+        <p>Um curso que explora os benefícios de utilizar o Git como ferramenta de controle de versão para projetos em qualquer linguagem, em qualquer plataforma.</p>
+
+        <h3>Principais benefícios:</h3>
+        <ul>
+            <li>Funciona de maneira distribuída</li>
+            <li>Permite a edição concorrente de arquivos do projeto</li>
+            <li>Não depende de uma conexão ativa com um servidor</li>
+        </ul>
+    </body>         
+</html>
+Verificando o estado dos arquivos novamente com o comando git status, percebemos que o Git já reconhece que temos arquivos que foram modificados no nosso projeto desde o nosso último commit:
+
+# On branch master
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#    modified:   index.html
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+Contudo, vemos que essas alterações ainda não fazem parte das alterações que serão adicionadas no próximo commit. Para adicionar esses arquivos para o próximo commit, precisamos rodar novamente o comando git add com o nome do arquivo.
+
+Verificando o estado novamente, vemos que o nosso arquivo index.html está sob a condição "Changes to be committed".
+
+# On branch master
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#    modified:   index.html
+#
+Agora as alterações estão prontas para o commit. Ao rodar o comando git commit -m "Conteúdo da página index.html", temos o segundo commit do nosso projeto.
+
+Recapitulação do processo
+Durante o ciclo básico que demonstramos anteriormente, nós interagimos com 3 estágios diferentes do repositório. O primeiro deles enquanto nós criamos o repositório, mas não indicamos nenhum arquivo para ser rastreado.
+
+Nesse estágio, estamos interagindo com um estado do projeto que chamamos de "Working Directory", ou seja, é o nosso sistema de arquivos atual. Nele estão as alterações que estamos realizando no momento.
+
+O Working Directory pode estar "limpo", quando não há diferença entre os arquivos como armazenados no repositório e como estão atualmente. Quando há diferença (por exemplo, alteramos determinado arquivo, mesmo que uma alteração mínima), o Working Directory fica marcado como "sujo".
+
+Em nosso caso o arquivo não existia para se ter uma comparação, pois tínhamos um repositório novo. Após modificarmos nossos arquivos a ponto de definirmos que um "passo" foi concluído, criamos uma visão desse passo, um ponto de controle preliminar com o comando "git add".
+
+Esse comando cria um novo estágio do repositório, o que chamamos de "Index" ou "Staging Area". Esse estágio é transitório e pode ser alterado ainda antes de se tornar um passo do projeto: podemos adicionar novos arquivos, removê-los ou mesmo alterá-los.
+
+Quando satisfeitos com o conteúdo do "Index", utilizamos o comando "git commit" para persistí-lo, gravar esse passo com todos os arquivos novos e alterações efetuadas. O comando "commit" criou um terceiro estágio do repositório que conhecemos como "HEAD". O HEAD é o último estado que o Git usa como referência, é a visão do último passo do projeto que foi concluído e entregue.
+
+Conclusão
+Uma ferramenta como o Git nos permite fazer alterações em nosso projeto com mais segurança pois sabemos que podemos controlar cada alteração, às vezes de maneira bem detalhada, de cada um dos nossos arquivos.
+
+Apesar de poderosa, o Git não é uma ferramenta totalmente automatizada (automatizar esse processo seria impossível, pois o gerenciamento das versões varia muito de acordo com o ambiente do projeto e da equipe). Precisamos interagir com o Git constantemente para podermos extrair o melhor dos benefícios que ele oferece.
+
+Apesar de demonstrarmos o uso do Git desde o início do projeto, podemos utilizar os mesmos passos em um projeto existente para que ele possa, a partir de um momento, ser controlado pelo Git.
+
+Esse capítulo demonstrou o ciclo básico do trabalho de controle de versões de um projeto do ponto de vista de um único desenvolvedor. Com o Git podemos trabalhar em equipe, conforme veremos nos próximos capítulos. Apesar de podermos trabalhar em equipe, não precisamos, por enquanto, nos conectar a um servidor central; fizemos o controle local do nosso projeto. Isso permite que possamos trabalhar em um projeto mesmo sem ter acesso à rede ou à internet pois essas alterações podem ser aplicadas mais tarde ao repositório "central".
+
+Qual comando utilizamos para informar ao Git que a pasta atual no prompt de comando deve ser tratada como um repositório?
+
+git init
+ 
+O comando git init inicia um novo repositório! É isso aí!
+
+"O Git é uma ferramenta de controle de versão de arquivos que permite o rastreio de alterações em diversos arquivos em um mesmo repositório, não importando a localização dos mesmos no sistema de arquivos."
+A afirmação acima é:
+
+Falsa
+ 
+Cada repositório deve ser associado diretamente com uma pasta no sistema de arquivos e, portanto, a afirmação é falsa.
+
+Quais são os três estados de um repositório com os quais interagimos ao realizar o fluxo de controle com o Git?
+
+working directory, index e HEAD
+ 
+working directory representa o estado atual dos arquivos no repositório. Podemos utilizar o comando git add para adicioná-los ao index, ou staging area, que representa uma visão preliminar das modificações que queremos definir para nosso projeto, comparando essas ao HEAD, o último passo completo do nosso projeto, que serve de referência para comparação do trabalho com o working directory.
+
+Como podemos verificar quais arquivos foram alterados, em comparação com o último passo (commit) do repositório?
+
+O comando git status lista o estado atual de cada arquivo, caso tenha sido modificado
+ 
+O comando git status exibe um resumo dos arquivos modificados, adicionados ou excluídos de seu working directory, em comparação com o HEAD.
+
+Qual o comando utilizado para informarmos ao Git que desejamos rastrear determinado arquivo, incluindo-o no controle de versão?
+
+git add
+ 
+Correto! O comando git add, seguido pelo caminho relativo ou completo do arquivo, registra que o mesmo deve ser adicionado ao controle de versão!
+
+Vimos que o comando git add pode receber como parâmetro o nome de um arquivo que deve ter suas alterações rastreadas. Assim, o mesmo será adicionado ao index do repositório. De que outras maneiras podemos utilizar o comando git add? Como podemos adicionar mais de um arquivo ao index ao mesmo tempo? Escolha as alternativas que representem corretamente estes outros modos.
+
+git add arquivo1 arquivo2
+ 
+Você pode adicionar arquivos específicos passando cada um como um parâmetro, separando cada arquivo por um espaço!
+
+git add caminhoDeUmDiretorio
+ 
+Você pode adicionar um diretório inteiro passando como parâmetro do comando git add o caminho do diretório!
+
+git add .
+ 
+O caminho git add . funciona do mesmo modo que passar o caminho de um diretório, pois o atalho . representa o diretório atual. Portanto, serão adicionados todos os arquivos que estiverem dentro do diretório atual!
+
+
+
