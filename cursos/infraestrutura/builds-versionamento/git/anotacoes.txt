@@ -461,5 +461,65 @@ git add .
  
 O caminho git add . funciona do mesmo modo que passar o caminho de um diretório, pois o atalho . representa o diretório atual. Portanto, serão adicionados todos os arquivos que estiverem dentro do diretório atual!
 
+O comando git add pode ser executado de modo interativo com a opção -i. Ao rodar o comando completo, git add -i, o modo interativo inicia um prompt de comando específico, aguardando as decisões do usuário sobre quais as alterações detectadas no working directory devem ser adicionadas ao index.
+Realize uma alteração substancial ao arquivo index.html (por exemplo, adicione um novo parágrafo de texto dentro da tag <body> e altere um texto existente).
+
+Agora adicione o arquivo utilizando o modo interativo:
+
+Rode o comando git add -i
+$ git add -i
+           staged     unstaged path
+  1:    unchanged        +1/-0 index.html
+
+*** Commands ***
+  1: status    2: update    3: revert    4: add untracked
+  5: patch     6: diff      7: quit      8: help
+What now>
+Para adicionar arquivos alterados, utilize a opção update. Você pode digitar tanto o número, quanto a palavra escrita como também somente a primeira letra dela. No caso, utilizamos aqui a abreviação u e pressione enter.
+What now> u
+           staged     unstaged path
+  1:    unchanged        +1/-0 index.html
+Aparecerá uma listagem dos arquivos modificados, com um número atribuído a cada arquivo. Digite o número que representa o arquivo index.html e pressione enter .
+Update>> 1
+           staged     unstaged path
+* 1:    unchanged        +1/-0 index.html
+Aparecerá um asterisco ao lado do número do arquivo, indicando que ele será adicionado. Pressione enter novamente para confirmar e voltar ao menu principal.
+Update>> 
+updated one path
+
+*** Commands ***
+  1: status    2: update    3: revert    4: add untracked
+  5: patch     6: diff      7: quit      8: help
+Se quiser, confira as modificações. Utilize a opção status para conferir que o arquivo index.html foi adicionado corretamente, digitando a opção e pressionando enter.
+What now> status
+           staged     unstaged path
+  1:        +1/-0      nothing index.html
+
+*** Commands ***
+  1: status    2: update    3: revert    4: add untracked
+  5: patch     6: diff      7: quit      8: help
+Utilize a opção quit para terminar a interação!
+What now> 7
+Bye.
+$
+Agora você pode fazer o commit do arquivo, que já está adicionado ao index. Confira usando o comando git status!
+
+O comando git add -i é mais recomendado quando temos um número muito grande de alterações a serem adicionadas ao index e também um grande número de alterações que não gostaríamos de adicionar ao index. O modo interativo inclusive permite que adicionemos seletivamente trechos de um arquivo, deixando algumas modificações de fora mesmo estando no mesmo arquivo, com a opção patch.
+A nomenclatura das opções não é consistente com os comandos que utilizamos até agora, porém perceba que sempre uma das opções é de ajuda, e podemos consultá-la a qualquer momento. Caso esteja em dúvida, sempre existe a opção de terminar o modo interativo e voltar ao prompt de comando.
+
+Num ciclo simples de controle de um projeto com o Git, muitas vezes podemos querer adicionar ao HEAD todas as alterações que foram realizadas no working directory. O comando git commit oferece uma opção para que possamos evitar o passo de adicionar manualmente os arquivos ao index, gerando um commit que já inclui todas as modificações feitas no projeto.
+Qual é essa opção? Utilize o comando git commit --help para ver quais as opções disponíveis!
+
+git commit -a
+ 
+A opção -a inclui imediatamente no commit todos os arquivos modificados ou removidos! Porém, ela não adiciona os arquivos novos. Podemos combinar a opção de mensagem com git commit -a -m 'Mensagem de commit' para não precisar escrever a mensagem no editor padrão do console.
+
+O comando git commit pode também utilizado sem passar a opção -m. Neste caso, o editor de texto padrão de seu terminal vai abrir para que você digite a mensagem de commit. Ao salvar, caso a mensagem não esteja vazia, o commit será criado.
+
+O editor abrirá com um espaço para preenchermos a mensagem e, logo abaixo, uma listagem dos arquivos que serão e não serão enviados. Essas linhas que começam com # não serão enviadas na mensagem, pois são comentários!
+Esse modo de escrever a mensagem de commit é bastante interessante quando a mensagem que queremos escrever é um pouco mais complicada do que uma simples frase. Conseguimos, por exemplo, colocar itens na mensagem de commit, utilizando diversas linhas ao invés de uma única.
+
+Dica: você pode alterar o editor padrão definindo a variável de ambiente EDITOR com o comando do editor de texto que você quer que ele execute.
+
 
 
