@@ -52,18 +52,17 @@
 ### Configurar ambiente remoto (uso do repositório)
 #### Mostra repositórios remotos
 * `$ git remote`
+
 #### Adiciona repositórios remotos
 * `$ git remote add origin https://github.com/rnachbar/git-curso.git`
 * `$ git remote`
 
-### Subir alterações no repositório remoto
+## Subir alterações no repositório remoto
 * `$ git push origin master`
-### Baixar repositório remoto
+## Baixar repositório remoto
 * `$ git clone URL`
-### Atualiza repositório na máquina local
+## Atualiza repositório na máquina local
 * `$ git pull`
-
-
 
 * `$ `
 * `$ `
