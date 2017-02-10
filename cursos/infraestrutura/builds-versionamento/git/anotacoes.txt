@@ -521,5 +521,182 @@ Esse modo de escrever a mensagem de commit é bastante interessante quando a men
 
 Dica: você pode alterar o editor padrão definindo a variável de ambiente EDITOR com o comando do editor de texto que você quer que ele execute.
 
+############### 3. Sincronização dos dados com o repositório ###############
+
+Onde gravo meus arquivos?
+Apesar do Git nos permitir realizar os commits de maneira local, quando desejarmos trabalhar com uma equipe na qual várias pessoas precisarão de acesso aos arquivos em seus computadores, precisaremos de um local onde todas os arquivos e suas respectivas modificações estejam disponíveis.
+
+Uma possibilidade inocente para resolver esse problema é, sempre que um arquivo for alterado, efetuarmos sua gravação em um pen-drive e distribuí-lo para as outras pessoas da equipe. No entanto, essa tarefa tende a se tornar muito trabalhosa com o passar do tempo. Imagine a qualquer alteração ter que ficar passando pen-drive para todos os colegas da equipe. Totalmente inviável.
+
+Uma outra possibilidade é termos um diretório na rede onde todos possuem acesso e, sempre que uma informação for alterada por alguma pessoa, a alteração seja refletida nesse diretório. Assim, todos as outras pessoas da equipe também podem recuperar essas alterações.
+
+Esse local remoto onde os arquivos ficam centralizados para todos os desenvolvedores é conhecido como repositório remoto, e é justamente o que o Github nos permite criar: repositórios para os quais podemos submeter nossos arquivos e outras pessoas de uma equipe possuam acesso e permissão para manipulá-los de maneira colaborativa. No entanto, ainda não temos nenhum repositório criado para começarmos a enviar nosso arquivo.
+
+Criação de repositórios no Github para guardar os arquivos
+Sempre que desejarmos armazenar os arquivos de um novo projeto, precisamos criar um novo repositório. O Github nos permite a criação de ilimitados repositórios, desde que eles sejam abertos e visíveis a todos os usuários. Em planos pagos, é possível ter repositórios privados, onde apenas determinados usuários possuam acesso.
+
+Para conseguirmos criar nosso repositório, é preciso estar logado no Github, com uma conta já previamente criada e configurada, como visto no capítulo 1.
+
+Uma vez logado no Github, existe na página inicial, do lado direito, um botão chamado "New Repository", que permitirá a criação do novo repositório. Em seguida, basta indicarmos o nome do projeto, que no nosso caso é "curso-git", e, opcionalmente, uma descrição. Nesse instante, você deverá estar em uma tela similar à abaixo.
+
+
+
+Podemos também definir a visibilidade do repositório que, no caso, deixaremos como público. Pronto, clicando em "Create Repository" teremos o nosso novo repositório remoto, hospedado no Github.
+
+Configuração do repositório remoto
+No capítulo anterior, foram realizados commits. Porém, todos eles de maneira local, ou seja, eles só estão visíveis para o próprio autor do commit e ainda não estão disponíveis no repositório remoto.
+
+Para conseguirmos compartilhar nosso projeto HTML, precisamos indicar que o diretório do nosso projeto apontará para um repositório remoto, no caso, o que acabamos de criar no Github. Para realizarmos esse processo, o Git possui o comando git remote add, com o qual podemos indicar a localização do repositório remoto e o nome que queremos dar para ele (um apelido ou alias).
+
+A sintaxe completa do comando é:
+
+git remote add [alias_do_repositorio] [uri_do_repositorio]
+Portanto, precisamos ainda de duas informações para completar o comando, que são o alias do repositório e a url de onde ele estará disponível.
+
+Uma convenção adotada é a utilização do nome do repositório remoto como "origin". No entanto, qualquer outro nome pode ser utilizado. Em seguida, devemos saber também a URI do repositório, que é um caminho único que indica o local onde ele ficará armazenado. O próprio Github, segue uma convenção com relação à URI de seus repositórios, sendo a seguinte:
+
+https://github.com/[nome_do_usuario]/[nome_do_repositorio].git
+Com isso, para o nosso projeto, teremos o seguinte caminho:
+
+https://github.com/[seu_nome_do_usuario]/curso-git.git
+Logo, o comando completo que devemos executar no prompt é:
+
+git remote add origin https://github.com/[seu_nome_de_usuario]/curso-git.git
+Ao executarmos o comando, nenhuma saída é mostrada no prompt.
+
+Envio dos commits locais para o repositório
+No capítulo anterior, realizamos alguns commits locais, os quais queremos enviar ao servidor para que outras pessoas consigam visualizar o trabalho feito.
+
+Para isso, uma vez que o repositório já tenha sido inicializado com o comando git init, os commits locais já tenham sido realizados e o repositório remoto configurado, basta executarmos o comando git push, indicando qual é o repositório remoto para onde os commits serão enviados e a branch que será enviada para o servidor. O repositório remoto será o "origin", que acabamos de configurar, enquanto a branch será a "master", criada por padrão sempre que um repositório é criado. Aprederemos mais sobre branches nos próximos capítulos.
+
+Com isso, teremos o comando: git push origin master.
+
+Executando o push, teremos uma saída similar com a seguinte, no prompt:
+
+Counting objects: 3, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 272 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/[seu_usuario_do_github]/curso-git.git
+  * [new branch]      master -> master
+Contribuição com o projeto: clone de repositórios
+Agora que o repositório do projeto está disponível e inclusive já possui commits realizados, outros desenvolvedores podem querer contribuir com o projeto. O primeiro passo para que um outro usuário realize suas alterações é ter em seu próprio computador uma cópia do repositório. Dessa forma, ele terá todos os arquivos disponíveis em seu computador, para alterar como desejar.
+
+O processo de copiar o repositório remoto para um computador, a fim de realizar alterações nos arquivos ou até mesmo para ter os arquivos no computador, é chamado de "clone" e pode ser realizado através do comando git clone [uri_do_repositorio].
+
+O desenvolvedor que quiser colaborar em um repositório pode descobrir a URI de clonagem dele acessando sua página no Github. Nesse caso, o endereço de clonagem será:
+
+https://github.com/[usuario_do_dono_do_repositorio]/curso-git.git.
+Pronto, agora é possível que outros desenvolvedores trabalhem no projeto. Basta executar o clone com o comando: git clone https://github.com/[usuario_do_dono_do_repositorio]/curso-git.git.
+
+Após a execução do comando, um diretório chamado "curso-git" será criado e a seguinte saída será exibida:
+
+Cloning into curso-git...
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0)
+Unpacking objects: 100% (3/3), done.
+Caso queira, é possível que o nome da pasta em seu computador seja diferente. Basta especificar o nome desejado no fim do comando:
+
+git clone https://github.com/[usuario_do_dono_do_repositorio]/curso-git.git meuprojeto
+
+O exemplo acima copia o repositório "curso-git" para uma pasta chamada "meuprojeto". Lembre-se de utilizar essa opção com cautela, quando o nome do repositório conflitar com outra pasta em seu computador por exemplo, pois é preferível manter a consistência entre o nome do repositório e o nome da pasta. Portanto, vamos manter o primeiro exemplo de comando.
+
+Ao clonar um repositório, não precisamos adicionar o repositório remoto através do comando git remote add, pois tudo já é feito pelo comando git clone, dando um alias "origin" para o repositório.
+
+É importante ter em mente que o processo de clonagem de um projeto pode demorar. O tempo pode variar de acordo com o tamanho do projeto que está sendo clonado e também com a velocidade de conexão.
+
+Uma vez que o colaborador realizou o clone do repositório em seu computador e agora possui todos os arquivos localmente, as alterações desejadas por ele serão feitas localmente, igual aprendido na seção anterior. Ao final das alterações, ele realizará o envio dos commits para o repositório remoto através da execução do comando git push origin master.
+
+Ao executar o "push", veremos uma mensagem similar à abaixo no prompt.
+
+Counting objects: 5, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 304 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/[usuario_no_github]/curso-git.git
+    c886b6a..b9aa50c  master -> master
+A partir desse momento, acessando a página do repositório no Github, é possível ver a lista com os commits realizados.
+
+Sincronização com as novas alterações do repositório
+A partir do momento em que fizemos atualizações no repositório, os outros desenvolvedores que já o possuem em seus computadores não estarão sincronizados com estas alterações, ou seja, eles ainda não possuem em seus computadores as novas versões dos arquivos.
+
+Para que a sincronização seja realizada e o desenvolvedor tenha em seu computador as novas versões dos arquivos, basta que ele execute o comando git pull origin master. A saída no prompt será similar à abaixo, indicando os arquivos que tiveram alterações e quantas linhas do arquivo foram afetadas.
+
+remote: Counting objects: 5, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From github.com:[usuario_no_github]/curso-git
+    c886b6a..b9aa50c  master     -> origin/master
+Updating c886b6a..b9aa50c
+Fast-forward
+  index.html |    1 +
+  1 files changed, 1 insertions(+), 0 deletions(-)
+Visualização de log de commits
+Uma vez que o projeto possua commits no repositório remoto, conseguimos visualizar no próprio site do Github que os commits estão publicados. Basta acessar o endereço https://github.com/[seu_usuario_no_github]/[projeto]/commits/master, onde "master" é o nome da branch utilizada que, novamente, estudaremos melhor nos próximos capítulos.
+
+Ao visualizarmos o log dos commits através da página do repositório no Github, temos uma visualização agradável do que acontece com o projeto e sua evolução. No entanto, muitos desenvolvedores podem achar o fato de ter que abrir o navegador para visualizar a lista de commits um processo muito trabalhoso.
+
+Para facilitar a visualização dos commits, é possível também executar o comando git log em um prompt, no diretório de um projeto, que mostrará informações como o autor, a data e hora e a mensagem de commit utilizada. Uma possível saída para esse comando é:
+
+commit b9aa50ccb68dc6c60bca197b7a5ee5e0b1d556f2
+Author: Nome de Um Usuário <email1@servidor.com>
+Date:   Tue Dec 27 17:35:50 2011 -0200
+
+    Um outro commit de outro usuário 
+commit c886b6ae3d8963ddba8cc80e434f572f72276ea8
+Author: Nome de outro usuário <email2@servidor.com>
+Date:   Tue Dec 27 16:47:15 2011 -0200
+
+    Primeiro commit
+Ao executar o comando git log, note que ele é extremamente rápido, pois, quando clonamos o repositório, todas as informações dele estão localmente em nosso computador, ou seja, não precisamos acessar nada de fora de nossa máquina.
+
+Contudo, às vezes desejamos obter mais informações sobre os commits realizados: conhecer quais os arquivos que foram modificados no commit. Será que temos que colocar na mensagem do commit para saber quais os arquivos modificados? Felizmente, o Git nos fornece uma ferramenta que permite visualizar os arquivos modificados. O comando é o git whatchanged. Uma possível saída para esse comando é:
+
+commit b9aa50ccb68dc6c60bca197b7a5ee5e0b1d556f2
+Author: Nome de Um Usuário <email1@servidor.com>
+Date:   Tue Dec 27 17:35:50 2011 -0200
+
+    Um outro commit de outro usuário 
+:100644 100644 6b6c919... 5270907... M index.html
+Nesse caso, está sendo indicado que o arquivo index.html sofreu modificações (indicado pela letra M).
+
+Controle de permissões do repositório do github
+Muitas vezes queremos contribuir com um projeto, mas não possuímos permissão para realizarmos as contribuições como por, exemplo, novos commits.
+
+Conseguimos perceber que não possuímos permissão para um repositório no Github ao acessarmos ele via o navegador e notar que a URL para clonarmos o projeto possui a mensagem "Read-Only access" ao seu lado. Um exemplo pode ser visualizado na imagem a seguir:
+
+
+
+No nosso caso, como criamos o repositório curso-git no começo dessa seção, podemos também dar permissão para outros colaboradores. Por exemplo, caso queiramos adicionar o usuário fictício "João Carlos Fonseca" aos coloboradores do projeto, podemos acessar o endereço https://github.com/[seu_usuario_no_github]/curso-git/settings/collaboration e adicionarmos o id do usuário que, nesse caso, é jcfonsecagit.
+
+No capítulo anterior, você gerou alguns commits, que ainda não foram enviados para o repositório remoto. Agora que configuramos ele, podemos enviar nossos commits para lá através do comando git push origin master.
+Esse comando envia os dados da branch local master para a branch remota master, localizada no repositório origin.
+
+Se tudo ocorreu certinho, a saída deve ser bem parecida com essa:
+Counting objects: 3, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 272 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/[seu_usuario_do_github]/curso-git.git
+  * [new branch]      master -> master
+Outra alternativa é utilizar, no primeiro push, a opção -u ou --set-upstream. Ela atrela a branch remota à local, fazendo com que não seja mais necessário passar como parâmetros a origem e a branch no comando push, que fica então assim: git push.
+
+Quando um desenvolvedor executa um git clone [repositorio], o que é copiado para sua máquina?
+
+Tudo que existe naquele repositorio
+ 
+Exatamente! Ao realizarmos a clonagem, uma cópia de todo o repositório remoto é criada em nossa máquina. Todos os arquivos, tags, histórico, branches e assim por diante ficam disponíveis localmente na máquina do desenvolvedor.
+
+Às vezes desejamos visualizar mais informações do que o git log nos fornece, como por exemplo quais arquivos foram modificados no commit. Para isso existe o comando git whatchanged. Mas e se quisermos ver também quais as linhas modificadas?. Para isso, basta passar uma opção ao comando git whatchanged para que o Git nos forneça tal informação. Qual é essa opção?
+
+git whatchanged -p
+ 
+Ao executarmos o comando git whatchanged -p é possível visualizar quais as linhas que foram modificadas em cada commit do nosso projeto. Obs: também é possível utilizarmos git log -p, que imprime também os commits nos quais não houve modificação.
+
 
 
