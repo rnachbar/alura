@@ -4,6 +4,11 @@ Desenvolvimento de estudos da plataforma Alura e seus cursos
 ## Dependências
 * [Git](https://git-for-windows.github.io/)
 
+## Informações
+* Cursos dividos por categorias
+* Cronagrama.md faz referência aos cursos finalizados ou em andamento daquela categoria
+* Dependências necessárias descritas em cadaa curso
+
 ## Rotina de pull
 *Passos que devem ser executados antes do desenvolvimento (diario ou cada vez que for mexer no repositório)*
 
