@@ -2,15 +2,11 @@ GIT - trabalho em equipe com controle e segurança
 GIT - Controle de versão distribuído
 Com o GIT se ganha histórico de versões
 
-git diff - exibe as diferenças entre arquivos
-git blame - mostra as alterações linha por linha
-
 GITHUB - plataforma online onde se pode hospedar o código com o controle de versão do git
 
 Criar usuário e senha: https://github.com
 
-git clone copia os arquivos para o seu computador
-git clone url_do_repositorio_que_o_github_fornece
+Branche é desenvolver em uma área específica do seu repositório e depois integrar essa área no repositório principal
 
 ############### 1. Introdução ao controle de versões com Git ###############
 
@@ -697,6 +693,89 @@ Exatamente! Ao realizarmos a clonagem, uma cópia de todo o repositório remoto 
 git whatchanged -p
  
 Ao executarmos o comando git whatchanged -p é possível visualizar quais as linhas que foram modificadas em cada commit do nosso projeto. Obs: também é possível utilizarmos git log -p, que imprime também os commits nos quais não houve modificação.
+
+############### 4. Organização do trabalho com branches ###############
+
+O que é branch e por que utilizá-las?
+É comum, durante o desenvolvimento de novos recursos ou de correção de bugs, interrompermos o trabalho por falta de tempo ou porque surgiu uma nova prioridade do projeto. Mas o que fazer com as alterações que estão pela metade? Deletar e depois ter que refazer tudo novamente? Colocar no repositório algo pela metade, podendo quebrar todo o sistema?
+Uma solução que é bem utilizada no dia a dia é a de criar uma seção separada do projeto, uma bifurcação, uma branch. Tal solução possibilita desenvolver separadamente cada uma das funcionalidades sem interferir no desenvolvimento de uma outra parte do projeto.
+
+Trabalhando com branches: primeiros passos
+Já sabemos que a utilização de branches facilita no dia a dia do desenvolvedor. Mas como criar uma nova branch? Para tal, utilizamos o comando git branch, passando como opção o nome da branch que desejamos criar. No nosso caso, criaremos a branch design, onde realizaremos algumas alterações referentes ao design da nossa página html:
+git branch design
+
+Ao executarmos o comando, nenhuma saída é mostrada no prompt.
+
+Agora, como verificamos quais são as branches existentes em um projeto? Isso se resolve com o comando git branch. Ele nos fornece todas as branches criadas na máquina. Ele também possibilita visualizar qual a branch que estamos atualmente através de um "*" que precede o nome da branch atual.
+
+git branch
+
+  design 
+* master
+Observe que o "*" precede uma branch chamada master. Mas nós não a criamos agora. De onde ela surgiu? A branch master é criada quando executamos o nosso primeiro commit do projeto. Ela é considerada a branch principal do projeto.
+
+Mas, se quisermos alterar o projeto numa outra branch, como é que fazemos para alterar a branch atual? Isto é feito através do comando git checkout, passando o nome da branch para a qual desejamos mudar. No nosso caso, temos:
+
+git checkout design
+
+Switched to branch 'design'
+
+E pronto. Todas as alterações que realizaremos a partir de agora estarão na branch design.
+
+Vamos adicionar estilo para a nossa página. Para tal, copie o seguinte código num arquivo chamado design.css. Adicione este arquivo na pasta do seu projeto.
+
+body {
+  background-color: blue;
+}
+Adicione também a seguinte linha no header do seu arquivo index.html:
+
+<link rel="stylesheet" type="text/css" href="/design.css"/>
+Porém, essas alterações ainda não foram atualizadas no repositório. Para isso, precisamos adicionar os arquivos e commitar as alterações:
+
+git add design.css index.html
+git commit -m "Adicionando estilo para a nossa página"
+E pronto! As alterações estão salvas na branch design. O esquema do projeto com as branches pode ser vista na figura a seguir:
+
+
+
+Se voltarmos para a branch master com o comando git checkout master, vemos que as alterações feitas anteriormente não estão mais presentes.
+
+Por fim, perceba que todas essas alterações foram realizadas sem precisar de conexão com a internet. O Git nos permite trabalhar tanto com o repositório remoto quanto com o nosso próprio repositório local, ao contrário de outros controladores de versão como o SVN e CVS.
+
+Compartilhando branches locais com outros desenvolvedores
+Agora, o que acontece se você começou alguma alteração em um projeto e não terminou? Será que é bom manter apenas localmente? E se alguém quiser continuar as alterações que você iniciou?
+E se criamos uma nova ferramenta que quebra a compatibilidade com as versões anteriores? Para resolver esses problemas, é bom manter também essas branches no repositório remoto.
+
+Iniciaremos este trabalho enviando a branch criada localmente para o repositório remoto. Isso é feito utilizando o comando git push passando dois argumentos: o primeiro é o nome do repositório e o segundo, o nome da branch que deseja-se enviar. No nosso caso, temos:
+
+git push origin design
+
+Com isso, o repositório remoto conterá uma cópia fiel da branch design local. Isso pode ser visto na figura a seguir:
+
+
+
+Porém, toda vez que atualizarmos tanto o nosso projeto local quanto o projeto remoto, precisaremos indicar qual o repositório e o nome da branch que a nossa branch local se refere no remoto, isto é, precisaremos digitar git pull origin design e git push origin design para atualizar os repositórios locais e remotos, respectivamente.
+
+Para evitar tal trabalho, podemos indicar o caminho (track) da branch remota para a nossa branch local. Isso pode ser feito no instante em que criamos a branch remota através da opção "-u". No nosso caso, temos:
+
+git push -u origin design
+
+Com isso, a nossa branch local sabe qual a branch remota que ela se referencia.
+
+
+
+E como podemos visualizar as branches já existentes em um repositório remoto? Isso é feito através da opção "-r" passado ao comando git branch.
+
+git branch -r
+origin/HEAD -> origin/master 
+origin/design
+Uma vez visto as branches remotas, como copiar uma delas para a máquina local? Isso é feito passando o nome do repositório e da branch remota ao comando git branch, além de indicar o nome da branch que será criada. Mais uma vez, temos o problema de indicar o caminho entre as branches. Para este caso, a opção -t resolve.
+
+git branch -t design origin/design
+Temos como resultado:
+
+Branch design set up to track remote branch design from origin.
+Switched to a new branch 'design'
 
 
 

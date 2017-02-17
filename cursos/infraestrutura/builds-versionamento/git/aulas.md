@@ -5,6 +5,15 @@
 
 ## Aula 1
 
+*Exibe as diferenças entre arquivos*
+* `$ git diff`
+
+*Mostra as alterações linha por linha*
+* `$ git blame`
+
+*Clonar os arquivos para o seu computador de um repositório (na pasta que deseja ter o repositório)*
+* `$ git clone url_do_repositorio_que_o_github_fornece`
+
 *Gerar chave de segurança GIT*
 
 * Através do Git Bash
@@ -66,6 +75,52 @@
 *Atualiza repositório na máquina local*
 * `$ git pull`
 
+## Aula 4
+
+*Ver branchs do repositório local (asterisco na branch atual)*
+* `$ git branch`
+
+*Criar branch*
+* `$ git branch desing`
+
+*Mudar de branch*
+* `$ git checkout desing`
+
+*Mandar branch criada para branch principal*
+* `$ git push -u origin desing`
+
+*Mostrar branchs remotas*
+* `$ git branch -r`
+
+*Criar branch local que existe no repositório*
+* `$ git branch -t desing origin/desing`
+
+
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
+* `$ `
 * `$ `
 * `$ `
 * `$ `
