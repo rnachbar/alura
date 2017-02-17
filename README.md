@@ -1,5 +1,5 @@
-# Alura
-Desenvolvimento de estudos da plataforma Alura e seus cursos
+# Plataforma Alura
+Desenvolvimento de estudos da plataforma Alura
 
 ## Dependências
 * [Git](https://git-for-windows.github.io/)
@@ -7,20 +7,20 @@ Desenvolvimento de estudos da plataforma Alura e seus cursos
 ## Informações
 * Cursos dividos por categorias
 * Cronagrama.md faz referência aos cursos finalizados ou em andamento daquela categoria
-* Dependências necessárias descritas em cadaa curso
+* Dependências necessárias descritas em cada curso
 
-## Rotina de pull
-*Passos que devem ser executados antes do desenvolvimento (diario ou cada vez que for mexer no repositório)*
+## Rotina de pull (Atualizar repositório local)
+*Passos que devem ser executados antes do desenvolvimento (diário ou cada vez que for utilizar o repositório)*
 
 * Na raíz do projeto, clicar com o botão direito do mouse e abrir o GIT BASH
 * `$ git pull`
 * `$ logout`
 
-## Rotina de push
-*Passos que devem ser executados após o desenvolvimento (diario ou a cada realização de aula)*
+## Rotina de push (Atualizar repositório remoto)
+*Passos que devem ser executados após o desenvolvimento (diário ou a cada alteração no repositório)*
 
-* Na raíz do projeto, clicar com o botão direito do mouse e abrir o GIT GUI
-* Comitar os arquivos alterados e sempre descrever o que foi feito
-* Após o comite, clicar com o botão direito e abrir o GIT BASH
-* `$ git push`
+* Na raíz do projeto ou na pasta onde ocorreu alterações clicar com o botão direito do mouse e abrir o GIT BASH
+* `$ git add .`
+* `$ git commit -m "descricao do commit. SEMPRE DESCREVER O QUE FOI FEITO"`
+* `$ git push origin master`
 * `$ logout`
