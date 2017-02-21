@@ -40,17 +40,14 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
                 <h1><a href=""><?= $this->fetch('title') ?></a></h1>
             </li>
         </ul>
-        <div class="top-bar-section">
-            <ul class="right">
-                <li><a target="_blank" href="http://book.cakephp.org/3.0/">Documentation</a></li>
-                <li><a target="_blank" href="http://api.cakephp.org/3.0/">API</a></li>
-            </ul>
-        </div>
     </nav>
     <?= $this->Flash->render() ?>
+
+    <!-- conteudo das views -->
     <div class="container clearfix">
         <?= $this->fetch('content') ?>
     </div>
+
     <footer>
     </footer>
 </body>

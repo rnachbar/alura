@@ -1,0 +1,70 @@
+############### 1. Introdução ###############
+
+Sejam bem-vindos ao curso de Cake PHP! Aqui iremos desenvolver um sistema de estoque onde poderemos: cadastrar, alterar, remover e listar produtos, autenticar um usuário e muito mais! Para facilitar esse processo utilizaremos uma ferramenta MVC, o Cake PHP!
+Nós trabalharemos com a versão 3.x do framework e, para a utilizar, precisaremos fazer a instalação na nossa máquina. Existem várias formas para tal, mas aqui utilizaremos o Composer, que é um gerenciador de dependências. Executemos o seguinte comando no Terminal:
+
+composer create-project --prefer-dist cakephp/app [app_name]
+Lembre-­se que este processo pode demorar um pouco, pois o Composer buscará todas as dependências do nosso projeto. Quando o processo terminar devemos ter uma nova pasta chamada "estoque". Essa pasta possui todos os arquivos do projeto. Agora precisamos iniciar a nossa aplicação, para isso precisamos subir um servidor PHP com este comando:
+
+php ­S localhost:8080
+Porém, como estamos utilizando um framework, precisamos subir um servidor com a configuração que o framework exige. Basta executar o comando
+
+bin/cake server
+Se tudo der certo, deveremos ver a seguinte mensagem:
+
+Welcome to CakePHP v3.0.10 Console
+­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­App : src
+Path: /home/renan/Desktop/cursocake/arquivo­curso/src/
+DocumentRoot: /home/renan/Desktop/cursocake/arquivo­curso/webroot ­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­ built­in server is running in http://localhost:8765/
+You can exit with `CTRL­C`
+Ao acessarmos a URL "localhost:8765" deverá aparecer a homepage do Cake PHP falando que deu tudo certo. Mas ao acessar tal página, o que realmente aconteceu? Quando acessamos um endereço, o Cake PHP procura uma lógica para ser executada, nós conseguimos representar essa lógica com um Controller, que por sua vez possui diversas ações e, por fim, a ação executada retorna uma visualização (HTML). O padrão do Cake PHP é o Controller Pages, o qual executa a ação display, que devolve a visualização "home.ctp".
+
+A página inicial é um exemplo, mas o que queremos mesmo é criar a nossa própria página. Inicialmente precisamos de alguém que execute a lógica que exibe a nossa página, um Controller. Criar um Controller no Cake PHP é muito simples, basta criar um arquivo dentro da pasta "src/controller". Porém o nome do nosso arquivo precisa seguir uma convenção que é "NomeDoQueIremosControlarController". Por exemplo, se queremos criar um Controller que controla produtos, o nome do nosso arquivo será "ProdutosController". O conteúdo do nosso arquivo é uma classe com o mesmo nome do arquivo e, como todo Controller herda de AppController, a nossa classe não será diferente:
+
+namespace App\Controller;
+
+class ProdutosController extends AppController {
+
+}
+Se tentarmos acessar a URL "localhost:8765/produtos" vamos receber um erro, falando que a ação index não está definida. A primeira ação (método) que o Cake procura quando não definimos nada é a ação index, para corrigir esse problema adicionamos tal método no nosso Controller:
+
+namespace App\Controller;
+class ProdutosController extends AppController {
+
+    public function index() {
+
+    }
+
+}
+Já temos a ação, mas não definimos em nenhum lugar qual é o HTML que será definido. Precisamos criar um arquivo dentro de "Template/Produtos/" chamado "index.ctp". Perceba que só pelo nome do Controller e da ação ele consegue adivinhar qual é o arquivo.
+
+<h1>Bem vindos ao cake</h1>
+Agora sim, quando atualizamos a página, podemos ver a mensagem “Bem vindos ao cake” e, mais do que isso, um título azul apareceu na nossa página. Mas de onde que esse código veio ? O Cake possui um layout padrão que está em "Template/Layout/default.ctp". Se precisarmos de um menu que está disponível no sistema inteiro, podemos escrevê-lo apenas uma vez no arquivo "default.ctp". A nossa página funciona, mas temos um texto estático. Para mandar uma mensagem do Controller para a View criamos a variável no Controller que acessa a View:
+
+public function index() {
+
+    $msg = “Bem vindo ao curso de cake”;
+
+}
+E no "index.ctp":
+
+<h1><?= $msg; ?></h1>
+É fácil acreditar que este código funciona, porém o Cake PHP limita o escopo das nossas variáveis, tudo que criamos no Controller está disponível apenas no Controller. Mas podemos quebrar essa regra usando o método set() da Classe Controller.
+
+public function index() {
+    $msg = “Bem vindo ao curso de cake”;
+
+    $this­>set(‘msg’,$msg);
+
+}
+Agora sim o nosso código funciona, veja que o método set() recebe dois parâmetros: o primeiro é o nome da variável que desejamos na View e o segundo é o seu conteúdo.
+
+Essa foi a introdução ao framework Cake PHP. Até a próxima aula!
+
+Para desenvolver o nosso projeto iremos utilizar um framework (cake-php) por que essa decisão foi tomada ? Qual é o papel de um framework no processo de desenvolver um software ?
+
+Decidimos usar um framework pois isso nos permite desenvolver a aplicação se preocupando mais com as regras de negócio do que com qualquer código de infraestrutura.Portanto frameworks nos fornece uma camada de abstração que encapsula o código que não precisamos saber como funciona ou códigos que escreveriamos diversas vezes, como por exemplo pegar parâmetros da url, encontrar o método que será executado e até mesmo separar a camada de visualização da nossa lógica.
+
+Quais são as consequencias de utilizar um framework ? Na sua opinião qual é a principal desvantagem ?
+
+Frameworks nos ajudam padronizando código, o que torna o desenvolvimento mais ágil. Bons frameworks costumam ser bem seguros e, quando usados corretamente, possuem uma boa performance. Porém, nem tudo é um mar de rosas: os frameworks também levam um certo tempo para aprender e podem viciar o programador a só desenvolver utilizando o framework .
