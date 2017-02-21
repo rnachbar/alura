@@ -22,3 +22,28 @@
 *Header, Footer e estrutura das páginas padrão ficam em Template/Layout/default.ctp*
 
 *Quando executamos a URL http://localhost:8765/produtos o cake procura um cara que controla a lógica de produtos e como não falamos qual a ação vai ser executada ele executa a ação padrão (index)*
+
+## Aula 2
+
+*Conectando ao banco*
+* `$ mysql -uroot -p`
+
+*Criando base de dados*
+* `$ create database estoque;`
+* `$ use estoque;`
+* `$ create table produtos (id int(11) not null auto_increment primary key, 
+		nome varchar(255) not null, 
+		preco decimal(10,2) not null, 
+		descricao text not null
+	);`
+* `$ insert into produtos (nome, preco, descricao) values ('iphone 6 plus', 3800.00, 'celular caro');`
+
+*Model ficam as interações com o banco de dados*
+
+*Pasta Table (Model/Table) referencia as tabelas*
+
+*Referenciar o controller produtos devemos criar a tabela com mesmo nome (ProdutosTable.php)*
+
+*Na pasta config tem o arquivo app.php com todas as configuraçõe da nossa aplicação (config/app.php)*
+
+*A ORM do cake que faz as consulas com mysql, nos só damos os comandos*

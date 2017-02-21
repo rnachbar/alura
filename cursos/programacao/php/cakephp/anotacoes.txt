@@ -68,3 +68,181 @@ Decidimos usar um framework pois isso nos permite desenvolver a aplicação se p
 Quais são as consequencias de utilizar um framework ? Na sua opinião qual é a principal desvantagem ?
 
 Frameworks nos ajudam padronizando código, o que torna o desenvolvimento mais ágil. Bons frameworks costumam ser bem seguros e, quando usados corretamente, possuem uma boa performance. Porém, nem tudo é um mar de rosas: os frameworks também levam um certo tempo para aprender e podem viciar o programador a só desenvolver utilizando o framework .
+
+############### 2. Listando Produtos ###############
+
+No capítulo anterior aprendemos a gerar uma parágrafo dinamicamente, mas na prática isso não resolve o nosso problema. Nós queremos listar produtos, então vamos começar a trabalhar nisso. A nossa listagem, que hoje tem apenas um título, deve virar uma tabela, portanto vamos editar o nosso arquivo "index.ctp" para ter uma tabela no lugar de um cabeçalho:
+<table class=”table”>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Hd de 20 gigas</td>
+            <td>29.99</td>
+            <td>Hd muito bom da marca mega­HD</td>
+        </tr>
+    </tbody>
+</table>
+Se atualizarmos o navegador teremos a nossa tabela, porém ela continua estática. Para resolver isso precisamos enviar os produtos pelo Controller, então representaremos o nosso produto como um array e utilizando o método set() para mandar a variável para a View:
+
+public function index() {
+    $produto = [“id”=> 1, “nome” => “Hd de 20 gigas”, “descricao” => “Hd muito bom da marca mega­HD”,”preco” => 29.99];
+
+    $this­>set(‘produto’,$produto);
+}
+E no "index.ctp":
+
+<table class=”table”>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td><?= $produto[‘id’]; ?></td>
+            <td><?= $produto[‘nome’]; ?></td>
+            <td><?= $produto[‘preco’]; ?></td>
+            <td><?= $produto[‘descricao’]; ?></td>
+        </tr>
+    </tbody>
+</table>
+O código só funciona para um produto. Precisamos criar um array para que funcione com vários:
+
+public function index() {
+
+    $produtos = [];
+    $produtos[] = [“id”=> 1, “nome” => “Hd de 20 gigas”, “descricao” => “Hd muito bom da marca mega­HD”,”preco” => 29.99];
+    $produtos[] = [“id”=> 1, “nome” => “Hd de 80 gigas”, “descricao” => “Hd muito bom da marca mega­HD Extreme”,”preco” => 129.99];
+    $this­>set(‘produtos’,$produtos);
+}
+E no "index.ctp":
+
+<table class=”table”>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Preço</th>
+            <th>Descrição</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php foreach($produtos as $produto) {
+        <tr>
+            <td><?= $produto[‘id’]; ?></td>
+            <td><?= $produto[‘nome’]; ?></td>
+            <td><?= $produto[‘preco’]; ?></td>
+            <td><?= $produto[‘descricao’]; ?></td>
+        </tr>
+    } ?>
+    </tbody>
+</table>
+O nosso código funciona, mas não queremos preencher todos os dados no nosso Controller. Queremos pegar essas informações de um banco de dados, nesse curso utilizaremos o MySQL. Caso já possuam este banco instalado, abra o Terminal e digite:
+
+mysql -­uroot -­p
+Se tudo der certo, já estaremos conectados ao banco de dados. Agora precisamos criar a base que usaremos neste projeto, para isso usamos o comando:
+
+create database estoque;
+Indicamos para o MySQL que queremos executar todos os próximos comandos em cima dessa base "estoque", portanto vamos executar o seguinte comando:
+
+use estoque;
+Ainda precisamos criar a tabela que irá salvar os produtos:
+
+create table produtos (
+id int(11) not null primary key auto_increment,
+nome varchar(255) not null,
+preco decimal(10,2) not null,
+descricao text not null);
+Podemos ver a estrutura da tabela utilizando o comando:
+
+desc produtos;
+Se acabamos de criar a tabela, ela está vazia. Apenas para testar, adicionemos um registro com o comando insert:
+
+insert into produtos (nome,preco,descricao) values (‘Iphone 6 plus’,3800.00,’Celular bem caro’);
+Para vermos esse registro inserido precisamos selecionar os dados da tabela, logo executamos um select:
+
+select * from produtos
+Já conseguimos ver os nossos registros. Agora precisamos integrar tudo isso com o Cake PHP. Ele nos ajuda bastante a conversar com o banco de dados, mas para isso precisamos seguir algumas convenções:
+
+precisamos ter um classe que representa a nossa tabela,
+essa classe precisa ficar dentro da nossa pasta "model/table"
+e, como queremos representar a tabela produtos, criamos o arquivo "ProdutosTable":
+namespace App\Model\Table;
+
+use Cake\ORM\Table;
+
+class ProdutosTable extends Table {
+
+}
+Repare que toda classe que representa uma tabela precisa estender a classe "Table" do Cake PHP que se encontra no "namespace Cake\ORM\Table" e, por isso, precisamos dar use nesse namespace. Precisamos usar esta classe que representa a nossa tabela, então vamos ao método index() do nosso Controller e indicamos que queremos uma "ProdutosTable". Fazemos isso através de uma fábrica que o Cake PHP disponibiliza, a TableRegistry. No lugar de preencher todos os produtos manualmente, pedimos para a nossa tabela selecionar todos os dados. Portanto teremos um método index() com esta cara:
+
+public function index() {
+
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $produtos = $produtosTable­->find(‘all’);
+    $this­>set(‘produtos’,$produtos);
+
+}
+Se tentarmos rodar o nosso método acessando o endereço "localhost:8765/produtos", um erro será lançado falando que não conseguiu se conectar com o "my_app@localhost". Isso acontece porque em nenhum lugar falamos qual é o banco de dados que vamos utilizar na nossa aplicação. Devemos acessar o arquivo "config/app.php" e, neste arquivo, temos uma seção especifica para banco de dados com um código semelhante a este:
+
+        'default' => [
+
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'persistent' => false,
+            'host' => 'localhost',
+
+            /**
+             * CakePHP will use the default DB port based on the driver selected
+             * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
+             * the following line and set the port accordingly
+             */
+
+            //'port' => 'nonstandard_port_number',
+            'username' => 'root',
+            'password' => '',
+            'database' => 'cursocake',
+            'encoding' => 'utf8',
+            'timezone' => 'UTC',
+            'cacheMetadata' => true,
+
+            /**
+             * Set identifier quoting to true if you are using reserved words or
+             * special characters in your table or column names. Enabling this
+             * setting will result in queries built using the Query Builder having
+             * identifiers quoted when creating SQL. It should be noted that this
+             * decreases performance because each query needs to be traversed and
+             * manipulated before being executed.
+             */
+
+            'quoteIdentifiers' => false,
+
+            /**
+             * During development, if using MySQL < 5.6, uncommenting the
+             * following line could boost the speed at which schema metadata is
+             * fetched from the database. It can also be set directly with the
+             * mysql configuration directive 'innodb_stats_on_metadata = 0'
+             * which is the recommended value in production environments
+             */
+
+            //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
+
+        ],
+Repare que nesse código ele pede o host, o usuário e a senha do nosso banco. Substituímos para o usuário do nosso banco de dados. Feito isso, o código funciona e no próximo capítulo aprenderemos a executar outras ações no banco de dados.
+
+
+
