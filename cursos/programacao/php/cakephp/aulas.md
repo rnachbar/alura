@@ -40,10 +40,29 @@
 
 *Model ficam as interações com o banco de dados*
 
-*Pasta Table (Model/Table) referencia as tabelas*
+*Pasta Table referencia as tabelas*
+* Model/Table
 
 *Referenciar o controller produtos devemos criar a tabela com mesmo nome (ProdutosTable.php)*
 
-*Na pasta config tem o arquivo app.php com todas as configuraçõe da nossa aplicação (config/app.php)*
+*Na pasta config tem o arquivo app.php com todas as configuraçõe da nossa aplicação*
+* config/app.php
 
 *A ORM do cake que faz as consulas com mysql, nos só damos os comandos*
+
+## Aula 3
+
+*Helpers ficam em*
+* Template/View/Helper
+
+*Nome_do_helperHelper.php e a classe estende para Helper*
+
+*Para iniciar um Helper, carregalo sempre, alterar a public function initialize no AppView.php dando load no helper criado*
+* Template/View/Helper/AppView.php
+
+*A classe entidade reprersenta um registro do banco*
+
+*A ORM do CakePHP nos permite fazer consultas, adicionar dados, alterar apenas com metodos, pois a ORM faz todas as consultas SQL*
+
+*Editar a página inicial da aplicação, alterar barra (/)*
+* config/routes.php

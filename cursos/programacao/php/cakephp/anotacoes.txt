@@ -244,5 +244,213 @@ Se tentarmos rodar o nosso método acessando o endereço "localhost:8765/produto
         ],
 Repare que nesse código ele pede o host, o usuário e a senha do nosso banco. Substituímos para o usuário do nosso banco de dados. Feito isso, o código funciona e no próximo capítulo aprenderemos a executar outras ações no banco de dados.
 
+############### 3. Criando Entidades e Helpers ###############
+
+Já conseguimos visualizar os produtos na tabela. Precisamos implementar o código para adicionar um novo produto. Neste momento fazemos isso no banco de dados e adicionamos manualmente. Criemos uma interface gráfica para isso. A primeira coisa que precisamos fazer é conseguir, da listagem, ir até a página que insere os produtos. Então criamos um link com a tag <a href>:
+<a href=”produtos/novo”> Novo produto </a>
+Recebemos um erro ao clicarmos no link, afinal não criamos a ação novo() no nosso Controller de produtos. Resolvendo isso:
+
+class ProdutosController extends AppController {
+
+    // codigo anterior aqui
+
+    public function novo() {
+
+    }
+
+}
+Se atualizarmos agora o nosso navegador, ele vai reclamar falando que não encontrou a visualização da ação. Criemos um aquivo chamado "novo.ctp" na pasta "Template/Produtos/" que, por enquanto, ficará vazio. Porém, por algum motivo, poderíamos querer mudar o link de "produtos/novo" para "produtos/cadastra" precisando mexer no HTML que criamos lá no nosso "index.ctp". Imagine um link que estará em diversas partes do nosso sistemas, atualizar todos eles daria muito trabalho e, além disso, a chance de deixar passar algum é muito alta. Para não corrermos esse risco, pedimos para o Cake PHP gerar o link utilizando o helper. Um helper é uma classe que vai nos ajudar a trabalhar com alguma parte do sistema, neste caso precisamos de um para gerar HTML, logo trocamos a nossa tag <a> para o seguinte código PHP:
+
+<?php
+
+echo $this­>Html­>link(‘Novo Produto’,[‘controller’ => ‘produtos’,’action’=>’novo’]);
+
+?>
+Perceba que agora o nosso link aponta direto para a ação do nosso Controller e, caso apenas a URL sofra alguma alteração, não precisaremos mexer nos links diretamente. Para criar o nosso formulário no arquivo "novo.ctp" também temos um helper:
+
+<?php 
+    echo $this­>Form­>create(['action' => 'salva']);
+    echo $this­>Form­>input('id');
+    echo $this­>Form­>input('nome');
+    echo $this­>Form­>input('preco');
+    echo $this­>Form­>input('descricao');
+    echo $this­>Form­>button('Salvar');
+    echo $this­>Form­>end();
+?>
+Porém, como o nosso helper vai saber qual é o tipo de cada campo? Ele precisa pegar como referência o formato do registro que queremos inserir no banco de dados. passamos, então, um registro vazio para o formulário. O primeiro passo é criar esse registro no nosso Controller:
+
+public function novo() {
+
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $produto = $produtosTable­>newEntity();
+    $this­>set(‘produto’,$produto);
+}
+E o passamos na criação do nosso formulário:
+
+echo $this->Form->create($produto, ['url' => ['action' => 'salva']]);
+Já conseguimos gerar o nosso formulário. Porém, ao voltarmos para a listagem, a coluna que exibe o preço do produto não possui nenhuma formatação. Novamente criamos um helper para resolver esse problema. Basta criar um arquivo "MoneyHelper.php" na pasta "View\Helper" (todo helper no Cake PHP herda da classe helper) e implementá-lo dessa forma:
+
+namespace App\View\Helper;
+use Cake\View\Helper;
+
+Class MoneyHelper extends Helper {
+
+    public function format($number) {
+
+    }
+
+}
+Passamos o helper para a View:
+
+return “R$”.number_format($number,2,”,”.”);
+E no "index.ctp"
+
+<td><?= $this­>Money­>format($produto[‘preco’]); ?></td>
+Porém, se atualizarmos o navegador, o nosso código não funciona, afinal onde informamos que o nosso helper foi carregado? Para isso, precisamos ir na nossa classe "AppView", no método initialize() e pedir para o Cake carregar um helper:
+
+public function initialize() {
+
+    parent::initialize();
+
+    $this­>loadHelper(‘Money’);
+
+}
+Ao atualizar a página, já vemos o nosso helper funcionando! Adicionemos uma nova coluna na nossa tabela, a coluna valor com desconto:
+
+<tr>
+    <td><?= $prod['id']; ?></td>
+    <td><?= $prod['nome']; ?></td>
+    <td><?= $this-­>Money-­>format($prod['preco']); ?></td>
+    <td><?= $this-­>Money­->format(prod­>calculaDesconto()); ?></td>
+    <td><?= $prod['descricao']; ?></td>
+</tr>
+Qual classe representa um registro do banco de dados? No Cake PHP, cada registro é um entidade, portanto o método find da nossa "ProdutosTable" retorna um array de entidades e, já que queremos criar o método calculaDesconto() para os nossos produtos, criamos a classe "Produto" em "Mode\Entity\Produto.php":
+
+<?php
+namespaceApp\Model\Entity;
+useCake\ORM\Entity;
+
+class Produto extends Entity{
+
+    publicfunctioncalculaDesconto(){
+        return$this‐>preco*0.9;
+              }
+}
+?>
+Feito isso, ao atualizar a nossa página, a coluna "valor com desconto" já estará funcionando!
+
+############### 4. Inserindo e atualizando os produtos. ###############
+
+Implementamos o nosso formulário na aula passada. Precisamos fazer o botão "Salvar" funcionar. Para isso escrevemos a ação salva no ProdutosController:
+public function salva() {
+
+}
+Mas o que esse método tem que fazer? A primeira coisa é pegar os dados enviados pelo formulário. isto é feito através do atributo request do nosso Controller, afinal queremos pegar os dados que foram enviados pela requisição e, para isso chamamos o método data do atributo request:
+
+public function salva() {
+
+    $dados = $this­>request­>data();
+}
+Precisamos ainda criar uma entidade e mandar ela se salvar no banco de dados, mas para isso precisamos de uma referência para a nossa tabela utilizando o "TableRegistry":
+
+public function salva() {
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $dados = $this­>request­>data();
+}
+Preenchemos uma entidade com os dados do formulário:
+
+public function salva() {
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $dados = $this­->request­>data();
+    $produto = $produtosTable-­>newEntity($dados);
+}
+E, por fim, pedimos para a nossa tabela salvar o produto:
+
+public function salva() {
+
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $dados = $this­->request­>data();
+    $produto = $produtosTable­>newEntity($dados);
+
+    if($produtosTable­->save($produto)) {
+
+    }else {
+    }
+    $this­->set(‘msg’,$msg);
+}
+Ao terminar de executar esse código, qual será a página carregada? Será página "salva.ctp", portanto criemos este arquivo apenas mostrando uma mensagem:
+
+ <h1><?= $msg; ?></h1>
+
+<?= $this­->Html­->Link(‘Voltar’,[‘controller’ => ‘produtos’,’action’ => ‘index’]); ?>
+Agora, ao preenchermos o formulário corretamente e clicar em salvar o nosso produto deverá ser cadastrado no banco. Estamos listando e cadastrando produtos sem escrever sequer uma linha de SQL! Tudo isso graças ao ORM do Cake PHP. Mas e se cadastrarmos um produto errado? Ainda não temos nenhum botão de alteração. Adicionemos uma nova coluna na tabela chamada "ações" e o conteúdo dessa coluna é um botão para editar o produto:
+
+<thead>
+    <!­­ outros th ­­>
+    <th>Ações</th>
+</thead>
+
+<tbody>
+    <?php
+    ?>
+    <tr>
+        $msg = “Produto salvo com sucesso.”;
+        $msg = “Erro ao salvar o produto.”;
+
+        foreach($produtos as $produto) {
+
+        <!-- outras td -->
+        <td>
+            => ‘editar’]);
+        </td>
+    </tr>
+        <?php
+        }
+        ?>
+</tbody>
+Criaremos agora o nosso método editar() no ProdutoController:
+
+public function editar() {
+
+}
+Quando clicamos em editar queremos que apareça o nosso formulário para alterar o produto. Como o formulário é exatamente o mesmo de adicionar produto, reaproveitaremos o nosso arquivo "novo.ctp" pedindo para a ação editar simplesmente exibir este arquivo. Fazemos isso através do método render:
+
+public function editar() {
+    $this-­>render(‘novo’);
+}
+Mas o que acontece quando acessamos esta página? Aparecerá um erro dizendo que a variável "produto" não está definida. Quando criamos o "novo", foi pedida uma variável produto vazia. A diferença é que agora iremos pegar um produto preenchido e vamos mostrá-lo no nosso formulário. Então precisaremos saber o seu id o pegando como parâmetro:
+
+public function editar($id) {
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $produto = $produtosTable-­>get($id);
+    $this-­>set(‘produto’,$produto);
+    $this­->render(‘novo’);
+}
+Para passar o id para a ação editar utilizamos a URL, portanto vamos adicionar o id no link gerado:
+
+<td>
+
+=> ‘editar’,$produto[‘id’]]);
+
+</td>
+Ao acessar a nossa página, o formulário já vem preenchido, mas ao clicamos em salvar um novo produto é cadastrado. Por que isso aconteceu? Qual é o código que está sendo executado? É o código de salvar, mas veja que coincidência: o método que atualiza um produto é justamente o save(). Como esse método sabe quando estamos criando um produto novo e quando estamos atualizando um produto? Ao cadastrarmos um produto seu id tem valor nulo. Então, o que o save() faz é verificar o valor do id, caso ele não seja nulo significa que queremos atualizar! Logo, apenas adicionamos o campo id no nosso formulário:
+
+<?php
+    echo $this­->Form­->create(['action' => 'salva']);
+    echo $this­->Form­->input('id');
+    echo $this­->Form­->input('nome');
+    echo $this­->Form­->input('preco');
+    echo $this­->Form­->input('descricao');
+    echo $this­->Form­->button('Salvar');
+    echo $this­->Form­->end();
+ ?>
+Desta maneira estamos atualizando e inserindo produtos usando o mesmo formulário. Um último detalhe, muito importante: quando acessamos o link "localhost:8765" nos aparece a página inicial do Cake PHP e não é isso o que queremos. Queremos que na homepage do nosso site apareça a listagem dos produtos. Resolvemos isso mexendo no arquivo "config/routes.php". Apenas alteramos a linha da rota “/” para usar o ControllerProdutos na ação:
+
+Alteramos
+
+$routes­->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+Para
+
+$routes-­>connect('/', ['controller' => ’Produto’, 'action' => 'index']);
 
 

@@ -36,5 +36,7 @@ class AppView extends View
      */
     public function initialize()
     {
+        parent::initialize(); // continua chamando o initialize do pai, da classe view
+        $this->loadHelper("Money"); // inicializando o helper Money
     }
 }
