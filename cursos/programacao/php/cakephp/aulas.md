@@ -64,5 +64,14 @@
 
 *A ORM do CakePHP nos permite fazer consultas, adicionar dados, alterar apenas com metodos, pois a ORM faz todas as consultas SQL*
 
+## Aula 4
+
 *Editar a página inicial da aplicação, alterar barra (/)*
 * config/routes.php
+
+## Aula 6
+
+*Flash Scope é para exibir uma mensagem que dura um requisição. Ao atualizar a página ela some*
+
+*Alterar estilo Flash Scope*
+* Template/Element/Flash

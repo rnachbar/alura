@@ -36,16 +36,19 @@ class ProdutosController extends AppController {
 		// se o id, que é a chave primária for null, o cake sabe que é para inserir um novo registro, caso o ide esteja preenchido ele ira atualizar o registro com o id informado
 		if ($produtosTable->save($produto)) {
 			$msg = "Produto salvo com sucesso!";
+			$this->Flash->set($msg. ['element' => 'success']); // usar o Flash Scope
 		} else {
 			$msg = "Erro ao salvar o produto!";
+			$this->Flash->set($msg, ['element' => 'error']); // usar o Flash Scope
 		}
 
-		$this->set('msg', $msg);
+		$this->redirect('Produtos/index');
 
 		// $this->request->data(); // pegar dados do formulário
 		// $produtosTable->save($produto); // salvar no banco
 	}
 
+	// tem que receber o id do produto por parametro
 	public function editar($id) {
 
 		$produtosTable = TableRegistry::get('Produtos');
@@ -55,7 +58,26 @@ class ProdutosController extends AppController {
 
 		// renderizar a ação novo, a view novo
 		$this->render('novo');
+	}
 
+	// tem que receber o id do produto por parametro
+	public function apagar ($id) {
+
+		$produtosTable = TableRegistry::get('Produtos');
+		$produto = $produtosTable->get($id);
+
+		if ($produtosTable->delete($produto)) {
+			$msg = "Produto removido com sucesso!";
+			$this->Flash->set($msg, ['element' => 'error']); // usar o Flash Scope, com elemento de erro, pode se personalizar o element
+		} else {
+			$msg = "Erro ao deletar o produto!";
+			$this->Flash->set($msg); // usar o Flash Scope
+		}
+
+		// fazer um redirecionamento (Para Produtos na ação index)
+		$this->redirect('Produtos/index');
+
+		// $produtosTable->delete($produto) // deletar registro
 	}
 	
 }

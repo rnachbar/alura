@@ -20,7 +20,12 @@
 				<td><?= $this->Money->format($produto->calculaDesconto()); ?></td>
 				<td><?= $produto['descricao']; ?></td>
 				<!-- passando parametro pelo link, passando o id -->
-				<td><?= $this->Html->Link('Editar', ['controller' => 'produtos', 'action' => 'editar', $produto['id']]) ?></td>
+				<td>
+					<?= $this->Html->Link('Editar', ['controller' => 'produtos', 'action' => 'editar', $produto['id']]) ?>
+
+					<!-- postLink cria um formulário com input hidden, onde o link é um botão que submete esse formulário -->
+					<?= $this->Form->postLink('Apagar', ['controller' => 'produtos', 'action' => 'apagar', $produto['id']], ['confirm' => 'Tem certeza que deseja apagar o produto' . $produto['nome'] . '?']) ?>
+				</td>
 			</tr>
 		<?php } ?>
 	</tbody>

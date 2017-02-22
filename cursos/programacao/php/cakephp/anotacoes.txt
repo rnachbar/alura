@@ -453,4 +453,114 @@ Para
 
 $routes-­>connect('/', ['controller' => ’Produto’, 'action' => 'index']);
 
+############### 5. Deletando os produtos ###############
 
+Na aula anterior acabamos cadastrando um Iphone 6 plus sem querer. O que precisamos fazer com esse registro? Seria bom podermos deletá-lo. Como já temos uma coluna chamada "ações", adicionemos um link "deletar" também:
+<!-- outras tds -->
+
+<td>
+
+<?php
+    => ‘editar’,$produto[‘id’]]);
+
+    => ‘deletar’,$produto[‘id’]]);
+?>
+
+</td>
+Ao clicarmos no link, o Cake PHP vai informar que não encontrou a ação deletar(), ela precisa ser criada:
+
+public function deletar($id) {
+
+}
+Queremos deletar os dados da nossa tabela, portanto referenciamos para ela:
+
+public function deletar($id) {
+
+    $produtosTable = TableRegistry::get(‘Produtos’);
+}
+Além disso, precisamos selecionar qual é o produto que iremos deletar e pedir para a nossa tabela de fato executar essa ação, fazemos isso utilizando o método delete():
+
+public function deletar($id) {
+
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $produto = $produtosTable­>get($id);
+
+    if($produtosTable­>delete($produto)) {
+
+    }else {
+
+    }
+
+    $msg = “Produto removido com sucesso”;
+    $msg = “Erro ao remover o produto”;
+
+}
+Mas, ao acabar a execução desse método, o Cake PHP vai procurar a view "deletar.ctp" e não é isso que queremos. Queremos que, quando terminar de deletar um produto, volte para a listagem. Para isso fazemos um redirecionamento usando o método redirect() do nosso Controller:
+
+public function deletar($id) {
+
+    $produtosTable = TableRegistry::get(‘Produtos’);
+    $produto = $produtosTable­>get($id);
+
+    if($produtosTable­>delete($produto)) {
+
+    }else {
+
+    }
+
+    $this­>redirect(‘produtos/index’);
+}
+Se testarmos o nosso código tudo deve estar funcionando corretamente, mas ainda temos um problema: o que acontece se acidentalmente clicarmos no botão "apagar" de algum produto? A nossa aplicação não pensa duas vezes, removendo o produto do banco de dados. Pediremos, então, uma confirmação para o nosso usuário. Fazemos isso adicionando um terceiro parâmetro ao nosso link que é o confirm.
+
+Além disso, estamos passando o id do produto pela URL, a qual não é uma boa prática, afinal qualquer um poderia acessá-la e deletar um produto. Usemos um formulário com o método de envio configurado para POST, assim os nossos dados não aparecerão na URL. Portanto, substituímos o nosso helper HTML pelo helper de formulário, ficando com esse código:
+
+$msg = “Produto removido com sucesso”;
+$msg = “Erro ao remover o produto”;
+echo $this­>Form>PostLink(‘Apagar’,[‘controller’=>’produtos’,’action’ => ‘deletar’,$produto[‘id’],[‘confirm’ => ‘Deseja realmente remover o produto’.$produto[‘nome’].” ?”]);
+Agora, se rodarmos a nossa aplicação, o Cake PHP criará um javascript solicitando a confirmação do nosso usuário.
+
+############### 6. Flash Scope ###############
+
+Já conseguimos inserir, deletar e apagar os nossos produtos, mas na última aula não mostramos a mensagem que criamos no Controller. Podemos criar uma variável "mensagem" e simplesmente passar um $this->set(‘msg’,$msg). Faz sentido, afinal é assim que estamos fazendo até agora. Porém, no final do método nós redirecionamos a página, então essa variável acaba se perdendo entre as requisições. Este é um problema comum e, sendo assim, alguém já pensou em uma forma de resolvê-lo: algumas mensagens nós queremos que durem o escopo de uma requisição, ou seja, quando atualizamos a página ela tem que sumir. Damos a esse recurso o nome de Flash scope, para trabalhar com ele precisamos chamar o método set() do atributo Flash do nosso Controller:
+$this->Flash->set(“minha mensagem”);
+Agora usamos esse recurso no nosso código de deletar produtos:
+
+public function deletar($id) {
+    $produtosTable = TableRegistry::get(‘Produtos’);    
+    $produto = $produtosTable->get($id);
+
+    if($produtosTable->delete($produto)) {
+        $this->Flash->set(“Produto removido com sucesso”);
+    }else {
+        this->Flash->set(“Erro ao remover o produto”);
+    }
+    $this->redirect(‘produtos/index’);
+}
+Se rodarmos o nosso código e tentar deletar um produto será exibida uma mensagem em uma caixa verde falando “Produto deletado com sucesso” e, se atualizarmos, ela some por durar apenas uma requisição.
+
+Podemos aplicar essa ideia também na hora de salvar um produto. Não precisamos mais da página "salva.ctp" e podemos usar as mensagem em Flash e redirecionar para a nossa listagem:
+
+public function salva() {
+    $produtosTable = TableRegistry::get('Produtos');
+    $produto = $produtosTable->newEntity($this->request->data());
+
+    if($produtosTable->save($produto)) {
+        $this->Flash->set("Produto inserido com sucesso");
+    }else {
+        $this->Flash->set("Erro ao inserir o produto");
+    }
+    $this->redirect('Produtos/index');
+}
+Se tentarmos cadastrar um produto em branco será exibida uma mensagem de erro, mas ela aparece em uma caixa verde. Mensagens de erros geralmente são exibidas em caixas vermelhas, podemos resolver isso adicionando o parâmetro element ao nosso método set():
+
+public function salva() {
+    $produtosTable = TableRegistry::get('Produtos');
+    $produto = $produtosTable->newEntity($this->request->data());
+
+    if($produtosTable->save($produto)) {
+        $this->Flash->set("Produto inserido com sucesso");
+    }else {
+        $this->Flash->set("Erro ao inserir o produto",['element'=> 'error']);
+    }
+    $this->redirect('Produtos/index');
+    }
