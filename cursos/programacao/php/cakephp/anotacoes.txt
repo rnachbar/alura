@@ -564,3 +564,82 @@ public function salva() {
     }
     $this->redirect('Produtos/index');
     }
+
+############### 7. Autorização ###############
+
+Nosso sistema já está funcionando quase que plenamente. E quem pode cadastrar um produto? Qualquer pessoa que acessar o nosso site! Para restringir o acesso, criamos um sistema de login com uma tabela no nosso banco que armazena os nossos usuários, então, no Terminal:
+create table users (
+id int not null primary key auto_increment,
+username varchar(255) not null,
+password varchar(255) not null
+);
+Mas por que o nome "users"? No Cake PHP todo os sistema de autenticação considera que os nossos usuários estão salvos em uma tabela "users", a qual obrigatoriamente possui os campos "username" e "password". Portanto estamos seguindo uma convenção para evitar uma nova configuração.
+
+Agora que já temos a tabela precisamos criar um formulário para poder inserir usuários na tabela. Como temos uma parte do sistema que cuida de usuários, criaremos um controlador para isso, o "UsersControllers.php":
+
+namespace App\Controller;
+
+class UsersController extends AppController {
+
+}
+Além de um controlador, precisamos também de uma classe que representa a nossa tabela no banco, então criamos a classe "UsersTable":
+
+namespace App\Model\Table;
+use Cake\ORM\Table;
+
+class UsersTable extends Table {
+
+}
+Ao acessarmos a URL "localhost:8765/users" o Cake PHP reclama que não encontrou o método index(), então criemos dentro de "UsersController.php":
+
+public function index() {
+
+}
+Como queremos adicionar um usuário, trocamos a nossa ação padrão e, além disso, precisamos criar o arquivo "adicionar.ctp" em "Template\Users\". Como é um arquivo para adicionar usuários, criamos um form utilizando o helper. Dentro de "UsersController.php"fazemos:
+
+public function adicionar() {
+
+}
+E no "adicionar.ctp":
+
+<h1>Cadastrar usuário</h1>
+<?php
+    echo $this->Form->create($user,['action' => 'save']);
+    echo $this->Form->input('username');
+    echo $this->Form->input('password');
+    echo $this->Form->button('Cadastrar');
+    echo $this->Form->end();
+?>
+Precisamos criar a variável $user no nosso Controller. Como estaremos cadastrando um usuário novo, precisamos passar um usuário em branco. Em "UsersController.php" fazemos:
+
+public function adicionar() {
+    $usersTable = TableRegistry::get(‘Users’);
+    $user = $usersTable->newEntity();
+    $this->set(‘user’,$user);
+}
+Ainda não escrevemos o código que salva o nosso usuário no banco. Precisamos implementar ação salvar(), que será bem parecida com a dos produtos. A única diferença é que agora trabalharemos com a "UsersTable" no lugar da "ProdutosTable":
+
+public function salvar() {
+    $usersTable = TableRegistry::get(‘Users’);
+    $user = $usersTable->newEntity($this->request->data());
+
+    if($usersTable->save($user)) {
+        $this->Flash->set(‘Usuário salvo com sucesso’);
+    }else {
+        $this->Flash->set(‘Erro ao salvar o usuário’);
+    }
+
+    $this->redirect(‘Users/adicionar’);
+}
+Se preenchermos o nosso formulário já deverá ser inserido um usuário no banco, mas o que fazemos com esse usuário? Precisamos realizar o login, então programamos tal ação no "UsersController.php":
+
+public function login() {
+
+}
+Precisamos criar uma visualização para essa ação criamos o arquivo "login.ctp" em "Template\Users\":
+
+echo $this->Form->create();
+    echo $this->Form->input('username');
+    echo $this->Form->input('password');
+    echo $this->Form->button('Login');
+    echo $this->Form->end();

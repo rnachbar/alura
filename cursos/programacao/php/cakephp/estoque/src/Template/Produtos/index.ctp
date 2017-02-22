@@ -34,4 +34,6 @@
 <?php
 	// Helper de HTML. Criando um link (nome do texto, array[controller, ação])
 	echo $this->Html->Link('Novo Produto', ['controller' => 'produtos', 'action' => 'novo']);
+
+	echo $this->Html->Link('Logout', ['controller' => 'users', 'action' => 'logout']);
 ?>

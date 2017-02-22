@@ -75,3 +75,24 @@
 
 *Alterar estilo Flash Scope*
 * Template/Element/Flash
+
+## Aula 7
+
+*Criando tabela users*
+* `$ create table users (id int not null auto_increment primary key, 
+		username varchar(255) not null, 
+		password varchar(255) not null
+	);`
+
+*Inserindo em users*
+* `$ insert into users (username, password) values ('admin', 'admin');`
+
+*No cake a convenção para se fazer um sistema de login é que os usuários fiquem dentro da tabela users e essa tabela precisa um campo de usuário (username) e senha (password), então por padrão criar dessa forma sistema de login no CakePHP*
+
+*Para sistema de login (autenticação) alterar o AppController*
+
+*Quando o usuário não está autorizado a acessar uma página, o cake procura um controller chamado users e uma ação login*
+
+*Quanod se ativa o componete de aplicação, por padrão se é bloqueado a aplicação interia com exceção ao formulário de login*
+
+*O CakePHP por padrão não deixa trabalharmos sem criptográfia dos dados*

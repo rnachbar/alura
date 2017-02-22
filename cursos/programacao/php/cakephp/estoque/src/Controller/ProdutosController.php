@@ -36,7 +36,7 @@ class ProdutosController extends AppController {
 		// se o id, que é a chave primária for null, o cake sabe que é para inserir um novo registro, caso o ide esteja preenchido ele ira atualizar o registro com o id informado
 		if ($produtosTable->save($produto)) {
 			$msg = "Produto salvo com sucesso!";
-			$this->Flash->set($msg. ['element' => 'success']); // usar o Flash Scope
+			$this->Flash->set($msg, ['element' => 'success']); // usar o Flash Scope
 		} else {
 			$msg = "Erro ao salvar o produto!";
 			$this->Flash->set($msg, ['element' => 'error']); // usar o Flash Scope
@@ -79,5 +79,4 @@ class ProdutosController extends AppController {
 
 		// $produtosTable->delete($produto) // deletar registro
 	}
-	
 }
