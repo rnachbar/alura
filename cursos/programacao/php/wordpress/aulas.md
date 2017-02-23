@@ -6,6 +6,7 @@
 * [Hospedagem PHP](https://www.hostinger.com.br/)
 * [FileZilla](https://filezilla-project.org/)
 * [Sublime Text 3](https://www.sublimetext.com/3)
+* [Tema Flat Bootstrap](https://br.wordpress.org/themes/flat-bootstrap/)
 
 ## Desenvolvimento do Curso
 * [Alura WordPress](http://alura-wordpress.pe.hu/)
@@ -35,3 +36,38 @@
 
 *Painel WordPress*
 * /wp-admin
+
+## Aula 2
+
+*WordPress trabalha com temos e cada tema tem seu estilo, configurações*
+
+*Temas disponíveis/instalados/novos*
+* Aparência->Temas
+
+*É bom instalar plugins recomendado pelo tema*
+
+*Após instalar um plugin sempre ativa-lós*
+
+*Temas no servidor*
+* wp-content/themes
+
+*Adicionar páginas*
+* Páginas
+
+*Alterar Links Permanentes (nome do post melhor opção)*
+* Configurações->Links Permanentes
+
+*Configurar página inicial*
+* Configurações->Leitura->A página inicial mostra->Uma página estática (selecionar abaixo)->(selecionar página inicial)
+
+*Plugin Bootstrap 3 Shortcodes serve para criar atalhos de funcionalidades do bootstrap. Aparece acima do editor de páginas*
+
+*xs significa extra small (quando a tela, resolução for pequena usará xs)*
+
+*md significa medium (quando a tela, resolução for na média, normal usará md)*
+
+*Quebre de linha no editor*
+* shift + enter
+
+*Novo parágrafo*
+* enter
