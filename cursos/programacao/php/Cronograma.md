@@ -4,3 +4,4 @@
 * PHP I: Orientação a objetos com sua linguagem preferida
 * PHP II: Avançando com Orientação a objetos
 * CakePHP I: Acelere o desenvolvimento web
+* WordPress I: hospedagem, administração e widgets
