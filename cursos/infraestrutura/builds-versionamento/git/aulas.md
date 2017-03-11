@@ -50,7 +50,7 @@
 
 ## Aula 3
 
-*Exibe histórioco de commits*
+*Exibe histórico de commits*
 * `$ git log`
 
 *Ver quais arquivos foram alterados*
