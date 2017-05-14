@@ -1,6 +1,10 @@
 <?php
 
-class Produto {
+// não se pode instanciar uma classe abstrata
+// se a classe mãe possui um metodo abstrato, todas suas filhas tem que ter esse metodo
+// uma classe abstrata pode ter metodos que não sejam abstratos
+// a partir do momento que ela tem um metodo abstrato a classe tem que ser abstrata
+abstract class Produto {
 
 	private $id;
 	private $nome;
@@ -62,6 +66,18 @@ class Produto {
 	public function temIsbn() {
 		return $this instanceof Livro;
 	}
+
+	public function temTaxaImpressao() {
+		return $this instanceof LivroFisico;
+	}
+
+	public function temWaterMarker() {
+		// retorna a instancia de Ebook
+		return $this instanceof Ebook;
+	}
+
+	// quando um metodo é abstrato obrigatoriamente que suas filhas implemente esse método nele
+	abstract function atualizaBaseadoEm($params);
 
 	public function calculaImposto() {
 		return $this->getPreco() * 0.195;

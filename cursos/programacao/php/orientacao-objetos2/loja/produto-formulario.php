@@ -7,14 +7,9 @@ verificaUsuario();
 $categoria = new Categoria();
 $categoria->setId(1);
 
-$produto = new Produto("", "", "", $categoria, "");
-
+$produto = new LivroFisico("", "", "", $categoria, "");
 $categoriaDao = new CategoriaDao($conexao);
-
-$categorias = $categoriaDao->listaCategorias();
-
-?>	
-
+$categorias = $categoriaDao->listaCategorias(); ?>
 <h1>Formulário de produto</h1>
 <form action="adiciona-produto.php" method="post">
 	<table class="table">

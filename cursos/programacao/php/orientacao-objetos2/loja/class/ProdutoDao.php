@@ -18,23 +18,12 @@ class ProdutoDao {
 
 		while($produto_array = mysqli_fetch_assoc($resultado)) {
 
-			$categoria = new Categoria();
-			$categoria->setNome($produto_array['categoria_nome']);
-
-			$nome = $produto_array['nome'];
-			$descricao = $produto_array['descricao'];
-			$preco = $produto_array['preco'];
-			$usado = $produto_array['usado'];
-			$isbn = $produto_array['isbn'];
 			$tipoProduto = $produto_array['tipoProduto'];
+			$factory = new ProdutoFactory();
+			$produto = $ProdutoFactory->criaPor($tipoProduto, $produto_array);
+			$produto->atualizaBaseadoEm($produto_array);
 
-			if ($tipoProduto == "Livro") {
-				$produto = new Livro($nome, $preco, $descricao, $categoria, $usado);
-				$produto->setIsbn($isbn);
-			} else {
-				$produto = new Produto($nome, $preco, $descricao, $categoria, $usado);
-			}
-
+			$prodtudo->getCategoria()->setNome($produto_array['categoria_nome']);
 			$produto->setId($produto_array['id']);
 
 			array_push($produtos, $produto);
@@ -50,13 +39,23 @@ class ProdutoDao {
 			$isbn = $produto->getIsbn();
 		}
 
+		$taxaImpressao = "";
+		if ($produto->temTaxaImpressao()) {
+			$taxaImpressao = $produto->getTaxaImpressao();
+		}
+
+		$waterMarker = "";
+		if ($produto->temWaterMarker()) {
+			$waterMarker = $produto->getWaterMarker();
+		}
+
 		$tipoProduto = get_class($produto);
 
 		$query = "insert into produtos (nome, preco, descricao, categoria_id, 
-			usado, isbn, tipoProduto) values ('{$produto->getNome()}', 
+			usado, isbn, tipoProduto, taxaImpressao, waterMarker) values ('{$produto->getNome()}', 
 				{$produto->getPreco()}, '{$produto->getDescricao()}', 
 					{$produto->getCategoria()->getId()}, {$produto->isUsado()}, 
-						'{$isbn}', '{$tipoProduto}')";
+						'{$isbn}', '{$tipoProduto}', '{$taxaImpressao}', '{$waterMarker}')";
 
 		return mysqli_query($this->conexao, $query);
 	}

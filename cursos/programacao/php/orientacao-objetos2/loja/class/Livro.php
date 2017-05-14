@@ -1,11 +1,10 @@
 <?php
 // livro é uma extensao de um produto com algumas caracteristicas a mais
 // livro herda tudo que produto tem
-class Livro extends Produto {
+// com o abstract não conseguimos mais estanciar Livro, somente os seus tipos
+abstract class Livro extends Produto {
 
 	private $isbn;
-	private $taxaImpressao;
-	private $waterMark;
 
 	public function getIsbn() {
 		return $this->isbn;
@@ -13,22 +12,6 @@ class Livro extends Produto {
 
 	public function setIsbn($isbn) {
 		$this->isbn = $isbn;
-	}
-
-	public function getTaxaImpressao() {
-		return $this->taxaImpressao;
-	}
-
-	public function setTaxaImpressao($taxaImpressao) {
-		$this->taxaImpressao = $taxaImpressao;
-	}
-
-	public function getWaterMarker() {
-		return $this->waterMark;
-	}
-
-	public function setWaterMarker($waterMark) {
-		$this->waterMark = $waterMark;
 	}
 
 	// reescrita - reescrever o metodo
