@@ -10,6 +10,7 @@
 
 ## Desenvolvimento do Curso
 * [Alura WordPress](http://alura-wordpress.pe.hu/)
+* [Hospedagem Hostinger](https://www.hostinger.com.br/)
 
 ## Aula 1
 
@@ -71,3 +72,13 @@
 
 *Novo parágrafo*
 * enter
+
+## Aula 3
+
+*Alterarações no site (favicon)*
+* Aparência->Personalizar->Identidade do site
+
+* Em caso de mensagem de manutenção, ir até o servidor e excluír o arquivo .maintence
+
+## Aula 4
+
