@@ -1,0 +1,9 @@
+##### 1. Índices e Explain #####
+
+Para ter acesso aos mesmos dados que usamos durante a aula, você pode usar o arquivo livraria.sql que está nesse link(https://gist.github.com/lazaropj/73065898dc751133a7815c736c2a3eb1) aqui. Basta primeiro criar o banco de dados com o comando
+create database livraria
+
+E depois é só usar o comando:
+
+mysqldump -u root -p livraria < caminho/ate/arquivo
+
