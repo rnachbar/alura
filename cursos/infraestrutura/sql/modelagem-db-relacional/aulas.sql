@@ -40,5 +40,13 @@ create table LIVROS (
 
 show index from livros; # mostra os index da tabela
 
+# Criar index em toda coluna pode ser prejudicial em termos de performance, pois quando se cria um index você tem um espaço dele em disco, você perde velocidade na hora de inserir, alterar e deletar
+
+# Explain serve para explicar o que esta acontecendo naquela query
+
+
+##### AULA 2
+
+
 
 

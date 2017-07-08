@@ -7,3 +7,80 @@ E depois é só usar o comando:
 
 mysqldump -u root -p livraria < caminho/ate/arquivo
 
+Agora que já sabemos criar, apagar, vantagens e desvantagens temos uma boa base para usar o índice nas nossas tabelas. Na sua opinião quando deve ser criado um índice para uma tabela tendo como base tudo que vimos nessa aula?
+
+Quando temos um problema de leitura grande em determinada tabela ou consulta.
+ 
+Esse é um bom cenário para se considerar o uso de índices.
+
+Na minha opinião, quando temos um problema de leitura muito grande em uma determinada tabela e consulta, o uso do índice deve ser estudado com carinho. Todo caso é um caso e por isso que eu falo que deve ser estudado e não ser a famosa bala de prata, pois também vimos que tem algumas desvantagens que, as vezes, pode ser maior que as vantagens.
+Então sempre leve em consideração o que aprendemos aqui com o cenário que você para poder aplicar essa técnica com maestria e resolver o seu problema
+
+Agora que já temos o banco de dados localmente, podemos fazer o login e continuar com o curso.
+A gente precisa fazer uma consulta no banco de dados para saber quantos livros foram lançados no mesmo dia. Essa informação foi pedida pelo CEO da empresa, pois ele está preocupado com as vendas.
+
+A query é a seguinte:
+
+select *, 
+     (select count(l2.data_de_lancamento) from livros l2 where l2.data_de_lancamento = l.data_de_lancamento) as anteriores
+from livros l
+Opa, mas temos que ordenar essa consulta
+
+select *, 
+     (select count(l2.data_de_lancamento) from livros l2 where l2.data_de_lancamento = l.data_de_lancamento) as anteriores
+from livros l order by l.data_de_lancamento
+Temos o resultado esperado, porém o tempo de execução está muito grande. Mas por que está demorando tanto? Precisamos de uma explicação para saber por que está demorando tanto.
+
+Quando a gente precisa dessa tal explicação em uma consulta, podemos utilizar o comando explain antes da query:
+
+explain select *, 
+     (select count(l2.data_de_lancamento) from livros l2 where l2.data_de_lancamento = l.data_de_lancamento) as anteriores
+from livros l order by l.data_de_lancamento
+Através dessa explicação, vimos que a consulta está passando por mais de 409 milhões de registros para trazer o resultado. Daí a explicação dessa demora.
+
+Pegamos o exemplo de uma lista telefônica para demonstrar um conceito que usamos tanto no nosso dia a dia como também nos nossos banco de dados, que é o índice.
+
+Podemos colocar índice em qualquer coluna, mas vimos que faz mais sentindo nesse nosso caso usar a coluna data_de_lancamento. Então para criar o índice para essa coluna é só executar o comando:
+
+create index indice_por_lancamento on livros(data_de_lancamento);
+Agora é só rodar a consulta novamente e ver que ficou super rápido.
+
+Prontinho, seu índice foi criado e resolveu bem o nosso problema.
+
+Caso você queira ver os índices de uma determinada tabela é só usar o comando:
+
+show index from livros
+
+Como foi alertado no vídeo, sempre que estamos trabalhando com modelagem de dados temos que tomar cuidado para não criar coisas desnecessárias como índices.
+Quando criamos um índice, ganhamos velocidade na leitura do dado porém perdemos tempo na hora de inserir, apagar e atualizar ele.
+
+Então use com sabedoria os índices no sua banco de dados.
+
+Durante a aula, a gente precisou criar um índice para a coluna data_de_lancamento na tabela livros. Agora como nós faríamos para um índice para a coluna nota na tabela autores?
+
+create index indice_por_nota on autores(nota);
+
+Para a criação do índice a estrutura do comando é a seguinte:
+create index "nome_do_indice" on "tabela"("coluna");
+Então para criar um índice na coluna nota na tabela autores, devemos executar o seguinte comando:
+
+create index indice_por_nota on autores(nota);
+
+Ao criarmos um índice para a coluna data_de_lancamento, nossa query ficou absurdamente mais rápida, porém nem tudo são flores quando falamos da criação de índices. Dentre as opções abaixo, quais são as desvantagens de se usar índices em bancos de dados relacionais?
+
+Os pontos que devemos levar em consideração como desvantagens são:
+Aumento de espaço em disco, pois o índice é salvo e isso aumenta o tamanho do seu banco;
+Perda de performance na hora de inserir, atualizar e apagar o dado;
+Além de criar mais um artefato para ser mantido e cuidado no seu banco de dados.
+
+Criar índice pode nos ajudar como vimos na aula, mas também pode ser que ele não esteja resolvendo o problema que temos e precisamos apaga-lo. Como podemos apagar um índice chamado indice_por_nome da tabela livros ?
+
+O comando para apagar um determinado índice é:
+ALTER TABLE "tabela" DROP INDEX "nome_do_indice"
+Então nosso comando fica assim:
+
+ALTER TABLE livros DROP INDEX indice_por_nome
+
+##### 2. Primeira regra de normalização #####
+
+
