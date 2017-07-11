@@ -1,0 +1,105 @@
+* Qualquer navegador da suporte ao JavaScript (dinamismo, página interativa)
+
+############### 1. Introdução ###############
+
+Seja bem vindo ao curso JavaScript: Programando na linguagem da web, e eu sou o Douglas Quintanilha e serei seu instrutor neste curso que te dará uma introdução a essa linguagem tão importante atualmente.
+
+Você talvez possa estar se perguntando: por que o JavaScript hoje em dia é tão falado? Por que essa linguagem ganhou tanta popularidade ultimamente e por que eu, como desenvolvedor, tenho que aprendê-la?
+
+O JavaScript é a linguagem de programação nativa da Web, melhorando a usabilidade e a interatividade do usuário com a página, por si só já bastaria como um excelente motivador para despertar seu interesse por essa fascinante linguagem, mas além de ser dominante nos cenários dos navegadores, o JavaScript recentemente também se expandiu para o lado do servidor com o lançamento do Node.js, um ambiente que permite criar um servidor Web completo utilizando o JavaScript, a linguagem ganhou grande popularidade e caiu ainda mais no gosto dos desenvolvedores, se tornando parte do coletivo imaginário de qualquer programador moderno.
+
+E não é só no servidor que o Javascript ganhou terreno nos últimos anos, hoje em dia é possível programar um Arduino com a biblioteca Johnny-Five, criar um aplicativo para Desktop utilizando o framework Electron e até mesmo encontramos o banco de dados, como o MongoDB, que utiliza a sintaxe do JavaScript em suas queries. Hoje, o JavaScript está presente em diversas áreas do desenvolvimento.
+
+Saber JavaScript lhe permite esticar suas habilidades de desenvolvedor para os mais diversos ramos da tecnologia, e é claro, a controlar e manipular qualquer página Web!
+
+A partir de agora, estudaremos a sintaxe, como funciona essa linguagem, quais são suas nuances, através de um pequeno projeto, para explorar o JavaScript em sua principal área de atuação, no front-end, na manipulação de páginas Web.
+
+O Javascript é uma das linguagens mais importantes de nosso tempo porque: é uma linguagem que, além de ser a padrão nos navegadores atuais, vem expandindo para outras áreas como servidores, banco de dados e até plataformas de Internet of Things.
+
+O Javascript cresceu bastante e hoje em dia pode ser encontrado nas mais diversas plataformas de desenvolvimento. Dominá-la é essencial se você deseja desenvolver sites para a Web, já que ela é a linguagem que funciona em todos os navegadores e responsável por dar iteratividade e dinamismo as páginas web.
+
+Ao longo deste treinamento, nós vamos aprimorar o site da Aparecida Nutrição. Aparecida é uma nutricionista que resolveu melhorar os seus processos organizacionais e migrar os dados de seus clientes para um site, ao invés de ficar consultando tudo em antigas fichas de papel.
+Ela deseja conseguir adicionar novos clientes na tabela, calcular os seus IMCs e obter o estado de saúde sem ter que ficar fazendo cálculos manuais. Nós, como desenvolvedores contratados por ela, vamos melhorar o site atual dela para que ela possa ter disponíveis estas novas funcionalidades.
+
+Baixando o projeto
+O primeiro passo é baixar o projeto inicial deste treinamento, clicando aqui. Descompacte-o e acesse a pasta introducao-javascript em seu computador e abra-a em um editor de textos.
+
+Durante o treinamento, o instrutor utiliza o editor de textos Atom, mas existem diversos outros, como o Sublime Text 3 e o Visual Studio Code, então use o de sua preferência.
+
+Exibindo um alerta com JavaScript
+Para começar a adicionar funcionalidade e dinamismo na página de pacientes, precisamos primeiro aprender como utilizamos o JavaScript corretamente em nossas páginas. Uma primeira tentativa é utilizar as funções do JavaScript dentro do corpo de nossa página.
+
+No início do index.html, logo após a tag <body>, vamos exibir um alerta com JavaScript, através da função alert:
+
+<body>
+    alert("Olá mundo");
+
+    <!-- Restante do index.html -->
+</body>
+Ao abrir a página index.html no navegador, vemos o seguinte resultado:
+
+Navegador imprimindo alert como texto
+
+O script está sendo exibido como texto, isto é, o navegador não fez nenhum tratamento especial para interpretar aquele código como um script.
+
+Interpretando o JavaScript
+Precisamos dar uma pista para que o navegador deixe de olhar aquele trecho de código como HTML e comece a vê-lo como um script que deve ser interpretado. Para isso, usamos a tag <script>:
+
+<body>
+    <script>
+        alert("Olá mundo");
+    </script>
+
+    <!-- Restante do index.html -->
+</body>
+Agora sim! Quando recarregamos a página no navegador, nosso trecho de script é interpretado como um código, e não como um conteúdo qualquer da página, e o alerta é exibido.
+
+A função alert é uma das funções como podemos utilizar para exibir mensagens com JavaScript, mas podemos utilizar também o console.log, que pode ser considerado mais agradável para exibir uma mensagem, já que ela não é exibida em uma pop-up, e sim no console do navegador.
+
+Vamos testar:
+
+<body>
+    <script>
+        console.log("Olá mundo");
+    </script>
+
+    <!-- Restante do index.html -->
+</body>
+No Linux ou Windows, para ver o console do navegador basta apertar F12, no OSX basta pressionar COMMAND + ALT + J. Ao abrir o console, vemos a mensagem:
+
+Imprimindo uma mensagem no console do navegador
+
+Além disso, o console do navegador também aceita funções JavaScript! Podemos escrever mais um console.log:
+
+console.log("Aqui tem um recado para você");
+Ou até mesmo um alerta:
+
+alert("Olá");
+Com o alert e o console.log, damos os primeiros passos com o JavaScript, entendendo que para o JavaScript funcionar, o seu código deve estar entre a tag <script>.
+
+A tag <script> é responsável por nos ajudar a resolver este problema. Tudo que declaramos dentro da tag <script> é interpretado como Javascript quando o navegador passar por ali.
+No caso abaixo:
+
+<script>
+alert("Olá mundo");
+</script>
+Quando o navegador passar pela tag abaixo ele vai interprar o texto "alert("Olá mundo");" e irá executar a função alert(), que é responsável por exibir uma pop up com a mensagem Olá mundo.
+
+Ao abrir o HTML abaixo em um navegador, o que irá acontecer ?
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>Minha página com Javascript</h1>
+        <script>
+            Olá mundo!
+        </script>
+    </body>
+</html>
+
+No entanto, quando ler a tag <script>, o navegador entende que todo texto que está dentro da tag <script> deve ser lido como um Javascript, logo ele vai tentar interpretar a frase "Olá Mundo" como se fosse uma função Javascript válido. O que sabemos que não é, e então ele exibirá um erro de Unexpected Identifier, que nada mais é o que ele dizendo através do console de desenvolvedor que ele não entende "Olá mundo" como uma de suas funções.
+Saber identificar e interpretar os erros do console é uma habilidade de todo bom desenvolvedor Javascript, então é bom começarmos a praticá-la desde já.
+
+Se desejamos que uma mensagem seja exibida no console, devemos sempre chamar a função console.log(), que é a função que recebe como parâmetro o conteúdo da mensagem que queremos exibir no console.
+
+
