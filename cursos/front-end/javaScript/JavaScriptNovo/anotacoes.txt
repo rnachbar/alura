@@ -2306,6 +2306,794 @@ Agora as mensagens são limpas também quando adicionamos um paciente com sucess
 
 ############### 7. Remoção, Delegação e Animação ###############
 
+Agora que já estamos validando totalmente os nossos pacientes, podemos nos concentrar em adicionar novas funcionalidades ao site da Aparecida.
+Mas ela pode sem querer adicionar um paciente com algum dado errado, faltando alguma letra no nome, ou algum número no peso, por exemplo. O paciente passará pela validação, mas com os dados incorretos. E ela não consegue editar o paciente e nem removê-lo, para adicioná-lo novamente.
+
+Então vamos implementar a opção de remoção de pacientes para a Aparecida. Ela pode ser feita através de um ícone, ou para ser mais simples, através de um duplo clique! Ao clicar duas vezes em um paciente, o mesmo é removido.
+
+Escutando o evento de duplo clique nas linhas
+Se queremos colocar um evento de duplo clique nas linhas, devemos escutar esse evento para cada linha da tabela, então vamos fazer isso no JavaScript.
+
+Como estamos criando uma funcionalidade nova, sem nada relacionado com o formulário ou com o cálculo de IMC, vamos então criar um novo arquivo dentro da pasta js, o remover-paciente.js. É nesse arquivo que ficará toda a lógica de remoção.
+
+Antes de mais nada, vamos logo importar esse arquivo no index.html:
+
+<script src="js/calcula-imc.js" ></script>
+<script src="js/form.js" ></script>
+<script src="js/remover-paciente.js" ></script>
+Primeiramente, devemos selecionar as linhas. Todas elas possuem a classe paciente, então vamos selecioná-las:
+
+var pacientes = document.querySelectorAll(".paciente");
+Agora, para cada linha, para cada paciente, fazemos algo:
+
+var pacientes = document.querySelectorAll(".paciente");
+
+pacientes.forEach(function(paciente) {
+
+});
+E para cada paciente, adicionamos um escutador de eventos, para escutar o evento de duplo clique, o dblclick:
+
+var pacientes = document.querySelectorAll(".paciente");
+
+pacientes.forEach(function(paciente) {
+    paciente.addEventListener("dblclick", function() {
+
+    });
+});
+Agora falta sabermos como removemos um elemento do DOM, com JavaScript.
+
+Removendo um elemento do HTML com JavaScript
+A função do JavaScript responsável por remover um elemento do HTML é a função remove(). Então temos que chamar essa função no paciente que foi clicado.
+
+Quem será clicado? O dono do evento, certo? O dono do evento é que sofrerá a ação de duplo clique e executará a função. Para acessar o dono do evento, a quem o evento está atrelado, utilizamos uma palavra reservada do JavaScript chamada this:
+
+var pacientes = document.querySelectorAll(".paciente");
+
+pacientes.forEach(function(paciente) {
+    paciente.addEventListener("dblclick", function() {
+        this.remove();
+    });
+});
+O this é uma palavra de contexto ligada com quem acionou o evento, a quem o evento está atrelado. Como o evento está atrelado ao paciente, o this fará referência a ele.
+
+Ao testar na página, e dar um duplo clique em um paciente nativo, o mesmo é removido! Então conseguimos implementar a remoção de um paciente de um jeito bem fácil.
+
+Mas nem tudo é perfeito, e essa implementação tem um pequeno defeito. Ao adicionar um paciente pelo formulário, nós não conseguimos removê-lo. Isso porque o novo paciente não estava na página no momento em que o remover-paciente.js foi carregado (lembrando que o navegador abre a página e vai lendo o seu HTML, carregando os nossos scripts logo após).
+
+Então, o script seleciona somente os pacientes que já estão na página. Ao adicionar um ou mais pacientes, eles não estão escutando o evento! No momento em que um paciente for adicionado, deveríamos colocá-lo para ouvir o evento e executar o mesmo código, mas aí estaríamos duplicando código, que já sabemos não ser uma boa prática.
+
+Veremos no próximo vídeo um outro jeito de fazer a remoção do paciente, para remover os pacientes nativos e os que forem sendo adicionados depois da página ser carregada.
+
+Para resolver o problema da remoção de pacientes, vamos nos aproveitar de uma característica do JavaScript, chamada Event Bubbling, ou "bolheamento" de eventos. Quando escutamos um evento no JavaScript, esse evento na verdade não acontece só no dono do evento (no nosso caso, na linha do paciente), ele acontece também no pai do paciente, no pai do pai do paciente, e vai subindo até o último pai.
+
+Na nossa estrutura, ao dar um duplo clique na tr do paciente, o seu pai (tbody) também escuta o evento, e o pai do tbody (table) também, assim como os próximos pais, até chegar no body.
+
+Podemos fazer uma analogia com um copo de refrigerante, já que quando colocamos o refrigerante em um copo, suas bolhas vão do fundo do copo até estourar na boca do copo. O evento seria como se fosse essa bolha.
+
+Então vamos apagar o código antigo e fazer um teste. Primeiro selecionando o tbody:
+
+var tabela = document.querySelector("#tabela-pacientes");
+E vamos colocá-lo para escutar um evento de clique, imprimindo uma mensagem no console ao ser clicado:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("click", function() {
+    console.log("Fui clicado");
+});
+Ao voltar para a página, veremos que independente de onde clicarmos no corpo da tabela, o evento será disparado, logo a mensagem será exibida no console! Ou seja, tanto faz se colocarmos o escutador de eventos em cada paciente ou no tbody, ele só precisa saber que teve um evento que aconteceu ali dentro.
+
+Descobrindo o elemento clicado
+Para não termos que ficar escutando o evento para cada linha da tabela, e para as linhas adicionadas através do formulário, vamos delegar essa responsabilidade de ficar escutando os eventos para o pai deles todos, o tbody:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function() {
+
+});
+Dentro da função, perguntamos ao pai qual filho foi clicado, porque é ele que será removido. Dessa vez não podemos utilizar o this, porque o dono do evento é a tabela, logo ela acabará sendo removida.
+
+Para descobrir qual filho foi clicado, podemos utilizar novamente o event, então vamos recebê-lo como parâmetro na função:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+
+});
+O event pode responder essa nossa pergunta. Ele diz quem foi clicado, quem foi o alvo, através da propriedade target. E com o alvo em mãos, podemos deletá-lo:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+    event.target.remove();
+});
+Mas se testarmos, podemos ver que isso "quase" funciona. Já que ao clicar em algum campo da tabela, a td que é removida, afinal ela que foi clicada. Mas queremos remover a linha toda, a tr, que é pai da td.
+
+Acessando o pai de um elemento
+Para selecionar o pai de um elemento, existe a propriedade parentNode. Então selecionaremos quem foi clicado, e removeremos o seu pai, que será uma tr:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+    event.target.parentNode.remove();
+});
+Podemos até separar em variáveis para deixar mais claro:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+    var alvoEvento = event.target;
+    var paiDoAlvo = alvoEvento.parentNode;
+
+    paiDoAlvo.remove();
+});
+Agora, mesmo que adicionemos mais pacientes através do formulário, no momento em que ele receber um duplo clique, o evento irá subir até chegar na tabela, que o estará escutando. Consequentemente, o paciente será removido.
+
+Quando removemos um paciente, a linha some instantaneamente, abruptamente. Para melhorar a experiência do usuário, seria interessante que a linha vá sumindo aos poucos, gradualmente, que ela vá esmaecendo aos poucos, até seu total desaparecimento.
+Então vamos realizar essa implementação, animando a remoção do paciente.
+
+Transição com CSS
+Já sabemos que, se queremos colocar um efeito visual, devemos mexer com o CSS. Então, no index.css, vamos adicionar uma classe chamada fadeOut:
+
+.fadeOut {
+
+}
+E essa classe irá colocar a opacidade do elemento com 0, fazendo-o sumir:
+
+.fadeOut {
+    opacity: 0;
+}
+Só que ela fará isso de maneira gradual, com uma transição de meio segundo:
+
+.fadeOut {
+    opacity: 0;
+    transition: 0.5s;
+}
+Agora, falta adicionarmos essa classe no paciente, utilizando o JavaScript.
+
+Adicionando a classe e removendo a linha da tabela
+No remover-paciente.js, comentamos a linha que remove o elemento com a função remove, e adicionamos a classe fadeOut ao elemento:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+    event.target.parentNode.classList.add("fadeOut");
+    //event.target.parentNode.remove();
+});
+Podemos agora testar, dar um duplo clique no elemento e ver ele sumindo aos poucos... Mas a linha continua na tabela! Isso porque só estamos mexendo no visual do elemento, o HTML continua lá. Então vamos descomentar a linha, removendo o elemento logo em seguida à adição da classe:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+    event.target.parentNode.classList.add("fadeOut");
+    event.target.parentNode.remove();
+});
+Mais uma vez testamos, damos um duplo clique e... Mais uma vez a linha some instantaneamente, como no início do vídeo. Porque?
+
+Como o computador é muito rápido, o browser processa as linhas do script JavaScript instantaneamente. A classe é adicionada e logo em seguida o elemento é removido, por isso não conseguimos ver a transição acontecendo.
+
+Logo, só devemos remover a linha da tabela após a transição ser terminada. Devemos pedir para o JavaScript aguardar meio segundo (tempo que colocamos para a transição ocorrer) e só após isso removemos a linha.
+
+Aguardando a execução de uma função por um tempo determinado
+A função do JavaScript que utilizamos quando queremos aguardar um tempo é a setTimeOut. Para ela, passamos por parâmetro o que deve ser executado (uma função) e quanto tempo deve ser aguardado:
+
+var tabela = document.querySelector("#tabela-pacientes");
+
+tabela.addEventListener("dblclick", function(event) {
+    event.target.parentNode.classList.add("fadeOut");
+
+    setTimeout(function() {
+        event.target.parentNode.remove();
+    }, 500);
+
+});
+Logo, a função setTimeOut acima irá segurar a execução da função passada por parâmetro para ela, pelo tempo de 500 milissegundos, equivalente a meio segundo.
+
+Fazendo o teste novamente, mais uma vez damos um duplo clique em uma linha, a transição ocorre e após meio segundo a linha é removida!
+
+Agora que a Aparecida consegue adicionar pacientes, e também removê-los, seria interessante que disponibilizássemos para ela um campo de busca por nome, para filtrar os pacientes listados. Já que a tendência é a lista de pacientes aumentar cada vez mais, tornando assim a localização de um ou mais pacientes em específico bem difícil. Então vamos ver como implementar uma busca em uma tabela, utilizando JavaScript.
+Adicionando o campo de busca
+A primeira coisa que devemos fazer é adicionar uma label e um input no index.html, que será onde o nome do paciente a ser buscado será digitado. Adicionamos acima da tabela:
+
+<section class="container">
+    <h2>Meus pacientes</h2>
+    <label for="filtrar-tabela">Filtre:</label>
+    <input type="text" name="filtro" id="filtrar-tabela" placeholder="Digite o nome do paciente">
+    <table>
+        <!-- conteúdo da tabela omitido -->    
+    </table>
+</section>
+E para melhorar o seu estilo, adicionamos o seguinte código no index.css:
+
+#filtrar-tabela {
+    width: 200px;
+    height: 35px;
+    margin-bottom: 10px;
+}
+Agora, conforme o nome for digitado no campo, a ideia é que os pacientes que correspondam com o nome sejam mostrados. Por exemplo, ao digitar Doug, o paciente Douglas deverá ser exibido.
+
+Acessando o conteúdo digitado no campo de filtragem
+Resta agora implementarmos o código JavaScript que realizará essa filtragem. Vamos então criar o arquivo filtra.js, dentro da pasta js. Como é um novo arquivo, vamos importá-lo em index.html:
+
+<script src="js/calcula-imc.js" ></script>
+<script src="js/form.js" ></script>
+<script src="js/remover-paciente.js" ></script>
+<script src="js/filtra.js" ></script>
+Devemos pegar o conteúdo de texto que está sendo digitado no campo de busca. Só que quando queremos filtrar? Queremos digitar conforme o usuário vá digitando, a cada letra digitada. Ou seja, queremos detectar o evento de digitar, conhecido como input. Toda vez que alguém inserir dados no campo, esse evento é disparado.
+
+Primeiramente, devemos selecionar o campo de texto:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+Com o campo em mãos, podemos escutar o evento input:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+
+});
+A cada letra que inserimos, a função é chamada. A cada vez que digitarmos, devemos pegar o value do campo, e filtrar a tabela. Podemos utilizar campoFiltro.value dentro da função, mas campoFiltro é o dono do evento, certo? Então podemos utilizar a palavra de contexto this, que é referente ao próprio dono do evento.
+
+Agora, conforme o nome for sendo digitado, podemos ir comparando com os nomes de todos os pacientes da tabela. Os que forem iguais, nós mostramos, e os que forem diferentes, nós escondemos. Vamos então selecionar todos os pacientes:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+});
+Só que queremos comparar com o nome dos pacientes, não com a tr. Precisamos então iterar sobre os pacientes, para acessar o nome de cada um:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    for (var i = 0; i < pacientes.length; i++) {
+
+    }
+});
+Agora selecionamos o paciente, e dele selecionamos a td com a classe info-nome. Dela extrairemos o nome do paciente:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    for (var i = 0; i < pacientes.length; i++) {
+        var paciente = pacientes[i];
+        var tdNome = paciente.querySelector(".info-nome");
+        var nome = tdNome.textContent;
+    }
+});
+Agora temos acesso ao nome de todos os pacientes da tabela, e também ao conteúdo de texto do campo de filtragem, só precisamos esconder todos os pacientes que são diferentes do conteúdo de texto, e mostrar os que são iguais.
+
+Veremos como fazer isso no próximo vídeo :)
+
+Queremos esconder tudo o que for diferente do valor do campo de texto e mostrar tudo o que for igual. Quando nós quisermos deixar um paciente com fundo vermelho, adicionamos uma classe no mesmo e no CSS definimos a cor de fundo dos elementos com essa classe. Fizemos a mesma coisa para sumir com o paciente, quando o mesmo for removido, adicionamos uma classe e no CSS adicionamos o estilo.
+Faremos o mesmo para esconder os pacientes, se o nome for diferente do conteúdo de texto, adicionaremos uma classe. Se não for, ou seja, se o nome for igual ao que foi digitado, removemos a classe:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    for (var i = 0; i < pacientes.length; i++) {
+        var paciente = pacientes[i];
+        var tdNome = paciente.querySelector(".info-nome");
+        var nome = tdNome.textContent;
+
+        if (nome != this.value) {
+            paciente.classList.add("invisivel");
+        } else {
+            paciente.classList.remove("invisivel");
+        }
+    }
+});
+E no index.css, sumimos com o elemento que tiver a classe invisivel:
+
+.invisivel {
+    display: none;
+}
+Vamos testar agora. Ao digitar Douglas, somente o paciente Douglas é exibido! Mas ao apagar o que digitamos, os pacientes não voltam! Isso porque todos os pacientes estão com a classe invisivel, ou seja, só deveríamos colocar a classe invisivel quando há algum conteúdo no campo, algo digitado.
+
+Então só vamos colocar a classe invisivel se houver algo digitado. Vemos se há algo digitado ou não através do seu length, se ele for 0, significa que o campo está em branco, mas se for maior que 0, significa que há algo digitado:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    if (this.value.length > 0) {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            var tdNome = paciente.querySelector(".info-nome");
+            var nome = tdNome.textContent;
+
+            if (nome != this.value) {
+                paciente.classList.add("invisivel");
+            } else {
+                paciente.classList.remove("invisivel");
+            }
+        }
+    }
+});
+Mas se não houver nada digitado, nós percorremos todos os pacientes e removemos a classe:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    if (this.value.length > 0) {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            var tdNome = paciente.querySelector(".info-nome");
+            var nome = tdNome.textContent;
+
+            if (nome != this.value) {
+                paciente.classList.add("invisivel");
+            } else {
+                paciente.classList.remove("invisivel");
+            }
+        }
+    } else {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            paciente.classList.remove("invisivel");
+        }
+    }
+});
+Agora, quando filtramos os pacientes, e apagamos o conteúdo do campo de texto, todos os pacientes voltam a ser exibidos!
+
+Estamos com uma busca funcional, mas ela só busca pelo nome inteiro do paciente. Para ficar mais interessante, podemos realizar uma busca letra a letra. Por exemplo, ao digitar a letra P, todos os pacientes que começam com P seriam exibidos, como Pedro, Paulo e Pablo. Ao adicionar um a, ficando Pa, somente os pacientes Paulo e Pablo seriam exibidos. E conforme fomos colocando as letras, a filtragem iria sendo feita.
+Para buscar texto em uma outra palavra, as linguagens de programação já possuem uma solução, e isso não é diferente com o JavaScript. Essa solução é a expressão regular.
+
+As expressões regulares nada mais são do que um tipo especial de texto, que nos auxilia em fazer uma busca textual em um texto maior. Pode ser uma busca simples, como a nossa, se a palavra Paulo contém a palavra Pa, por exemplo; ou uma busca mais complexa, se um parágrafo contém a palavra nome, por exemplo, mais ou menos o que os editores de texto utilizam quando queremos buscar por uma palavra, com o famoso CTRL + F.
+
+Criando expressões regulares no JavaScript
+Para criar expressões regulares no JavaScript é bem fácil, criamos uma variável e dentro dela colocamos uma expressão regular, que é um objeto especial do JavaScript. Criamos esse objeto com um new e o seu nome, RegExp
+
+var expressao = new RegExp();
+Para o objeto, podemos passar dois parâmetros. O primeiro é o texto que queremos buscar, no nosso caso o que está sendo digitado, logo this.value. O segundo é como que queremos que a expressão regular busque, relativo a algumas características suas, mas o importante para nós é que não queremos case-sensitive, que é a diferenciação entre letras maiúsculas e minúsculas. Para buscar tanto letras maiúsculas, quanto minúsculas, passamos a letra i como segundo parâmetro:
+
+var expressao = new RegExp(this.value, "i");
+Mas como utilizamos a expressão regular para buscar no nome do paciente o texto que queremos?
+
+Buscando com expressões regulares
+Para usar, ao invés de compararmos com o nome inteiro do paciente (como estávamos fazendo), vamos pedir para a expressão regular testar para ver se o nome do paciente possui um pedaço do que foi digitado no campo de busca. Para isso, a expressão regular tem o método test, onde nós passamos para ela o que queremos testar:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    if (this.value.length > 0) {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            var tdNome = paciente.querySelector(".info-nome");
+            var nome = tdNome.textContent;
+            var expressao = new RegExp(this.value, "i"); 
+
+            if (expressao.test(nome)) {
+                paciente.classList.add("invisivel");
+            } else {
+                paciente.classList.remove("invisivel");
+            }
+        }
+    } else {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            paciente.classList.remove("invisivel");
+        }
+    }
+});
+Esse teste irá retornar verdadeiro, caso o nome contenha a expressão, ou falso, caso não contenha. Como estamos testando se o nome não contém a expressão (por isso adicionamos a classe invisivel), precisamos utilizar novamente o operador de negação (!). Logo, se o teste falhar, adicionamos a classe, se não, removemos a classe:
+
+// filtra.js
+
+var campoFiltro = document.querySelector("#filtrar-tabela");
+
+campoFiltro.addEventListener("input", function() {
+    var pacientes = document.querySelectorAll(".paciente");
+
+    if (this.value.length > 0) {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            var tdNome = paciente.querySelector(".info-nome");
+            var nome = tdNome.textContent;
+            var expressao = new RegExp(this.value, "i"); 
+
+            if (!expressao.test(nome)) {
+                paciente.classList.add("invisivel");
+            } else {
+                paciente.classList.remove("invisivel");
+            }
+        }
+    } else {
+        for (var i = 0; i < pacientes.length; i++) {
+            var paciente = pacientes[i];
+            paciente.classList.remove("invisivel");
+        }
+    }
+});
+Agora a filtragem é feita letra a letra. Conseguimos deixá-la um pouco mais dinâmica.
+
+Para saber mais sobre expressões regulares, há um curso bem interessante aqui na Alura, o curso Expressões regulares: Capturando textos de forma mágica.
+
+############### 9. AjaxBuscando pacientes com AJAX ###############
+
+A última feature que vamos desenvolver no site da Aparecida é a capacidade dele se integrar a um outro sistema, que também contém pacientes. Esse sistema é um servidor, que funciona externamente ao nosso computador, que contém alguns pacientes, e que a Aparecida resolveu adotar no seu consultório, então ela quer trazer esses pacientes para que eles fiquem cadastrados no sistema dela, integrando assim os dois sistemas.
+Acessando o sistema externo de pacientes
+O sistema externo de pacientes pode ser acessado no navegador, através da URL https://api-pacientes.herokuapp.com/pacientes. Nele, há uma lista de pacientes que devem ser integrados ao sistema da Aparecida. No site da Aparecida, com o clique de um botão, esses pacientes serão importados, sendo incluídos na tabela.
+
+Ou seja, ao clicar no botão, iremos buscar os dados dos pacientes no sistema externo e adicioná-los no site da Aparecida.
+
+Adicionando um novo botão na página
+A primeira coisa que devemos fazer é adicionar o botão na página index.html. É nele que clicaremos para buscar os pacientes externos. Adicionaremos esse botão abaixo da tabela:
+
+<section class="container">
+    <h2>Meus pacientes</h2>
+    <label for="filtrar-tabela">Filtre:</label>
+    <input type="text" name="filtro" id="filtrar-tabela" placeholder="Digite o nome do paciente">
+    <table>
+        <!-- conteúdo da tabela omitido -->
+    </table>
+
+    <button id="buscar-pacientes" class="botao bto-principal">Buscar Pacientes</button>
+
+</section>
+Se temos uma nova feature, vamos criar um novo arquivo JavaScript dentro da pasta js, ele será chamado de buscar-pacientes.js. Como temos um novo arquivo, vamos importá-lo na página index.html:
+
+<script src="js/calcula-imc.js" ></script>
+<script src="js/form.js" ></script>
+<script src="js/remover-paciente.js" ></script>
+<script src="js/filtra.js" ></script>
+<script src="js/buscar-pacientes.js" ></script>
+Se queremos buscar os pacientes ao clicar no botão, devemos selecioná-lo e escutar o seu evento de click:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+
+});
+No navegador, sabemos como acessar um endereço, podemos abrir uma nova aba, digitar o endereço e clicar ENTER. Ou seja, é o navegador que faz a requisição, ele vai até a URL e nos mostra os dados. Mas como faremos isso de dentro da nossa página?
+
+Varemos como fazer uma requisição com JavaScript de modo que ele vá até a URL, busque os dados e nos traga de volta, sem depender do navegador.
+
+Conhecendo a estrutura da API
+No código JavaScript, devemos acessar o endereço https://api-pacientes.herokuapp.com/pacientes, buscar e trazer os seus dados, e colocá-los na tabela. Esse endereço é uma API, que nada mais é que uma interface de programação, que disponibiliza os dados para nós.
+
+Não sabemos da onde vêm os dados, como e de que jeito eles foram gerados, eles já são disponibilizados prontos para usarmos, e isso é uma característica da uma API.
+
+Ao analisar os dados, eles possuem uma estrutura que nós já conhecemos: cada paciente fica entre chaves, e dentro das chaves há itens formados por um par chave e valor. Ou seja, parece muito com um objeto JavaScript.
+
+Além disso, todos os dados estão armazenados entre colchetes, característica de um array do JavaScript. Como os dados estão disponibilizados em uma estrutura que conhecemos, será bem fácil trazê-los para dentro do código JavaScript, só precisamos aprender como acessá-los, como realizar a requisição sem o navegador, somente com JavaScript.
+
+Enviando uma requisição com JavaScript
+Para fazer essa requisição, temos um objeto bastante conhecido do mundo JavaScript, o XMLHttpRequest:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+});
+O XMLHttpRequest é um objeto do JavaScript responsável por fazer requisições HTTP. Ele possui o XML no nome porque era utilizado para realizar o transporte de dados do tipo XML, mas hoje em dia ele consegue trafegar outros tipos de dados.
+
+Só que para ele realizar as requisições, devemos ensiná-lo e configurá-lo para fazer as requisições do jeito que queremos. Faremos isso com alguns de seus métodos.
+
+O primeiro deles, o método open, é onde diremos qual tipo de requisição queremos fazer (GET) e para onde. Passamos esses dois valores por parâmetro para ele:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+});
+Essa linha somente configura o endereço que será acessado, verifica se o mesmo está correto, existe, configurando a requisição. Para realizar a requisição em si, precisamos chamar o método send:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.send();
+});
+Podemos testar o nosso botão somente com esse código. Ao clicar nele, nada acontece. Porque?
+
+Porque no nosso código atual, é como se o JavaScript estivesse abrindo uma nova aba no navegador, digitou o endereço e clicou ENTER. Mas ficou faltando a parte final, que é exibir os dados para nós.
+
+Obtendo e exibindo a resposta da requisição
+Para poder exibir os dados, depois que enviamos a requisição, devemos escutar um evento específico que é acionado quando a requisição termina, quando a sua resposta for carregada. Ao escutar esse evento, conseguiremos carregar essa resposta da requisição, justamente os nossos dados. Esse evento é o load, evento característico do XMLHttpRequest:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+
+    });
+
+    xhr.send();
+});
+E para acessar os dados da resposta, acessamos a propriedade responseText do XMLHttpRequest. Para testar, podemos guardá-la em uma variável imprimi-la no console do navegador:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+        var resposta = xhr.responseText;
+        console.log(resposta);
+    });
+
+    xhr.send();
+});
+Agora, ao clicar no botão, os dados são impressos no console! Ou seja, já estamos conseguindo trazer os dados de outro site para o mundo do JavaScript. Falta agora criar os pacientes com esses dados e exibi-los na tabela. Faremos no próximo vídeo :)
+
+Já temos acesso aos dados da requisição, mas para conseguir trabalhar com eles precisamos passá-los para um formato mais palpável, já que a resposta vem como texto. Mas ele tem uma estrutura tão parecida com o objeto do JavaScript...
+O formato de dados JSON
+Os dados possuem uma estrutura parecida com o objeto do JavaScript porque eles estão no formato JSON (sigla de JavaScript Object Notation), que é um formato de dados (parecidos com os objetos do JavaScript) que podemos transportar pela web.
+
+A semelhança é tanta, que podemos facilmente converter JSON, ou o texto da resposta da requisição, em objetos do JavaScript que estamos mais acostumados a utilizar! Podemos converter para uma string, um objeto puro em si, ou até mesmo um array, que é o que estamos interessados, que a resposta vire um array de objetos, de pacientes.
+
+Convertendo JSON para um array de objetos
+Para transformar a resposta que temos atualmente (uma string) em um array de pacientes, devemos usar um transformador, um parseador de JSON para objetos do JavaScript. E quem vai fazer isso é o objeto JSON, que possui um método chamado parse, que pode receber um texto em JSON, que será parseado e nos será retornado um objeto JavaScript. Como nossa resposta tem uma cara de array, o método entenderá isso e nos retornará um array do objetos:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+        var resposta = xhr.responseText;
+        var pacientes = JSON.parse(resposta);
+    });
+
+    xhr.send();
+});
+Agora que temos um array, sendo que cada item do array é um objeto que representa o paciente, basta iterar por eles e adicionar cada um na tabela.
+
+Adicionando os pacientes na tabela
+Já implementamos essa adição de pacientes na tabela, certo? Lá no form.js nós já fazemos isso, só que o código está preso ao escutador do evento click do botão Adicionar:
+
+// form.js
+
+var botaoAdicionar = document.querySelector("#adicionar-paciente");
+botaoAdicionar.addEventListener("click", function(event) {
+
+    event.preventDefault();
+
+    var form = document.querySelector("#form-adiciona");
+    var paciente = obtemPacienteDoFormulario(form);
+    var pacienteTr = montaTr(paciente);
+
+    var erros = validaPaciente(paciente);
+    if (erros.length > 0) {
+        exibeMensagensDeErro(erros);
+        return;
+    }
+
+    var tabela = document.querySelector("#tabela-pacientes");
+    tabela.appendChild(pacienteTr);
+
+    form.reset();
+
+    var mensagensErro = document.querySelector("#mensagens-erro");
+    mensagensErro.innerHTML = "";
+
+});
+Vamos então reaproveitar esse código, criando a função adicionaPacienteNaTabela. Essa função receberá um paciente, montará a sua tr, selecionará a tabela e adicionará a tr como sua filha:
+
+// form.js
+
+function adicionaPacienteNaTabela(paciente) {
+    var pacienteTr = montaTr(paciente);
+    var tabela = document.querySelector("#tabela-pacientes");
+    tabela.appendChild(pacienteTr);
+}
+Agora podemos chamar essa função no form.js:
+
+// form.js
+
+var botaoAdicionar = document.querySelector("#adicionar-paciente");
+botaoAdicionar.addEventListener("click", function(event) {
+
+    event.preventDefault();
+
+    var form = document.querySelector("#form-adiciona");
+    var paciente = obtemPacienteDoFormulario(form);
+
+    var erros = validaPaciente(paciente);
+    if (erros.length > 0) {
+        exibeMensagensDeErro(erros);
+        return;
+    }
+
+    // chamando a nova função adicionaPacienteNaTabela
+    adicionaPacienteNaTabela(paciente);
+
+    form.reset();
+
+    var mensagensErro = document.querySelector("#mensagens-erro");
+    mensagensErro.innerHTML = "";
+
+});
+E também no buscar-pacientes.js, basta iterar pelo array, e adicionar cada paciente contido nele, chamando a função que acabamos de criar:
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+        var resposta = xhr.responseText;
+        var pacientes = JSON.parse(resposta);
+
+        pacientes.forEach(function(paciente) {
+            adicionaPacienteNaTabela(paciente);
+        });
+    });
+
+    xhr.send();
+});
+Podemos ver se está tudo funcionando. Ao abrir a página no navegador e clicar em Buscar Pacientes, a tabela é preenchida com todos os pacientes que estavam no servidor externo!
+
+Essa técnica que fizemos nessa capítulo, é a técnica de fazer AJAX, de fazer uma requisição com JavaScript de forma assíncrona. Porque de forma assíncrona? Porque a requisição não está parando o fluxo do JavaScript, ou seja, no momento em que a requisição é feita, o nosso código JavaScript continua sendo executado normalmente, podemos excluir pacientes, adicionar, tudo isso enquanto estamos buscando os pacientes no servidor externo.
+
+Já estamos conseguindo trazer os pacientes e adicioná-los na tabela, somente clicando em um botão, mas sabemos que na web, nem sempre todas as requisições que fazemos dão certo.
+Muitas vezes, ao acessar um site, podemos receber um erro 404. Por exemplo, ao tentar acessar a Alura, através de uma URL que não existe (por exemplo https://www.alura.com.br/akcnadsinficaqof), recebemos o erro 404, porque essa URL não existe. Não existe somente esse erro, também existem os erros 201, 402, 503, etc... Vários erros que podem ocorrer quando fazemos uma requisição web.
+
+Seria interessante, quando fizermos uma requisição com o JavaScript, detectar se acontece algum erro, e avisar isso ao usuário.
+
+Para testar se uma requisição falhou ou não, devemos verificar o seu código HTTP. O código HTTP para uma requisição perfeita, quando deu tudo certo, é o código 200. Então, depois que carregar a requisição, podemos testar se o código é o 200, se não for significa que houve algum erro. Para saber o código da requisição, acessamos a propriedade status do XMLHttpRequest
+
+// buscar-pacientes.js
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+
+        if (xhr.status == 200) {
+            var resposta = xhr.responseText;
+            var pacientes = JSON.parse(resposta);
+
+            pacientes.forEach(function(paciente) {
+                adicionaPacienteNaTabela(paciente);
+            });
+        } else {
+            console.log(xhr.status);
+            console.log(xhr.responseText);
+        }
+    });
+
+    xhr.send();
+});
+Com isso, o erro e a mensagem de resposta são exibidos no console, mas seria interessante deixar mais claro ao usuário que um erro ocorreu.
+
+Mostrando a mensagem de erro para o usuário
+Para exibir a mensagem de erro para o usuário, podemos adicionar um span no index.html, logo abaixo da tabela e acima do botão:
+
+<main>
+    <section class="container">
+        <h2>Meus pacientes</h2>
+        <label for="filtrar-tabela">Filtre:</label>
+        <input type="text" name="filtro" id="filtrar-tabela" placeholder="Digite o nome do paciente">
+        <table>
+            <!-- conteúdo da tabela omitido -->
+        </table>
+
+        <span id="erro-ajax" class="invisivel">Erro ao buscar os pacientes</span>
+
+        <button id="buscar-pacientes" class="botao bto-principal">Buscar Pacientes</button>
+
+    </section>
+</main>
+Como o span possui a classe invisivel, por padrão ele não aparecerá na página. E no buscar-pacientes.js, selecionamos esse span, e se um erro ocorrer, removemos a classe invisivel, deixando assim a mensagem visível para o usuário:
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+        var erroAjax = document.querySelector("#erro-ajax");
+
+        if (xhr.status == 200) {
+            var resposta = xhr.responseText;
+            var pacientes = JSON.parse(resposta);
+
+            pacientes.forEach(function(paciente) {
+                adicionaPacienteNaTabela(paciente);
+            });
+        } else {
+            erroAjax.classList.remove("invisivel");
+        }
+    });
+
+    xhr.send();
+});
+Mas se a requisição ocorrer normalmente, sem erros, nós ocultamos a mensagem novamente, adicionando a classe invisivel:
+
+var botaoAdicionar = document.querySelector("#buscar-pacientes");
+
+botaoAdicionar.addEventListener("click", function() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", "https://api-pacientes.herokuapp.com/pacientes");
+
+    xhr.addEventListener("load", function() {
+        var erroAjax = document.querySelector("#erro-ajax");
+
+        if (xhr.status == 200) {
+            erroAjax.classList.add("invisivel");
+            var resposta = xhr.responseText;
+            var pacientes = JSON.parse(resposta);
+
+            pacientes.forEach(function(paciente) {
+                adicionaPacienteNaTabela(paciente);
+            });
+        } else {
+            erroAjax.classList.remove("invisivel");
+        }
+    });
+
+    xhr.send();
+});
+Ao testar, verificamos que se ocorrer tudo certo, nenhuma mensagem é exibida. Se alterarmos a URL para uma que não exista, a mensagem é apresentada para o usuário.
+
+
 
 
 
