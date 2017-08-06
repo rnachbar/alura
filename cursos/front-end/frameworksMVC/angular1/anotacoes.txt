@@ -1401,7 +1401,990 @@ angular.module('alurapic').controller('FotosController', function($scope, $http)
 
 });
 
+##### 4. Minimizando a complexidade do nosso HTML #####
 
+Progredimos com nossa aplicação, porém a marcação HTML da página index.html está um pouco confusa, pelo menos para mim. São muitas divs e classes, tudo porque estamos usando o Bootstrap. Ganhamos de um lado, mas perdemos em termos de legibilidade. Por exemplo, a marcação de um painel é assim:
+
+<!-- exemplo, não entra em nenhum lugar -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title text-center">Leão</h3>
+      </div> 
+      <div>
+           // conteúdo do painel
+      </div>
+</div>
+Confinando a complexidade do painel em uma diretiva
+O mundo seria melhor se pudéssemos esconder a complexidade da marcação que vimos utilizando algo como um componente:
+
+<!-- exemplo, não entra em nenhum lugar -->
+<meu-painel titulo="Leão">
+  // conteúdo do Painel
+</meu-painel>
+Mas a tag meu-painel é um componente que não existe no mundo HTML. Porém, lembram das diretivas do Angular? Elas nada mais são do que componentes reutilizáveis e que podem existir não apenas como atributos, mas como tags também. Será que podemos criar uma diretiva customizada do Angular que esconda a complexidade do painel do Bootstrap? Sim e é isso que faremos agora para deixar nossa marcação mais elegante, inclusive poderemos aproveitá-la em outros lugares da nossa aplicação.
+
+O primeiro passo é criar um módulo em separado que conterá nossas diretivas. Vamos criá-lo em:
+
+public/js/directives/minhas-diretivas.js
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+Criamos um novo módulo. Antes de mais nada, precisamos importar seu script em index.html, e inclusive adicioná-lo como dependência do módulo principal da nossa aplicação.
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+            <div class="row">
+                <div class="panel panel-default col-md-2" ng-repeat="foto in fotos">
+                    <div class="panel-heading">
+                        <h3 class="panel-title text-center">{{foto.titulo}}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <img class="img-responsive center-block" src="{{foto.url}}">
+                    </div><!-- fim panel-body -->
+                </div><!-- fim panel panel-default -->
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas']);
+Pronto, agora criamos nossa primeira diretiva através da função directive. Ela recebe como primeiro parâmetro o nome da diretiva em camelCase e como segundo uma função que deve retornar um directive definition object (DDO):
+
+// public/js/directives/minhas-diretivas.js 
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        var ddo = {};
+        return ddo;
+    });
+Veja que estamos retornando um objeto ainda sem qualquer configuração. Vamos começar restringindo a forma de uso da nossa diretiva. Como assim? Uma diretiva em Angular pode ser usada como Elemento, Atributo ou Comentário (esta última muito incomum). Vamos estipular que nossa diretiva pode ser usada tanto como atributo ou como elemento, adicionando em nosso DDO a propriedade restrict com valor "AE":
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        var ddo = {};
+
+        ddo.restrict = "AE";
+
+        return ddo;
+    });
+Nossa diretiva ainda não está pronta, mas ela pode ser usada como elemento, assim:
+
+<!-- exemplo, não entra em nenhum lugar -->
+<meu-painel></meu-painel>
+Ou como atributo, neste caso, usamos uma div adicionando a diretiva:
+
+<!-- exemplo, não entra em nenhum lugar -->
+<div meu-painel></div>
+Uma coisa importante que pode ter passado sem você perceber. O nome da nossa diretiva está em camelCase, porém na marcação HTML estamos usando hífen. Este é um padrão do Angular que não podemos deixar de seguir, caso contrário nossa diretiva não funcionará.
+
+Muito bem, qual é o próximo passo? Bem, podemos ter várias diretivas meu-painel numa mesma página, mas cada uma com seu próprio título. Algo assim:
+
+<!-- exemplo, não entra em nenhum lugar -->
+<meu-painel titulo="Leão"></meu-painel>
+<meu-painel titulo="Zebra"></meu-painel>
+<meu-painel titulo="Girafa"></meu-painel>
+Isolando nossa diretiva
+Para que cada diretiva tenha seu próprio título, cada uma precisará ter um escopo isolado, que existe independente do contexto na qual está incluída. Além de permitir que cada uma tenha seus próprios dados, podemos reutilizar a diretiva em qualquer lugar sem que ela bagunce o escopo pai no qual está inserida!
+
+Precisamos capturar o título passado pela diretiva para dentro de seu escopo isolado e fazemos isso adicionando em nosso DDO a propriedade scope:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        var ddo = {};
+        ddo.restrict = "AE";
+
+        ddo.scope = {
+            titulo: '@titulo'
+        };
+
+        return ddo;
+    });
+Criamos a propriedade titulo no escopo isolado da diretiva, porém o valor desta propriedade é curioso. Veja que nele temos @titulo, a sintaxe @ indica que estamos copiando o valor como string do atributo titulo adicionando na diretiva em nossa marcação. Porém, quando o nome do atributo na diretiva na marcação é igual ao nome da propriedade que guardará o seu valor, podemos deixar apenas @:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        var ddo = {};
+        ddo.restrict = "AE";
+
+        ddo.scope = {
+            titulo: '@'
+        };
+
+        return ddo;
+    });
+Agora que restringimos a forma de uso da diretiva e criamos seu escopo isolado, precisamos definir a marcação HTML que será utilizada por ela. Fazemos isso através da propriedade template:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        var ddo = {};
+
+        ddo.restrict = "AE";
+
+        ddo.scope = {
+            titulo: '@'
+        };
+
+        ddo.template = 
+                '<div class="panel panel-default">'
+            +   '   <div class="panel-heading">'
+            +   '        <h3 class="panel-title text-center">{{titulo}}</h3> '
+            +   '   </div>'
+            +   '   <div class="panel-body">'
+            +   '   </div>'
+            +   '</div>'
+
+        return ddo;
+    });
+Veja que no próprio template estamos usando a Angular Expression {{titulo}} para exibir o titulo passado como parâmetro para a diretiva. Será que funciona? Primeiro, vamos alterar index.html para fazer uso da nossa diretiva:
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+            <div class="row">
+                <meu-painel ng-repeat="foto in fotos" titulo="{{foto.titulo}}">
+                    <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+Veja que adicionamos em nossa diretiva também a diretiva ng-repeat, porque queremos repetir nossa diretiva de acordo com a quantidade de fotos. E o resultado final fica:
+
+Problema com diretiva
+
+Resultado não esperado? Entendendo um pouco mais de diretivas
+Ops! Funcionou parcialmente! Veja que o painel é montado e o título exibido, mas parece que nossa diretiva ignorou todo o seu conteúdo. Isso acontece porque o Angular altera aquele fragmento do DOM substituindo por um novo que representa a marcação da nossa diretiva, nesse processo, perdemos todos os seus elementos filhos. Para que o Angular preserve o conteúdo original da diretiva, precisamos usar o mecanismo de transclusão.
+
+Apesar do nome intimidador, não se preocupe. Para ativarmos a transclusão basta adicionar no DDO a propriedade transclude com valor true e na marcação da diretiva adicionar a diretiva ng-transclude no elemento que deve preservar seus elementos filhos:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        var ddo = {};
+
+        ddo.restrict = "AE";
+        ddo.transclude = true;
+
+        ddo.scope = {
+            titulo: '@'
+        };
+
+        ddo.template = 
+                '<div class="panel panel-default">'
+            +   '   <div class="panel-heading">'
+            +   '        <h3 class="panel-title text-center">{{titulo}}</h3> '
+            +   '   </div>'
+            +   '   <div class="panel-body" ng-transclude>'
+            +   '   </div>'
+            +   '</div>'
+
+        return ddo;
+    });
+Agora sim! Vejamos o resultado:
+
+Transclude
+
+Separar ainda é a melhor coisa: HTML de um lado e diretiva do outro
+Criamos nossa primeira diretiva! Porém, ficar concatenando HTML dentro da propriedade template não é algo gostoso de se fazer. Que tal colocarmos a marcação dentro de um arquivo HTML, local onde ele pertence? Para isso, vamos criar o arquivo public/js/directives/meu-painel.html com a marcação:
+
+<!-- public/js/directives/meu-painel.html -->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title text-center">{{titulo}}</h3>
+    </div>
+    <div class="panel-body" ng-transclude>
+    </div>
+</div>
+E agora, trocamos em nossa diretiva a propriedade template por templateUrl apontando para o arquivo HTML com a marcação da diretiva:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        var ddo = {};
+
+        ddo.restrict = "AE";
+        ddo.transclude = true;
+
+        ddo.scope = {
+            titulo: '@'
+        };
+
+        ddo.templateUrl = 'js/directives/meu-painel.html';           
+
+        return ddo;
+    });
+O resultado tem que continuar o mesmo, pois alteramos apenas a maneira pela qual organizamos nosso código.
+
+O que aprendemos neste capítulo?
+diretivas são componentes reutilizáveis
+a criar nossas própria diretivas
+diretivas reutilizáveis devem possuir escopo isolado
+mecanismo de transclusão
+
+Temos as seguintes declarações sobre diretivas:
+1) Diretivas são criadas através da função .directive.
+
+2) Diretivas retornam opcionalmente um DDO (Directive Definition Object).
+
+3) Diretivas são componentes do Angular que ensinam novos truques para o navegador.
+
+4) Diretivas ensinam novos truques para o navegador, e podem existir sem pertencerem a um módulo
+
+Podemos afirmar que:
+
+1 e 3 são verdadeiras
+ 
+Diretivas são componentes reutilizáveis que podem encapsular marcação e comportamento. São criadas sempre dentro de um módulo através da função .directive. Toda diretiva deve sempre retornar um DDO (Directive Definition Object) configurado para que funcione
+
+Veja a definição da diretiva:
+angular.module('minhasDiretivas', [])
+    .directive('abasDinamicasEspeciais', function() {
+       var ddo = {};
+       ddo.restrict = 'AE';
+
+      // implementação da diretiva omitida
+    });
+Quais são todos os possíveis usos da diretiva no HTML?
+
+<abas-dinamicas-especiais></abas-dinamicas-especiais> e <div abas-dinamicas-especiais></div>
+ 
+Com a propriedade restrict declaramos que ela pode ser utilizada tanto como atributo (A), quanto como elemento (E). Mesmo usando camelCase na definição da diretiva, devemos utilizar o hífen na marcação HTML.
+
+Para definir a diretiva no Angular devemos criar um Directive Definition Object (DDO), por exemplo:
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        var ddo = {};
+
+        //propriedades aqui
+
+        return ddo;
+    });
+Qual das propriedades abaixos não fazem parte de um DDO?
+
+url
+ 
+A propriedade url não faz parte de um DDO, mas temos a propriedade templateUrl, que permite criar um arquivo HTML separado para toda a marcação HTML dessa diretiva, indicando apenas o caminho para o arquivo. Alternativamente podemos usar a propriedade template com toda marcação necessária da diretiva.
+
+Veja o uso de uma diretiva para mostrar os dados de um usuario logado:
+<usuario-logado nome-completo="{{usuario.nome-completo}}"></usuario-logado>
+Como sabemos, para capturar dados da diretiva, usamos a propriedade scope:
+
+angular.module('minhasDiretivas', [])
+    .directive('usuarioLogado', function() {
+
+        var ddo = {};
+        ddo.restrict = "AE";
+
+        ddo.scope = {
+            nome: 'AQUI'
+        };
+
+        return ddo;
+    });
+O que devemos usar no lugar de AQUI para a diretiva funcionar corretamente?
+
+@nome-completo
+ 
+Repare que o atributo no elemento HTML se chama nome-completo e na diretiva usamos apenas nome. Se os dois fossem iguais, bastaria colocar @ no lugar de AQUI. Mas, como possuem nomes diferentes, é preciso ser explícito na declaração do scope usando @nome-completo para capturar o valor do atributo.
+
+Diretiva, marcação e definição
+Vejamos a seguinte marcação HTML:
+
+<p meu-paragrafo titulo="Bem-vindo ao alura"></p>
+Qual das opções abaixo cria corretamente a diretiva que nada mais faz do que exibir um parágrafo com o titulo recebido?
+
+angular.module('minhasDiretivas').directive('meuParagrafo', function() {
+
+    var ddo = {};
+    ddo.restrict = 'A';
+
+    ddo.scope = {
+        titulo : '@titulo'
+    };
+
+    ddo.template = '<p>{{titulo}}</p>';
+    return ddo;
+}):
+ 
+Muito bem! Nesse exercício vimos uma utilização de diretiva apenas como Atributo.
+
+O Bootstrap ajuda na aplicação de um visual profissional em nossa aplicação, porém seu uso baseado em tags e classes pode acabar deixando nosso HTML difícil de manter. Podemos minimizar essa complexidade através do Angular, criando componentes reutilizáveis chamados de diretivas, que podem encapsular, esconder a complexidade da marcação, inclusive de comportamento (algo que veremos mais à frente).
+Neste exercício, implemente os passos que foram vistos durante esta aula para criar sua primeira diretiva. Como sempre, seguem os passos gerais que devem ser empreendidos nesta tarefa:
+
+1) Sua primeira diretiva viverá em um módulo exclusivo chamado minhasDiretivas, declarado no arquivo public/js/directives/minhas-diretivas.js Criar módulos não é novidade, você já fez isso no primeiro capítulo. Não esqueça de importar o script do novo módulo em index.html, inclusive não esqueça de adicioná-lo como dependência do módulo alurapic, o módulo principal da aplicação.
+
+2) Do que adianta um módulo sem qualquer funcionalidade? Para o módulo minhasDiretivas crie a diretiva meuPainel através do encadeamento da função .directive. Ela recebe dois parâmetros, o nome da diretiva e a função que a define.
+
+3) Você precisa indicar a restrição da diretiva, seu template e escopo. Quando for declarar o template da diretiva, use templateUrl declarando seu template separadamente em um arquivo. Isso o ajudará na manutenção do seu código, principalmente do template.
+
+4) Terminou? Por mais que sua diretiva tenha o nome meuPainel, quando for utilizá-la em sua view index.html precisará usá-la como <meu-painel></meu-painel>, fechando obrigatoriamente a tag. O padrão camelCase é substituído pelo uso de hífens na marcação HTML. Aliás, a diretiva deve ter a seguinte interface de uso: <meu-painel titulo="meuTitulo"></meu-painel>.
+
+5) A diretiva conterá elementos filhos e quando o Angular for trocá-la na view pela marcação do Bootstrap perderemos todos os seus elementos. Lembra ainda qual é o mecanismo do Angular que faz com que a diretiva mantenha seus elementos filhos? Você precisará utilizá-lo!
+
+6) Por fim, faça uso da diretiva, alterando index.html.
+
+Diretivas não encapsulam apenas marcações HTML, veremos ao longo do treinamento como encapsularmos comportamentos.
+
+Mãos à obra e bom estudo!
+
+Seguem abaixo as alterações necessárias até aqui.
+A diretiva meuPainel:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        var ddo = {};
+
+        ddo.restrict = "AE";
+        ddo.transclude = true;
+
+        ddo.scope = {
+            titulo: '@'
+        };
+
+       ddo.templateUrl = 'js/directives/meu-painel.html';        
+
+        return ddo;
+    });
+Agora, a marcação da diretiva usada como template da diretiva. Note o uso da diretiva ng-transclude, indicando qual elemento do template deve manter seus elementos filhos:
+
+<!-- public/js/directives/meu-painel.html -->
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title text-center">{{titulo}}</h3>
+    </div>
+    <div class="panel-body" ng-transclude>
+    </div>
+</div>
+Por fim, importando o script do módulo minhasDiretivas, inclusive já declarando este módulo como dependência do módulo alurapic:
+
+<!-- public/index.html -->
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+   <!-- código posterior omitido -->
+Como criamos um módulo, precisamos importá-lo em index.html e declará-lo como dependência do módulo principal da aplicação:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas']);
+Por fim, alterando index.html para que faça uso da diretiva:
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+            <div class="row">
+                <meu-painel ng-repeat="foto in fotos" titulo="{{foto.titulo}}">
+                    <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+
+##### 5. Melhorando a experiência do usuário #####
+
+A lista pode crescer, e agora?
+Muito bem, evoluímos ainda mais nossa aplicação sob o ponto de vista interno, porém podemos melhorar a experiência do usuário. Por enquanto temos poucas fotos, mas eu tenho certeza que assim que aprendermos a cadastrar novas fotos e agrupá-las, o número será muito, muito maior! Então, que tal já implementarmos um mecanismo de procura que permita o usuário exibir apenas fotos de acordo com algum critério?
+
+Que tal filtrarmos nossa lista?
+Primeiro, vamos adicionar o campo de entrada da pesquisa. Vamos aproveitar a adicionar mais uma linha usando o sistema de GRID do Bootstrap, inclusive utilizaremos algumas classes especiais para estilizar elementos de entrada:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+                <meu-painel class="col-md-2" ng-repeat="foto in fotos" titulo="{{foto.titulo}}">
+                     <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+Filtro de pesquisa
+
+A ideia é simples: a medida que formos digitando, queremos exibir apenas as fotos que contenham em qualquer uma de suas propriedades o texto procurado.
+
+Vamos adicionar em FotosController uma propriedade que guardará o texto digitado pelo usuário:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+});
+Ah, então esse é o two-way data binding?
+Já sabemos acessar qualquer propriedade de $scope através de uma angular expression (AE), porém temos um problema: toda AE é somente leitura, isto é, não é capaz de atualizar $scope, que é justamente o que precisamos. É com base no que o usuário digitar que elaboraremos nossa estratégia de busca. Não queremos um data binding unidirecional, queremos um bidirecional, aquele que é capaz de ler de $scope, inclusive atualizar seu valor de acordo com a entrada do usuário.
+
+Felizmente o Angular suporta two-way data binding. A diferença é que não usamos AE, mas a diretiva ng-model. Vamos adicioná-la no input que recebe o filtro do usuário:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+                <meu-painel class="col-md-2" ng-repeat="foto in fotos" titulo="{{foto.titulo}}">
+                       <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+Eu não sabia que podemos filtrar com ng-repeat!
+E agora? Bem, toda vez que o usuário digitar neste campo, a propriedade $scope.filtro será atualizada! Excelente, mas como utilizaremos o valor corrente de $scope.filtro para filtrar a lista de fotos? A diretiva ng-repeat aceita receber um filtro através da propriedade filter, que deve ser adicionada imediatamente após um pipe |, sendo assim, ela ficará assim: ng-repeat="foto in fotos | filter: filtro"
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+                <meu-painel class="col-md-2" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+                      <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+Filtro em ação
+
+Inacreditável! Com pouquíssimo esforço, filtramos nossa lista, porém vale ressaltar que o filtro é aplicado em todas as propriedade do objeto foto de nossa lista, sendo assim, podemos encontrar uma foto pelo seu título, descrição, etc.
+
+Deixando o usuário ainda mais feliz animando nossa lista
+Você há de concordar que melhoramos bastante a aplicação, porém a aplicação do filtro é abrupta, instantânea, imediata! Para deixar o usuário feliz, que tal se animássemos a aplicação do filtro? Podemos fazer isso de várias maneiras, por exemplo, aplicado um efeito fadeout nas fotos que não atenderem nosso filtro.
+
+Normalmente, esta é uma tarefa do mundo CSS, sendo assim, precisamos criar uma classe com o efeito desejado e aplicar essa classe via JavaScript para os elementos que deixarem nossa lista. Vamos criá-la, mas dentro do arquivo public/css/efeitos.css:
+
+/* public/css/efeitos.css*/
+
+.fade {
+  -moz-transform: scale(0.1);
+  -webkit-transform: scale(0.1);
+  -ms-transform: scale(0.1);
+  -o-transform: scale(0.1);
+  transform: scale(0.1);
+}
+Agora, vamos importar o CSS em index.html e aplicar a classe fade em nosso painel com a diretiva ng-repeat:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+                <meu-painel class="col-md-2 fade" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+                        <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+E testar logo em seguida:
+
+Problema na aplicação do nosso painel animado
+
+Hum, não funcionou como esperado. Os elementos já começam invisíveis. A ideia é aplicar a classe painel-animado apenas no elemento que sair (leave) da lista, isto é, para o elemento que não atender o critério do nosso filtro. E agora?
+
+A equipe do Angular criou o módulo ngAnimate, que ataca justamente este problema. Antes de entrarmos nos detalhes de seu funcionamento, vamos importar seu script logo após o script core do Angular e adicioná-lo como dependência no módulo principal da aplicação
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+
+        <!-- importando o módulo ngAnimate -->
+
+        <script src="js/lib/angular-animate.min.js"></script>
+
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+
+               <!-- adicionando a classe painel-animado -->
+
+                <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+                       <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+Agora, alterando a main.js:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate']);
+Pronto. Quando usamos o módulo ngAnimate, algumas diretivas do Angular passam a adicionar ou remover classes automaticamente sem a nossa ciência. São classes definidas pelo Angular, algo que lembra muito as pseudo classes do CSS3. Por exemplo, quando usamos a diretiva ng-repeat e um elemento sai da lista ele ganha a classe ng-leave, e quando está para sair ng-leave-active. Existem outras classes e nem todas as diretivas suportam as mesmas classes, sendo necessário recorrer à documentação do Angular. Sendo assim, podemos resolver nosso problema aumentado a especificidade do nosso seletor .painel-animado:
+
+/* public/css/efeitos.css*/
+
+.painel-animado.ng-leave-active {
+  -moz-transform: scale(0.1);
+  -webkit-transform: scale(0.1);
+  -ms-transform: scale(0.1);
+  -o-transform: scale(0.1);
+  transform: scale(0.1);
+}
+Testando mais uma vez, nossa lista é exibida mas nenhuma animação é efetuada quando digitamos algo no filtro, isto porque não usamos o poderoso transition do CSS. Por mais que estejamos aprendendo Angular, trabalhar com o módulo ngAnimate requer que você conheça os poderosos recursos do CSS3, a única coisa que o Angular faz é aplicar ou remover determinadas classes. Para efetuar a transição fazemos:
+
+/* public/css/efeitos.css*/
+
+/* novidade! Ativa a transição no elemento. Agora, quando o transform for aplicado apenas para os elementos que estão saindo da lista, a escala será animada!*/
+
+ .painel-animado {
+    -moz-transition:transform 0.8s;
+    -webkit-transition:transform 0.8s;
+    -ms-transition:transform 0.8s;
+    -o-transition:transform 0.8s;
+    transition:transform 0.8s;
+}
+
+.painel-animado.ng-leave-active {
+  -moz-transform: scale(0.1);
+  -webkit-transform: scale(0.1);
+  -ms-transform: scale(0.1);
+  -o-transform: scale(0.1);
+  transform: scale(0.1);
+}
+CUIDADO: não é para dar um espaço entre as classes .painel-animado e .ng-leave-active , caso contrário o seletor se tornará hierárquico e o efeito não vai funcionar. Os dois devem estar grudados! Se quiser saber mais sobre esse tipo de seletor o Alura possui treinamentos de CSS.
+Maravilha! Agora nossa transição funciona perfeitamente, ou quase perfeita (para perceber, é necessário ver o vídeo, não é possível através da foto ilustrar o problema a seguir)!
+
+O atraso pode ser a melhor opção!
+Repare que nossa lista é filtrada a cada tecla que pressionamos e os elementos que não condizem com nosso filtro são animados e retirados da lista, mas a coisa é feita tão instantaneamente que o efeito deixa um pouco a desejar. Para resolvermos isso, precisamos realizar um pequeno atraso (delay) na entrada do usuário. Por exemplo, a cada dígito do usuário, vamos aguardar meio segundo (500ms) para que o framework atualize o valor de $scope.filtro e filtre nossa lista. Fazemos isso através da diretiva ng-model-options:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+
+        <!-- importando o módulo ngAnimte -->
+
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro" ng-model-options="{ debounce: 500 }">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+                <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+                      <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+Agora sim! Há um pequeno atraso na atualização do valor de $scope.filtro, por conseguinte um atraso nos elementos que deixaram a lista, deixando nossa animação mais bacana.
+
+Melhoramos ainda mais a experiência do usuário e com certeza, só temos a ganhar com isso!
+
+O que aprendemos neste capítulo?
+a diretiva ng-model e two-way data binding
+aplicação de filtro na diretiva ng-repeat
+ng-model-options e postergação do two-way data binding
+animações com o módulo ngAnimate
+animações requerem conhecimento sólido de CSS3
+
+
+Seguem afirmativas sobre two-way data binding:
+1) Permite ler dados (model) sem propagar atualizações desses dados a partir da view.
+
+2) É realizado através de Angular Expression (AE)
+
+3) É realizado pela combinação de Angular Expression (AE) e ng-model
+
+4) É realizado através da diretiva ng-bind.
+
+Podemos dizer que:
+
+Todas são falsas
+ 
+Perfeito! Diferente da Angular Expression (AE) que é somente leitura (one-way data binding), a diretiva ng-model permite ler e propagar alterações de dados a partir da view.
+
+Qual a diferença entre a diretiva ng-model e Angular Expression (AE)?
+
+O primeiro lê e grava no model, enquanto o segundo apenas lê.
+ 
+A diretiva ng-model permite ler e também alterar o model associado (two-way data binding). É muito comum em telas de cadastro, onde precisamos capturar os dados do usuário para depois enviá-los numa requisição Ajax, por exemplo. Já a Angular Expression (AE) apenas lê o model (one-way data binding).
+
+Veja o esboço de código HTML abaixo:
+<label>
+    <input type="search" ng-model="textoFiltro">
+</label>
+
+<ul>
+    <li ng-repeat="funcionario in funcionarios">
+        {{funcionario.nome}}
+    </li>
+</ul>
+O que devemos colocar na diretiva ng-repeat para filtrar a lista de funcionários a partir do input, com base no valor de textoFiltro? Teste alguns códigos em busca da solução desse exemplo.
+
+No final da diretiva ng-repeat devemos adicionar um | (o char pipe) seguido do nome do model: textoFiltro
+<label>
+    <input type="search" ng-model="textoFiltro">
+</label>
+
+<ul>
+    <li ng-repeat="funcionario in funcionarios | filter: textoFiltro">
+        {{funcionario.nome}}
+    </li>
+</ul>
+Essa configuração fará com que a nossa lista seja filtrada dinamicamente com base no valor de textoFiltro. Poderoso e simples!
+
+Quando usamos filter, todas as propriedades dos objetos são vasculhadas à procura do valor digitado. E se quisermos buscar apenas, por exemplo, pelo nome do funcionário? Podemos fazer essa forma:
+
+ng-repeat="funcionario in funcionarios | filter: {nome: textoFiltro} "
+Veja que agora iremos comparar o valor digitado apenas com a propriedade nome do objeto funcionario.
+
+Simples e poderoso!
+
+Temos as seguintes frases a respeito da diretiva ng-model-options:
+1) Serve para postergar a atualização do modelo (dado).
+
+2) Sua unidade de trabalho é em milissegundos, passada através da propriedade debounce.
+
+3) Não pode ser usada sem a diretiva ng-model
+
+4) Pode vir antes ou depois da diretiva ng-model sem problemas.
+
+Todas as afirmativas são verdadeiras
+ 
+Perfeito! Não faz sentido usarmos ng-model-options sem ng-model, já que a primeira passa opções especiais para a segunda. A diretiva ng-model-options pode ser usada para postergar a atualização do model, recebendo um objeto com a propriedade debounce com valor em milissegundos. A ordem de escrita não é importante.
+
+No mundo CSS, não é incomum termos uma classe declarada que é ativada apenas quando algum elemento tiver essa classe. Geralmente, podemos adicionar e remover classes via JavaScript, o que permite a aplicação condicional do estilo. O Angular possui o módulo ngAnimate, que pode nos ajudar nessa tarefa. Sobre este módulo podemos afirmar que:
+1) Quando carregado, faz com que algumas diretivas do core do Angular adicionem e removam classes dinamicamente. Porém, não temos controle das classes adicionadas e precisamos recorrer à documentação para ver aquelas que nos interessam.
+
+2) Quando carregado, traz uma série de animações já prontas para uso.
+
+3) Quando carregado, permite que apenas a diretiva ng-repeat adicione dinamicamente classes de acordo com o estado dos elementos.
+
+4) É um módulo que não faz parte do core do Angular.
+
+1 e 4 são verdadeiras
+ 
+O módulo ngAnimate precisa ser carregado, uma vez que o módulo core angular.min.js não o carrega automaticamente. Este módulo, apesar do nome sugestivo, não traz qualquer animação pronta para uso, ele apenas habilita para uma série de diretivas a capacidade de adicionarem ou removerem classes de acordo com o estado de seus elementos. Fazendo uma analogia com CSS, é como se fossem pseudo classes.
+
+Hora de praticar, implementando as novas funcionalidades apresentadas no capítulo. Como de costume, segue um resumo dos passos que devem ser executados:
+1) Permita que o usuário filtre a lista digitando em um campo. Ele ficará imediatamente abaixo do jumbotron, como uma linha do grid do Bootstrap. Uma linha no grid do bootstrap é qualquer elemento container que tenha a classe row. Dúvida? Você pode consultar a explicação do capítulo e "colar" a estrutura, deixe para quebrar a cabeça com Angular apenas! Para filtrar, aplique um filter na diretiva ng-repeat, mas tome cuidado, pois tanto o campo de entrada quanto o valor de filter devem apontar para a mesma propriedade. A diferença é que o campo de entrada utilizará two-way data binding e a diretiva ng-repeat utilizará filter.
+
+2) Agora que sua lista é filtrada, melhore ainda mais a experiência do usuário animando os elementos que são removidos da lista, aplicando uma espécie de fade, que na verdade realiza uma transição do tamanho atual do elemento para um tamanho menor. Para esta tarefa, você precisará do módulo ngAnimate que, para estar disponível, você precisa importar o script angular-animate.min.js, já disponibilizado na pasta public/js/lib. Não custa nada lembrá-lo de que você ainda precisará declarar o módulo ngAnimate como dependência do módulo principal alurapic.
+
+3) Ter o módulo ngAnimate carregado não é suficiente. Você deve criar seus estilos CSS pegando carona nas classes adicionadas dinamicamente pelo Angular, quando este módulo está presente. Existem uma série de classes, porém foque na ng-leave-active. Como este é um treinamento de Angular e não de CSS, sinta-se livre para consultar o CSS na explicação do capítulo, inclusive para saber onde gravar o CSS e como adicioná-lo na marcação.
+
+4) Agora que sua lista é filtrada e elementos removidos sofrem animações, repare que a cada dígito o two-way data binding do Angular atualiza em$scope a propriedade que guarda o que o usuário digitou através da diretiva ng-model. Podemos dar um tempo antes que ng-model atualize a propriedade em $scope, que é usada por ng-repeat para filtrar a lista. Usamos para isso a diretiva ng-model-options. Lembre-se que ela trabalha com milissegundos, sendo assim, postergue em meio segundo a atualização.
+
+Mãos à obra!
+
+Segue o index.html alterado com o campo que captura o termo que desejamos filtrar, digitado pelo usuário. Ele já possui as diretivas ng-model e ng-options-model, este último para realizar um delay da atualização de $scope.filtro:
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+
+        <!-- importando o módulo ngAnimte -->
+
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body ng-controller="FotosController">
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="text-center">Alurapic</h1>
+            </div>
+
+            <!-- novidade, a row com o campo de busca -->
+            <div class="row">
+                <div class="col-md-12">
+                <form>
+                     <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro" ng-model-options="{ debounce: 500 }">
+                </form>
+                </div> <!-- fim col-md-12 -->
+            </div> <!-- fim row -->
+
+            <div class="row">
+                <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+                      <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+                </meu-painel>
+            </div><!-- fim row -->
+        </div><!-- fim container -->
+    </body>
+</html>
+O controller modificado, com a propriedade filtro. Na verdade, ela nem precisaria existir, porque o two-way data binding a criaria automaticamente caso não existisse. Foi adicionada para deixar claro o que o controller fornece e recebe da view.
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+});
+Repare que o HTML anterior já importa um CSS. É o arquivo que contém nossos estilos usados pelo ngAnimate:
+
+.painel-animado {
+    -moz-transition:transform 0.8s;
+    -webkit-transition:transform 0.8s;
+    -ms-transition:transform 0.8s;
+    -o-transition:transform 0.8s;
+    transition:transform 0.8s;
+}
+
+.painel-animado.ng-leave-active {
+  -moz-transform: scale(0.1);
+  -webkit-transform: scale(0.1);
+  -ms-transform: scale(0.1);
+  -o-transform: scale(0.1);
+  transform: scale(0.1);
+}
+Ainda no HTML da solução, veja que a diretiva meu-painel possui a classe painel-animado. Quando o elemento é removido da lista ele ganha ng-leave-active. Por isso no arquivo CSS temos o seletor .painel-animado.ng-leave-active, que significa: aplique o estilo apenas se o elemento tiver essas duas classes ao mesmo tempo.
+
+É claro, para funcionar precisamos declarar o módulo ngAmimate como dependência do módulo alurapic:
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate']);
 
 
 
