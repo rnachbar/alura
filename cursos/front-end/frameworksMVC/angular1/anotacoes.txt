@@ -2386,5 +2386,435 @@ Ainda no HTML da solução, veja que a diretiva meu-painel possui a classe paine
 
 angular.module('alurapic', ['minhasDiretivas', 'ngAnimate']);
 
+##### 6. Dividir para conquistar! #####
+
+Desmistificando Single Page Applications
+Agora que a nossa aplicação ficou mais atraente, permitiremos que o usuário cadastre e edite fotos. Nada mais justo do que criarmos uma página de cadastro exclusiva. Porém, o Angular tem como foco a criação de Single Page Applications (Aplicação de única página), aquele tipo de aplicação que não recarrega durante uso. Então, será que a solução é colocar o HTML da página de cadastro e de todas as outras dentro de index.html? Com certeza não, já demos um duro para tornar nossa página mais fácil de manter. Então que diabos é esse de "não recarrega a página durante seu uso"?
+
+Então, realmente a página index.html não é recarregada, é a mesma durante todo o ciclo de vida da aplicação. Porém, é através de URL's especiais chamadas de rotas que o Angular busca a página desejada, inclusive ele já faz o trabalho de atualizar index.html automaticamente para nós com o conteúdo da página. É como se index.html fosse um template com uma única lacuna que recebe o conteúdo de outras páginas, mas uma por vez! Essas páginas não devem conter as tags head e body, pois serão inseridas dentro da página principal da aplicação que já os tem. É por isso que são chamadas de páginas parciais , ou partial pages, no inglês.
+
+Nossas primeiras views parciais
+Antes de avançarmos, vamos criar a parcial: public/partials/principal.html. Ela conterá a cópia da marcação que lista nossas fotos lá em index.html:
+
+<!-- public/partials/principal.html -->
+
+<div class="jumbotron">
+    <h1 class="text-center">Alurapic</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+    <form>
+         <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro" ng-model-options="{ debounce: 500 }">
+    </form>
+    </div> <!-- fim col-md-12 -->
+</div> <!-- fim row -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+    </meu-painel>
+</div>
+Então, em index.html vamos substituir esta marcação pela diretiva ng-view. Vamos aproveitar e remover a diretiva ng-controller da tag body:
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body>
+        <div class="container">
+
+            <!-- opa! abri uma mega lacuna! -->        
+            <ng-view></ng-view>
+
+        </div><!-- fim container -->
+    </body>
+</html>
+O módulo ngRoute e configurações de rotas
+Você não precisa ser um vidente para saber que, assim que abrirmos o endereço http://localhost:3000, veremos uma página em branco, porém já sabe que precisamos configurar as tais rotas do Angular.
+
+Rotas são configuradas com auxílio do módulo ngRoute. Como sempre, isso envolve a importação de um script e adição do módulo como dependência do módulo principal da aplicação:
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+
+        <!-- Importando o script do módulo ngRoute -->
+
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <ng-view></ng-view>
+        </div><!-- fim container -->
+    </body>
+</html>
+Agora, em main.js:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute']);
+Pronto, agora que temos encaixadas as peças do quebra-cabeças, vamos às configurações! Bem, poderíamos até criar um módulo exclusivo com as configurações das rotas da aplicação, mas não é incomum essa configuração ser feita diretamente no módulo principal da aplicação através do serviço $routeProvider, que obtemos através do sistema de injeção de dependências do Angular, dentro da função config:
+
+// public/js/main.js 
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider) {
+
+    });
+Usamos $routeProvider da seguinte maneira. Quando (when) o usuário acessar determinada rota, enviaremos para ele uma view parcial (templateUrl) e também indicamos qual é o controlador (controller) para aquela parcial. Definir o controller nos dá flexibilidade de usar uma mesma parcial com controllers diferentes:
+
+// public/js/main.js 
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider) {
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+    });
+Se abrirmos o endereço http://localhost:3000 nada será exibido, inclusive se tentarmos acessar http://localhost:3000/fotos. O Angular precisa de alguma maneira saber que o endereço que estamos tentando acessar não é um endereço do nosso servidor, mas uma de suas rotas. Fazemos isso adicionando um # (hash) antes da rota:
+
+http://localhost:3000/#/fotos
+Rotas ainda mais elegantes com Html5Mode
+Agora sim! Nossa view parcial principal.html é exibida! Mas um olhar atento revela que essa URL é um tanto estranha, pela presença do #, mas esse é um subterfúgio muito utilizado para que seja possível favoritar em seu navegador a parcial, mas, ainda assim, quando alguém abrir o endereço, quem será carregada é a view principal index.html, que buscará a parcial através do sistema de rotas do Angular. Com o advento do HTML5 foi criada a History API, que permite conseguirmos o mesmo resultado, mas sem o uso do #. O Angular suporta a History API e podemos ativá-la através do serviço $locationProvider, que também podemos pedir através do sistema de injeção de dependências:
+
+// public/js/main.js 
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider,  $locationProvider) {
+
+       $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+    });
+Além dessa configuração, precisamos adicionar a tag <base href="/">:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <base href="/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <ng-view></ng-view>
+        </div><!-- fim container -->
+    </body>
+</html>
+Agora, podemos remover o hash e acessar a URL diretamente:
+
+http://localhost:3000/fotos
+Outro ponto importante é que se o seu navegador não suportar este modo, automaticamente o Angular adotará a estratégia com # (hash).
+
+ATENÇÃO: para usar html5Mode seu servidor precisa estar preparado. Esta configuração está fora do escopo deste treinamento e você deve consultar a documentação do seu servidor favorito.
+
+Excelente, mas o que acontece se agora acessarmos um endereço que não existe? Nada será exibido, porém podemos indicar uma rota alternativa caso o endereço acessado pelo usuário não exista:
+
+// public/js/main.js 
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/fotos'});
+
+    });
+Fantástico! Agora vamos criar a parcial do cadastro de fotos, apenas com um título e sua respectiva rota:
+
+<!-- public/partials/foto.html -->
+<h1>Cadastro</h1>
+E agora vamos a rota /fotos/new, porém ainda sem definirmos um controller:
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+       // foto no singular!
+
+        $routeProvider.when('/fotos/new', {
+            templateUrl: 'partials/foto.html'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/fotos'});
+
+    });
+Agora, basta acessarmos:
+
+http://localhost:3000/fotos/new
+Agora sim! Temos duas parciais com responsabilidades diferentes.
+
+O que aprendemos neste capítulo?
+criação de parciais
+a diretiva ng-view
+o módulo ngRoute
+$routeProvider e configurações de rota
+rota padrão
+hash
+$LocationProvider e html5Mode
+
+Sobre Single Page Applications (SPA), podemos afirmar:
+1) Não recarrega durante seu uso.
+
+2) Parciais (partials) são fragmentos de páginas que são carregados dinamicamente.
+
+3) Ao trabalhar com SPA no Angular, indicamos onde serão carregadas as partials usando a diretiva <ng-view>.
+
+4) Podemos usar Angular em uma aplicação que não seja SPA.
+
+Das afirmações acima, podemos diz que:
+
+Todas são verdadeiras
+ 
+Angular tem como foco a criação de Single Page Applications (SPA's), porém seu uso não é exclusivo para este tipo de aplicação. Uma SPA é aquela aplicação que não recarrega durante seu uso. No caso do Angular, há um sistema de rotas que funciona no lado do cliente capaz de carregar do servidor fragmentos de páginas, chamadas de partials (parciais). Esses fragmentos são inseridos na página principal da aplicação.
+
+Surpresa! Você aprendeu em um dos capítulos anteriores a criar a diretiva meuPainel. Para que seu conhecimento não caia em esquecimento , neste exercício você criará a diretiva minhaFoto, ela deve encapsular a seguinte marcação:
+<img class="img-responsive center-block" src="{{url}}" alt="{{titulo}}">
+Seu uso será:
+
+<minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}"></minha-foto>
+Será que você consegue? Você pode consultar, o importante é que você crie essa diretiva do zero!
+
+Bom exercício!
+
+Alterando minhas-diretivas.js para encadear mais uma chamada à .directive:
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+
+        // código omitido
+
+    })
+    .directive('minhaFoto', function() {
+
+        var ddo = {};
+
+        ddo.restrict = "AE";
+
+        ddo.scope = {
+            titulo: '@',
+            url: '@'
+        };
+
+        ddo.template = '<img class="img-responsive center-block" src="{{url}}" alt="{{titulo}}">';           
+
+        return ddo;
+
+    });
+Agora, usando nossa diretiva em index.html:
+
+<!-- public/index.html -->
+
+<meu-painel ng-repeat="foto in fotos" titulo="{{foto.titulo}}">
+     <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}"></minha-foto>
+</meu-painel>
+Para saber mais: a diretiva ng-src
+Muitas vezes, recebemos mensagens estranhas no console do navegador, principalmente quando usamos uma AE para o atributo src da tag img. Isso acontece porque o browser tem uma política agressiva no carregamento de imagens baixando-as antes que o Angular possa processar as AE. Se isso incomodá-lo, você pode usar a diretiva ng-src no lugar src. Com isso, apenas Angular processará a diretiva, inclusive só depois da AE ter sido avaliada.
+
+Sua diretiva fica assim:
+
+ddo.template = '<img class="img-responsive center-block" ng-src="{{url}}" alt="{{titulo}}">';
+
+Sobre a configuração de rotas no lado do cliente Angular:
+1) Precisamos importar o módulo ngRoute para que consigamos configurar rotas.
+
+2) O artefato $routeProvider é um artefato injetável dependente do carregamento do módulo de rotas.
+
+3) Rotas podem ser configuradas sem a necessidade de pertencerem a um módulo.
+
+4) Para configurarmos uma rota, precisamos fornecer no mínimo o nome da rota e qual parcial será carregada.
+
+Sobre as afirmativas anteriores, podemos dizer que:
+
+1, 2 e 4 são verdadeiras
+ 
+Para que configuremos rotas, o módulo ngRoute precisa estar carregado, isso significa que precisamos importar o script do módulo e adicioná-lo como dependência de algum módulo que realizará a configuração de rotas. É através da função .config que configuramos rotas, solicitando através de injeção $routeProvider. O artefato $routeProvider só estará disponível para injeção se o módulo ngRoute tiver sido carregado previamente. Podemos usar a função .when do $routeProvider para configurar efetivamente uma rota. Ela recebe um nome, e um objeto contendo, o controller que será associado (pode ser omitido) e o caminho para a parcial que será carregada.
+
+Pode ser que o usuário queira ele mesmo digitar uma rota específica do Angular na barra de endereços do navegador e acabe errando. Nesse caso, podemos redirecionar o usuário para uma rota conhecida.
+Qual das opções realiza esse redirecionamento corretamente?
+
+ angular.module('controle', ['ngRoute'])
+    .config(function($routeProvider) {
+
+        $routeProvider.when('/produtos', {
+            templateUrl: 'partials/produtos.html',
+            controller: 'ProdutosController'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/produtos'});
+
+    });
+ 
+Precisamos de um módulo que tem como dependência o módulo ngRoute, sem o qual não seria possível recebermos via injeção $routeProvider. É através de $routeProvider.otherwise que realizamos um redirecionamento, passando um objeto com a propriedade redirectTo, que tem como valor uma rota existente do Angular.
+
+Temos a seguinte configuração de rota:
+angular.module('controle', ['ngRoute'])
+    .config(function($routeProvider) {
+
+        $routeProvider.when('/produtos', {
+            templateUrl: 'partials/produtos.html',
+            controller: 'ProdutosController'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/produtos'});
+
+    });
+Para habilitarmos o sistema de rotas no modo html5Mode sabemos que é necessária a diretiva <base href="/"> dentro da tag <head> da view principal da aplicação, porém isso não é suficiente.
+
+Altere o código anterior habilitando o módulo HTML5.
+
+Para resolver esse exercício você poderia ter escrito o seguinte código:
+angular.module('controle', ['ngRoute'])
+    .config(function($routeProvider, $locationProvider) {
+
+       // habilitando
+       $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/produtos', {
+            templateUrl: 'partials/produtos.html',
+            controller: 'ProdutosController'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/produtos'});
+
+    });
+Precisamos do artefato $locationProvider para habilitarmos o html5Mode. É através dele que habilitamos este modo.
+
+Hora de praticar implementando as novas funcionalidades apresentadas no capítulo. Como de costume, segue um resumo dos passos que devem ser executados:
+1) Por mais que o Angular seja feito para criação de SPA's, não faz sentido colocar tudo numa única view, principalmente se o escopo do seu sistema for grande. O primeiro passo é extrair todo o conteúdo da tag body de index.html para um arquivo em separado. Adote a convenção de que todas as views parciais ficarão dentro de public/partials (em inglês). Para o conteúdo extraído, o nome da view será principal.html. Não esqueça que uma view parcial não possui as tag's head nem body. As dicas não foram suficientes? Você pode recorrer sempre à explicação do capítulo, mas encare o desafio!
+
+2) Com a parcial principal.html criada, abra uma lacuna em index.html usando a diretiva do sistema de rotas do Angular. Ainda lembra seu nome? Ela é muito importante, porque todo o conteúdo das parciais serão "jogadas" para dentro dela. Porém, vale frisar que apenas uma parcial por vez pode ser exibida.
+
+3) Neste ponto você tem a parcial criada e a lacuna na view index.html . Chegou a hora de habilitar o sistema de rotas na aplicação (ainda não configure as rotas). Lembre-se que dois passos são necessários: importar o script do módulo de rotas e declará-lo como dependência no módulo alurapic. Dica: o nome do módulo é ngRoute.
+
+4) Muito bem! O Angular não fez curso de adivinhação para saber como exibir suas views parciais. Podem existir zilhões delas em seu projeto e no mundo Web navegamos entre páginas através de links que acessam URL's. A questão é que essas URL's não podem ser URL's acessadas diretamente do nosso servidor, caso contrário as parciais seriam baixadas diretamente, a página seria recarregada (matando a SPA, que nunca recarrega sua página durante uso) e pior: como a parcial não tem head nem body, ela não seria exibida corretamente. Para resolver esse problema, podemos registrar URL's de 'mentirinha' no sistema de rotas do Angular. Essas URL's não acessam um recurso diretamente no servidor, elas são processadas no lado do cliente através do Angular, que traduz aquela URL em uma chamada Ajax que carrega a parcial para aquela URL. Como é o Angular que faz esse processo, ele se encarrega de incluir a parcial dentro da diretiva ng-view em index.html. Configure duas rotas (você precisará injetar um artefato do angular responsável por isso, lembra?): a primeira com o endereço /fotos, associada com controller FotosController. Não esqueça também de indicar qual template será carregado (parcial). A segunda rota é aquele disparada quando o usuário acessar uma rota que não existe, que por sua vez redirecionará o usuário para /fotos.
+
+5) Faça um teste. Acesse a URL localhost:3000/#/fotos ou localhost:3000/index.html#/fotos. Repare que o conteúdo de index.html é trocado pelo conteúdo da parcial. Não funcionou? Reveja seus passos e consulte a explicação do capítulo para verificar se deixou alguma coisa de fora das configurações.
+
+6) Habilite o HTML5MODE no sistema de rotas e faça um teste sem usar o hash, por exemplo, acessando localhost:3000/fotos. Só não esqueça de adicionar o base em index.html, caso contrário a rota não funcionará.
+
+A solução (não segue necessariamente os passos sugeridos):
+A página index.html importando o módulo de rotas do Angular, com a diretiva ng-view e base:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <base href="/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <ng-view></ng-view>
+        </div><!-- fim container -->
+    </body>
+</html>
+A parcial principal.html, que agora contém o conteúdo que fazia parte de index.html:
+
+<!-- public/partials/principal.html -->
+
+<div class="jumbotron">
+    <h1 class="text-center">Alurapic</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+    <form>
+         <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro" ng-model-options="{ debounce: 500 }">
+    </form>
+    </div> <!-- fim col-md-12 -->
+</div> <!-- fim row -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <img class="img-responsive center-block" src="{{foto.url}}" alt="{{foto.titulo}}">
+    </meu-painel>
+</div>
+O módulo principal da aplicação importando o módulo ngRoute e configurando as rotas, mas ativando o módulo HTML5:
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+       // foto no singular!
+
+        $routeProvider.when('/fotos/new', {
+            templateUrl: 'partials/foto.html'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/fotos'});
+
+    });
+
 
 
