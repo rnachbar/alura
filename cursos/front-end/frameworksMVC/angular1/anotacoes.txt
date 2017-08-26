@@ -3491,7 +3491,301 @@ validação de formulário com Angular
 envio de dados para o servidor com $http.post
 mensagens de aviso para o usuário
 
+No decorrer do desenvolvimento da nossa aplicação, sentimos a necessidade de enviar os dados capturados pelo formulário para uma rota no back-end e fazemos isso através do serviço $http.
+Sobre essa afirmação, julgue as alternativas corretas:
+
+1) Para usar o serviço $http, recebemos sua instância através de injeção de dependências:
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    //código omitido
+
+});
+Porém, para que a injeção do $http seja habilitada, precisamos importar o módulo ngHttp em nosso arquivo main.js, como no código abaixo:
+
+var app = angular.module('alurapic', ['ngHttp', outros módulos ... ] );
+2) É necessário importar o arquivo JavaScript do módulo $http nas páginas HTML.
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-http.min.js"></script>
+        <script src="js/main.js"></script>
+    </head>
+    <body>
+        // código omitido
+    </body>
+</html>
+3) O serviço $http nos fornece um método chamado post, que usamos para enviar os dados:
 
 
+$http.post('/v1/fotos', $scope.foto)
+    .success(function() {
+    $scope.mensagem = 'Foto cadastrada com sucesso';
+});
 
+
+Somente a 3
+ 
+Perfeito! O serviço $http nos é fornecido através de injeção de dependências, além estar disponível juntamente com o core do Angular. Com $http podemos, por exemplo, efetuar rquisições assíncronas para uma rota back-end através de funções como .get ou .post.
+
+
+O HTML5 já vem com uma série de recursos para validação de formulários, porém não são tão flexíveis e muitas vezes precisamos modificá-los via JavaScript para atingirmos nossos objetivos (se você ainda não precisou, excelente!).
+É aí que entra a validação do Angular. Ela vem completar, inclusive ampliar os recursos de validação do HTML5, porém com a diferença de que temos flexibilidade no tratamento de mensagens e outros recursos.
+
+A questão é que precisamos abdicar do sistema de validação do HTML5 e abraçar totalmente o do Angular. Sendo assim, precisamos desabilitar o sistema de validação do HTML5.
+
+Qual das opções abaixo desativa corretamente a validação do HTML5:
+
+<form novalidate>
+</form>
+ 
+Correto! Desabilitamos a validação do HTML5 adicionando o atributo novalidate no formulário.
+
+Podemos afirmar sobre as diretivas ng-hide e ng-show:
+1) A ng-hide esconde o elemento se receber false e a ng-show esconde se receber true.
+
+2) A ng-hide serve para esconder elementos, contanto que seu valor seja false.
+
+3) A diretiva ng-hide não existe
+
+4) A diretiva ng-show exibe elementos quando seu valor é false.
+
+Todas as afirmativas são falsas
+ 
+A diretiva ng-hide esconde um elemento da tela quando seu valor for true, caso contrário ele continuará a ser exibido. Já a diretiva ng-show exibe o elemento quando seu valor for true. As duas diretivas possuem semânticas diferentes, apesar de conseguirem resultados semelhantes.
+
+Segue algumas afirmações sobre o atributo name quando usamos a validação do Angular:
+1) Temos acesso ao objeto criado implicitamente pelo Angular, que representa nosso formulário através do valor que atribuímos ao name do formulário.
+
+2) É a partir do objeto implícito que representa nosso formulário que temos acesso a todos os elementos de entrada, contanto que eles também possuam o atributo name devidamente preenchido.
+
+3) Supondo que tenhamos um formulário com o name vendas, podemos em nossos controllers testar se ele é válido ou inválido através das propriedades $scope.vendas.$valid e $scope.vendas.$invalid, respectivamente.
+
+4) É possível combinar a diretiva ng-disabled com o status de válido ou inválido do formulário, para desabilitar um botão caso o formulário esteja inválido.
+
+Todas são verdadeiras
+ 
+Correto! Através do atributo name podemos acessar o objeto criado pelo Angular para representar o form, por exemplo, e através dele podemos ainda acessar cada input também pelo atributo name.
+
+Bônus: usamos a diretiva ng-disabled, mas qual a razão de sua existência se já existe o atributo disabled, nativo do HTML? Bem, a especificação do HTML não requer que os navegadores preservem valores de atributos booleanos, como disabled. A presença desse atributo significa true e sua ausência false. Se tivéssemos colocado uma expressão do Angular para este atributo a informação de associação poderia ser perdida quando o navegador removesse o atributo.
+Documentação do Angular: https://docs.angularjs.org/api/ng/directive/ngDisabled
+
+Temos o seguinte formulário com apenas um input.
+<form name="calopsita">
+  <input name="nome" ng-model="passaro.nome" required ng-maxlength="20">
+  <!-- mensagem de erro obrigatório aqui -->
+  <!-- mensagem de erro tamanho aqui -->
+</form>
+Seguindo o exemplo acima, altere o código acima para exibir duas mensagens de erro de validação, uma para a obrigatoriedade do campo (atributo required) e outra para seu tamanho máximo (diretiva ng-maxlength). A ideia é que a mensagem seja exibida sempre que o campo estiver inválido, sem esperar sua submissão. Utilize uma tag span para cada mensagem.
+
+Bom exercício!
+
+A solução precisa acessar o objeto do formulário criado pelo Angular e a partir dele acessar o input buscando por erros de validação nas propriedades $error.required e $erro.maxlength:
+<form name="calopsita" novalidate>
+  <input name="nome" ng-model="passaro.nome" required ng-maxlength="20">
+  <span ng-show = "calopsita.nome.$error.required">
+     Nome obrigatório
+  </span> 
+  <span ng-show="calopsita.nome.$error.maxlength">
+      No máximo 20 caracteres!
+  </span>
+</form>
+ <!-- mensagem de erro obrigatório aqui -->
+ <!-- mensagem de erro tamanho aqui -->
+Se quisermos que a validação seja realizada apenas quando o formulário for submetido, precisamos colocar uma condição E consultando o estado do formulário para saber se ele foi submetido ou não:
+
+<form name="calopsita" novalidate>
+  <input name="nome" ng-model="passaro.nome" required ng-maxlength="20">
+  <span ng-show ="calopsita.$submitted && calopsita.nome.$error.required">
+     Nome obrigatório
+  </span> 
+  <span ng-show="calopsita.$submitted && calopsita.nome.$error.maxlength">
+      No máximo 20 caracteres!
+  </span>
+</form>
+<!-- mensagem de erro obrigatório aqui -->
+<!-- mensagem de erro tamanho aqui -->
+
+Está pronto para criar uma nova parcial e usar todo o poder de validação do Angular? Como de costume, neste exercício será fornecido os passos gerais que devem ser implementados para que você consiga concretizar o que foi ensinado no capítulo.
+1) O primeiro passo será adicionar um botão ao lado da entrada do usuário, em index.html, que ao ser clicado levará o usuário para a parcial foto.html. Segue a "cola" da estrutra do HTML, isso porque a intenção é focar no Angular:
+
+<!-- public/partials/principal.html -->
+
+<div class="jumbotron">
+    <h1 class="text-center">Alurapic</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <form>
+
+            <!-- Novidade! -->
+
+             <div class="input-group">
+                <span class="input-group-btn">
+                    <a href="/foto/new" class="btn btn-primary" type="button">
+                        Nova foto
+                    </a>
+                </span>
+                <input class="form-control" placeholder="filtrar pelo título da foto" ng-model="filtro" ng-model-options="{ debounce: 500 }">
+            </div> 
+
+            <!-- fim novidade! -->
+
+        </form>
+    </div> <!-- fim col-md-12 -->
+</div> <!-- fim row -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+    </meu-painel>
+</div>
+2) Veja que o link aponta para a rota /foto/new. O controlador desta rota ainda não existe em main.js. Cadastre-o como FotoController e mantenha à parcial foto.html, que ainda será criada.
+
+3) Crie a parcial foto.html. Mais uma "colher de chá", segue o HTML da página:
+
+<!-- public/partials/foto.html -->
+
+<div class="page-header text-center">
+    <h1>{{foto.titulo}}</h1>
+</div>
+
+<form name="formulario" class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Título</label>
+            <input name="titulo" class="form-control" ng-model="foto.titulo">    
+        </div>
+        <div class="form-group">
+            <label>URL</label>
+            <input name="url" class="form-control" ng-model="foto.url">
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea name="descricao" class="form-control" ng-model="foto.descricao">
+            </textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Salvar
+        </button>
+         <a href="/" class="btn btn-primary">Voltar</a>
+        <hr>
+    </div>
+    <div class="col-md-6">
+        <minha-foto></minha-foto>
+    </div>
+</form>
+4) Crie FotoController em public/js/foto-controller.js. Não esqueça de importá-lo em index.html.
+
+5) Inicialmente, imprima no console os dados da foto quando o usuário submeter o formulário. Lembra qual diretiva você utiliza quando quer chamar um código em seu controller no momento da submissão do formulário? Não esqueça de adicionar um botão para submeter o formulário.
+
+6) Depois que você conseguir exibir no console do seu navegador os dados da foto capturada, já pode validar o formulário com Angular. Dica: não esqueça de desativar a validação do HTML e lembre-se do papel do atributo name do formulário e sua relação com o objeto formulário criado implicitamente pelo Angular. Faça com que o título e a URL sejam obrigatórios, inclusive não aceite um título com mais de 20 caracteres. Não lembra tudo de cabeça? Consulte a explicação e o vídeo do capítulo que estão sempre à disposição.
+
+7) Exiba a mensagem com possíveis erros de validação. Lembre-se da diretiva ng-show para exibição condicional de elementos na página.
+
+8) Integre FotoController com o servidor, através de $http.post para enviar os dados e garantir a persistência das informações cadastradas. Atenção: você precisa saber se o formulário está válido ou não antes de enviar os dados.
+
+Você poderia ter seguido os seguintes passos.
+A nova parcial, partials/foto.html, com o recurso de validação do Angular:
+
+<div class="page-header text-center">
+    <h1>{{foto.titulo}}</h1>
+</div>
+
+<p ng-show="mensagem.length" class="alert alert-info">{{mensagem}}</p>
+
+<form novalidate name="formulario" class="row" ng-submit="submeter()">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Título</label>
+            <input name="titulo" class="form-control" 
+                ng-model="foto.titulo" required
+                ng-maxlength="20">
+            <span ng-show = "formulario.$submitted && formulario.titulo.$error.required" 
+                class="form-control alert-danger">
+                Título obrigatório
+            </span> 
+            <span ng-show="formulario.$submitted && formulario.titulo.$error.maxlength" class="form-control alert-danger">
+                No máximo 20 caracteres!
+            </span>   
+        </div>
+        <div class="form-group">
+            <label>URL</label>
+            <input name="url" class="form-control" 
+            ng-model="foto.url" required>
+
+            <span ng-show = "formulario.$submitted && formulario.url.$error.required" 
+                class="form-control alert-danger">
+                URL obrigatória
+            </span> 
+
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea name="descricao" class="form-control" ng-model="foto.descricao">
+            </textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="formulario.$invalid">
+            Salvar
+        </button>
+         <a href="/" class="btn btn-primary">Voltar</a>
+        <hr>
+    </div>
+    <div class="col-md-6">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+    </div>
+</form>
+O módulo main.js com a nova rota que carregará foto.html:
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+        // adicionando a propriedade controller que faltava. 
+
+        $routeProvider.when('/fotos/new', {
+            templateUrl: 'partials/foto.html',
+            controller: 'FotoController'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/fotos'});
+
+    });
+É claro, precisamos de um controller para alimentar a view. Criando o FotoController (singular):
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http) {
+
+    $scope.foto = {};
+    $scope.mensagem = '';
+
+    $scope.submeter = function() {
+
+        if ($scope.formulario.$valid) {
+
+            $http.post('/v1/fotos', $scope.foto)
+            .success(function() {
+                $scope.mensagem = 'Foto cadastrada com sucesso';
+            })
+            .error(function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível cadastrar a foto';
+            })
+        }
+    };
+});
 
