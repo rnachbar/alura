@@ -1,0 +1,43 @@
+##### 1. Começando nas buscas #####
+
+A internet gira em torno dos buscadores
+Autor desconhecido -- "The best place to hide a dead body is the second page of Google search"
+
+Uma criança acaba de nascer. Ela precisa se acostumar com cores, sons, sensações, tato, respiração, alimentação. E ela aprende tudo naturalmente. Com o tempo, ela vai aprimorando seus sentidos e aprende a fazer coisas por conta própria, comer, andar, necessidades e assim por diante. Ela explora toda a base que ela teve de aprendizado e evolui. Por exemplo, com a respiração como base, ela aprende a falar.
+
+Agora, imagine-se na seguinte situação: um parente seu, que nunca usou a internet antes, acabou de comprar um notebook e está acessando a internet pela primeira vez. Você está incumbido da tarefa de mostrar a essa pessoa o que é possível fazer nesse lugar gigantesco. Quais são as primeiras coisas que você mostraria para esse parente?
+
+Dou 10 segundos para você pensar!
+
+Provavelmente, você deve ter chegado em algumas opções como criar uma conta no Facebook e curtir fotos das pessoas, aprender a enviar um e-mail, acessar a página inicial de um portal de notícias. E em algum lugar dessa sua lista de coisas a ensinar deve estar "pesquisar algo no Google". Todas são tarefas básicas para quem está começando com a internet e, a partir do aprendizado dessas, a pessoa provavelmente vai derivar novas atividades para se fazer na internet.
+
+Mas é bem capaz que, de todas essas, o Google seja a ferramenta que vai dar mais possibilidades para que ela explore a internet, para que aprenda coisas novas, para que tire dúvidas sobre os mais variados assuntos, encontre lojas, saiba chegar a determinado lugar, aprenda uma receita boa para fazer no almoço de família no final de semana. Enfim, as possibilidades são infinitas. Só dependem da necessidade.
+
+Se tem algo que acompanha para sempre a vida de alguém que usa a internet, isso com certeza são as buscas. Você pode cansar da sua conta no Facebook e deletá-la, pode viver sem uma conta no Instagram, pode trocar o acesso a um portal de notícias por um feed. Porém, dificilmente você vai deixar de usar um buscador quando precisar saber de algo que não conhece ou de que não se lembra.
+
+Todo mundo usa buscas. Não acredita? Dê uma olhada no relatório do Alexa, órgão que provê dados sobre o acesso a internet no mundo todo, com os principais sites acessados em 2014:
+
+
+
+Dos cinco primeiros, dois são apenas buscadores: Google e Baidu, um buscador chinês. Já o Yahoo também é um buscador, mas em sua página inicial traz também notícias atuais.
+
+Ou seja, dos cinco sites mais acessados do mundo, três são buscadores. O mundo inteiro usa os buscadores para encontrar algo.
+
+Agora, imagina você, dono de um negócio, precisando de clientes e sem ser visto por cliente nenhum?
+
+Por que eu deveria me preocupar em aparecer no resultado das buscas?
+Seu chefe acabou de colocá-lo em um novo projeto. Você vai criar um novo sistema para sua empresa usando o framework Ruby on Rails, tecnologia que você não conhece e vai ter que aprender. Você decide procurar um livro para aprender, vai ao Google e procura por "livro de rails".
+
+
+
+Se nenhuma dessas lojas aparecesse na busca, como elas conseguiriam vender?
+
+Imagine você em uma tarde de sábado andando na Rua 25 de Março fazendo compras na véspera de Natal. Vários vendedores tentando, de diversas maneiras, chamar sua atenção para que você entre nas lojas deles. Quando alguém procura por algo no Google é exatamente a mesma coisa (exceto que ninguém vai ficar puxando você pelo braço de forma inconveniente).
+
+Para quem tem um site, uma das melhores formas de conseguir clientes e audiência (pessoas que acessam seu site) é através dos resultados de busca. Ser encontrado pelas pessoas é primordial, seja você um comércio eletrônico, físico ou um prestador de serviço.
+
+Apenas para que você tenha uma ideia, em média 40% dos acessos aos sites que mantenho vêm de buscas. Um deles é o site da editora desse livro, a Casa do Código, que também é um e-commerce. É impossível imaginar a empresa com 40% menos de acessos e, por que não, 40% menos clientes e 40% menos faturamento. Tudo está relacionado. Se as pessoas não têm como saber sobre seu site, elas não vão acessá-lo e você não terá clientes. Se você não tiver clientes, não vai vender o seu produto ou serviço e, com isso, não terá faturamento.
+
+
+
+Aparecer nos resultados do Google é o passo 0 pra quem quer conseguir mais acessos e mais clientes para seu site.
