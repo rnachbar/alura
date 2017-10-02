@@ -38,6 +38,118 @@ Para quem tem um site, uma das melhores formas de conseguir clientes e audiênci
 
 Apenas para que você tenha uma ideia, em média 40% dos acessos aos sites que mantenho vêm de buscas. Um deles é o site da editora desse livro, a Casa do Código, que também é um e-commerce. É impossível imaginar a empresa com 40% menos de acessos e, por que não, 40% menos clientes e 40% menos faturamento. Tudo está relacionado. Se as pessoas não têm como saber sobre seu site, elas não vão acessá-lo e você não terá clientes. Se você não tiver clientes, não vai vender o seu produto ou serviço e, com isso, não terá faturamento.
 
-
-
 Aparecer nos resultados do Google é o passo 0 pra quem quer conseguir mais acessos e mais clientes para seu site.
+
+Os buscadores são uma das bases para o uso da internet. Nela é possível encontrar informações sobre diferentes assuntos, vários dos quais não fazíamos a menor ideia de como funcionava. Portanto, com elas, o usuário pode expandir conhecimento, encontrar a solução para algum problema, matar uma curiosidade, encontrar um produto que tenha visto em algum outro lugar e várias outras tarefas.
+
+Quando se tem um negócio, você quer que as pessoas te encontrem e saibam quais produtos ou serviços você oferece. Muitos clientes podem até já saber qual é a sua empresa, mas a grande maioria das pessoas não te conhece. Aparecer nas buscas é fundamental para conseguir ser visto por mais clientes.
+
+##### 2. O convencimento e a conveniência #####
+
+Estar no Google é importante, mas, claro, muitos outros fatores influenciam no sucesso do seu site. Algumas delas podem até parecer óbvias no começo.
+
+Lembra da história da véspera de Natal na 25 de Março? Pois então, você ainda está lá no começo da sua saga para comprar uma linda árvore de natal. No começo da rua, você vê uma loja que parece ser bacana e, pelo que o vendedor que está do lado de fora da loja diz, parece que ali tem a árvore que você está procurando. Você é convencido a entrar naquela loja por dois motivos:
+
+Convencimento: antes de você entrar, o vendedor o convenceu de que ali é o lugar ideal para você achar o que procurava;
+Conveniência: é o primeiro lugar interessante que apareceu.
+Agora já imaginou a loja que fica no final da rua? Quantas pessoas vão andar até lá? Poucas.
+
+Nos sites de busca, a ideia é a mesma. Não basta só estar nos resultados de busca. Você precisa estar nos primeiros resultados. No mínimo na primeira página você tem que estar. Poucas pessoas vão até a segunda página dos resultados da busca. Terceira página, então? Você praticamente não existe.
+
+Em junho de 2013, a Chitika, uma empresa especializada em marketing digital, divulgou um estudo mostrando que, quanto melhor a posição em que seu site aparece nas buscas do Google, mais pessoas clicam para entrar no seu site. Os 3 primeiros resultados possuem juntos 50% dos cliques.
+
+
+
+Quando você observa no estudo a quantidade de tráfego de acordo com a página em que o resultado aparece na busca, temos um número que parece mais absurdo ainda, mas que faz todo o sentido: 91% dos sites acessados através de uma busca estão na primeira página dos resultados (considerando que o padrão do Google é mostrar 10 resultados por página).
+
+
+
+Ou seja, é primordial ter uma forte presença nos resultados de busca. Claro, cada tipo de negócio poderá ter uma expectativa diferente com relação aos seus resultados. Negócios que tradicionalmente são offline ainda podem levar algum tempo para gerar bons retornos diretamente pelas buscas, mas ainda assim, sites, lojas e serviços estarem disponíveis na internet é uma tendência para o futuro e sem volta. Portanto, quanto antes você estiver preparado para se dar bem nisso, melhor.
+
+E o que eu posso fazer?
+Você deve ter percebido que aparecer nos resultados de busca é importante, mas aparecer bem é primordial. E tenha em mente que você terá concorrência. Então, como conseguir aparecer bem?
+
+Uma primeira possibilidade é através dos resultados patrocinados, como o Adwords. Nesse caso, você paga uma quantia por clique, que pode variar desde de poucos centavos até muitos reais, de acordo com a palavra chave. Quanto mais concorrência pelo termo, mais caro custará o clique. Note como normalmente é feita a distribuição quando há resultados patrocinados:
+
+
+
+A primeira vista pode parecer interessante pagar para ter seu site nos primeiros resultados sempre, no entanto, a longo prazo pode não ser uma estratégia financeiramente sustentável, já que pode facilmente se tornar cara de acordo com o número de cliques que há.
+
+A estratégia barata e que funcionará sempre a longo prazo é rankear bem organicamente, sem depender de pagamentos. Aliás, geralmente até mesmo o retorno é mais interessante com o ranking orgânico, justamente pelo baixo custo de implementação.
+
+Existem diversas técnicas para conseguir ter um bom ranking organicamente. São vários detalhes que em conjunto farão com que você tenha um site interessante, usável e, como consequência, aparecerá bem nas buscas. Isso é importante. O importante para que seu site apareça bem nas buscas é ter um site bom (você vai aprender durante esse curso as características que fazem um site bom) e, como brinde, você aparecerá bem nas buscas e terá mais acessos.
+
+Entre outros fatores que podem surgir, destacamos o convencimento do usuário e a conveniência da posição em que o resultado aparece nas buscas.
+
+Em uma pesquisa pelos termos "playstation 4 preço", a descrição da página do Playstation 4 no mercado livre é "Compre seu PS4 no MercadoLivre. Os menores preços do último lançamento da Sony, o PS4, estão aqui. Console Playstation 4 em até 24x vezes. Confira!"
+Note como ele claramente no texto está tentando influenciar no clique e também na decisão de comprar um Playstation 4.
+
+Muitas vezes a página pode ser boa, com conteúdo claro e bem explicativo, mas como os usuários procuram por determinado assunto que pode não ter sido bem compreendido por quem fez o conteúdo dela, ficamos em alguns casos perdidos nas buscas.
+
+##### 3. O que é o SEO? #####
+
+Mas para isso, você precisará se preparar, estudar e entender como entrar nesse jogo. Aliás, eu falo que é um jogo, pois uma vez que você entende os princípios, fazer um site bom se torna algo viciante e você quer cada vez mais deixá-lo melhor.
+Todas essas técnicas que como consequência fazem com que seu site rankeie bem são as famosas SEO - sigla que significa Search Engine Optimization - , que você vai aprender durante esse curso.
+
+Você vai perceber durante essa nossa descoberta do mundo do SEO que muitas coisas são subjetivas. São muitas variáveis e fatores envolvidos e com frequência teremos que tomar decisões em trade-off, expressão usada quando existe um conflito de escolha, ou seja, teremos que abrir mão de algumas coisas para ganhar em outras. São decisões com que teremos que aprender a lidar. Além disso, no mundo do SEO, as coisas mudam com muita velocidade. Portanto, sempre desconfie do que lê e, se ficar em dúvida de algo, apele para o bom senso e pense em como seria melhor para o usuário de suas páginas. Esse é o caminho que os buscadores estão seguindo para saber como rankear as páginas. Se for bom para o usuário, o ranking será bom.
+
+O primeiro passo para saber como fazer seu site pode aparecer bem rankeado nos buscadores é saber como as buscas funcionam. E garanto, não é algo trivial. Preparado?
+
+SEO é a sigla para Search Engine Optimization, mas quais otimizações você acredita fazer parte desse conjunto de técnicas?
+São muitas otimizações. Como vimos, o Google e vários outros buscadores levam em conta mais de 200 fatores para decidir como rankear os sites e qual site vai aparecer antes ou depois do outro. Nessas otimizações envolve fatores como links, qualidade de texto, estrutura e organização das páginas, design, acessibilidade do site, tempo de carregamento e muitos outros fatores.
+
+Quais dessas tarefas não fazem parte de um processo de otimização de site para engines de busca?
+Alterar as cores de um site não possui influência no rankeamento e em como os buscadores vêem seu site, ou seja, não é porque você trocou seu site de verde para azul que fará com que ele tenha um aumento ou queda no ranking. Da mesma forma, a não existência de imagens na página não influência no rankeamento.
+
+##### 4. A simplicidade do Google #####
+
+Aaron Wall é fundador do site SEObook.com -- "The success of a page should be measured by one criteria: Does the visitor do what you want them to do?"
+
+Como já falamos, qualquer usuário com um conhecimento mínimo de como usar a internet já deve ter feito uma pesquisa no Google. Acredito que seja o local da internet com melhor usabilidade e onde toda complexidade está mais bem abstraída do usuário final.
+
+Você só acessa uma tela com um único campo para digitar o que quer e, em menos de um segundo, ele já mostra vários resultados para aquela sua pesquisa, sugere variações para ela, caso não saiba exatamente o que estava procurando e assim por diante.
+
+
+
+Para a grande maioria dos usuários da internet, isso é só mais um serviço interessante que a internet tem pra nos oferecer. No entanto, para um profissional de SEO não é bem assim. Há muito acontecendo quando o usuário faz uma simples pesquisa no Google. Aliás, há muito acontecendo bem antes de essa pesquisa ser feita!
+
+Como você acha que o Google decide qual página mostrar primeiro ou qual deixar de mostrar? E como ele faz tão rápido uma busca como essa dentro de 1 bilhão de sites possíveis? E considere que cada site tem em média um número muito superior a uma única página.
+
+##### 5. Como funcionam os spiders dos buscadores #####
+
+Saiba o que fazem os spiders
+Enquanto você lê essa explicação, o Google (e os outros buscadores também) está acessando e analisando, sem parar, as diversas páginas dos mais de 1 bilhão de sites disponíveis no mundo. Os programas que fazem esse trabalho são conhecidos como spiders.
+
+Esses spiders começam acessando algumas poucas páginas e recolhem informações sobre o seus conteúdos, como texto, imagens usadas, frequência de atualização, links e muito mais. A partir dos links, eles começam a navegar para as páginas que estão linkadas e fazem o mesmo processo de análise em cada página acessada.
+
+Dessa forma, ele consegue analisar praticamente toda a web, afinal, como a própria definição da world wide web diz: "... permite que documentos sejam interligados uns aos outros por meio de hyperlinks.".
+
+Sentindo na pele como funciona um spider
+Um pequeno exercício que você pode fazer para sentir um pouco como funciona um spider e matar a curiosidade, é: abra um site de sua preferência e clique em um dos links. Nessa nova página que for carregada, faça o mesmo. Você vai perceber que, depois de fazer cinco vezes a mesma coisa, é possível que o assunto da quinta página não tenha a menor relação com a primeira.
+
+Um exemplo que eu fiz foi começando da página da Casa do Código, www.casadocodigo.com.br. Cinco links depois, eu estava na página oficial do David Bowie, davidbowie.com.
+
+Durante esse processo de análise de cada página, os spiders fazem a indexação de todas as páginas e guardam essa indexação nos servidores do buscador.
+
+Quando uma pessoa faz a pesquisa, por exemplo no Google, tudo é processado dentro dos servidores do Google. Ou seja, na prática, você não está fazendo uma pesquisa na internet, e sim nos índices do Google.
+
+Consigo ver quando o spider acessa minha página?
+Uma das formas mais fáceis de saber quando um spider está acessando a sua página é usando os logs de acesso do seu servidor.
+
+O modo de visualizá-lo depende do seu servidor e de como ele está configurado para formatar os logs, mas bastaria procurar pelo User Agent chamado Googlebot, para encontrar o spider do Google acessando o seu site.
+
+
+        66.249.64.13 - - [19/Nov/2014:11:07:48 +1000] 
+            "GET /robots.txt HTTP/1.0" 200 468 "-" "Googlebot/2.1"
+
+Por sinal, bot é um outro nome, um pouco mais técnico, para nos referirmos aos spiders.
+
+Como ele decide o que deve me mostrar? Como ele sabe o que é importante pra mim?
+
+Durante o processo de indexação, uma das coisas que acontece é o acesso aos sites disponíveis na internet. Como se chama o componente que faz essa navegação pelos sites?
+Esses componentes são os spiders, que tem função de acessar todos os sites são os spiders.
+
+A relevância de uma página compreende fatores que passam pela qualidade do conteúdo, mas estão mais diretamente ligadas com a quantidade e qualidade de links que ele recebe. Se alguém que é muito linkado, linka para seu site, essa relevância (autoridade) acaba passando também para seu site, tornando-o relevante.
+
+O tempo inteiro os buscadores estão acessando sites e os indexando utilizando os spiders. Durante essa indexação, os buscadores acessam as páginas e links que as páginas possuem, observando o conteúdo de cada um delas e determinando o assunto abordado, termos relevantes, qualidade da imagem e diversos fatores que influenciam no rankeamento.
+
