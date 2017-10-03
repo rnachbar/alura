@@ -153,3 +153,124 @@ A relevância de uma página compreende fatores que passam pela qualidade do con
 
 O tempo inteiro os buscadores estão acessando sites e os indexando utilizando os spiders. Durante essa indexação, os buscadores acessam as páginas e links que as páginas possuem, observando o conteúdo de cada um delas e determinando o assunto abordado, termos relevantes, qualidade da imagem e diversos fatores que influenciam no rankeamento.
 
+##### 6. Os fatores específicos na busca #####
+
+Mas esse Google é um gênio!
+Não sei você, mas eu, mais de uma vez, já falei essa frase em voz alta na frente do computador após pesquisar algo na internet para o qual eu achava que dificilmente encontraria uma resposta.
+
+Na realidade, o Google (e outros buscadores) fazem uma criteriosa análise dos seus índices de acordo com o termo buscado, para saber quais são as páginas mais relevantes para o que eu estou buscando. Por sinal, essa á a premissa do Google: devolver resultados relevantes.
+
+Quando a busca é submetida, o Google faz mais de 200 considerações sobre cada página, para saber se ela deve ser mostrada ou não, e para saber o que é mais relevante entre os resultados encontrados e, dessa forma, saber o que priorizar no resultado.
+
+
+
+Esses 200 critérios são o ponto vital para conseguir fazer com que seu site apareça bem nas buscas. Eles vão desde fatores ligados ao domínio, como a idade do domínio (quanto mais antigo, melhor) ou então se a palavra-chave (falaremos mais disso mais à frente) faz parte do nome do domínio; passando por fatores ligados com a página em si, como títulos que são dados para as páginas através da tag <title> do HTML, existência e densidade da palavra-chave no conteúdo, uso adequado das tags <h1>, <h2> e <h3>, exibição adequada de imagens; passa também por uma avaliação dos links, verificando a relevância dos sites para os quais o seu site faz links, existência de links quebrados, contextualização; e também passa por diversos outros fatores como velocidade de carregamento da página, existência de certificado de que o site é seguro (SSL), análise de relevância nas redes sociais e muito mais.
+
+A lista é extensa e bem maior do que a do parágrafo anterior, mas não se preocupe. Naturalmente vamos passar por esses fatores durante o curso e aprender como usá-los a nosso favor.
+
+Mas uma coisa eu já posso antecipar... dentro desses vários fatores, os links têm um papel muito importante. Mas por que será?
+
+Entenda o PageRank
+Imagine que um brasileiro, cidadão comum, dê uma entrevista em uma televisão dizendo que viu um alienígena e que há vida em Marte. Você acreditaria? Provavelmente não, né? Mas e se esse mesmo anúncio fosse feito pela NASA? Possivelmente sua opinião mudaria, ou ao menos ficaria com uma pulga atrás da orelha.
+
+Repare como há uma diferença de relevância (e naturalmente de confiança) entre a pessoa que disse ver o extraterrestre e a NASA.
+
+Levando essa ideia além, o que aconteceria se um jogador de futebol da quinta divisão desse uma entrevista elogiando como você joga bola. E se a mesma entrevista fosse dada pelo Neymar?
+
+Essas relações sobre quem linka para quem também é analisada pelos buscadores, em especial o Google. É importante que outros sites linkem para você, como uma espécie de colaboração sobre o que você diz ou faz em seu site. Porém, volume de links não é o mais importante aqui. É preciso focar na qualidade dos links que são conseguidos.
+
+Além disso, o Google leva em consideração a contextualização dos links. Isso significa que o Obama falar que você é um grande jogador de futebol tem menos relevância do que o Neymar falar o mesmo. Ou seja, a contextualização dá prioridade para os sites que fazem parte da sua área de atuação. Se você possui um site de culinária, receber um link do site de uma página de um banco, explicando como fazer cálculos financeiros, não terá muito impacto no seu PageRank.
+
+Todos esses critérios formam um algoritmo criado por um dos fundadores do Google, Larry Page. Esse algoritmo é o PageRank e também é usado como fator para definir posicionamento nas buscas.
+
+E onde entra o SEO nessa história e o Panda, Penguin e Hummingbird?
+É importante notar que lá no começo dos anos 2000 os algoritmos de busca eram extremamente simples, fazendo um simples ::matching:: das palavras-chaves e sem tanto foco em retornar resultados que fossem necessariamente relevantes.
+
+Com o passar do tempo, esse cenário mudou e hoje temos todos esses diversos fatores que impactam o que vai ser devolvido como resultado na busca. Saiba de antemão que essa evolução vai continuar existindo.
+
+Essa evolução de algoritmos foi acontecendo aos poucos, conforme necessidades foram sendo sentidas para que o rankeamento fosse justo e de acordo com bons critérios. De lá pra cá, o Google já lançou diversos algoritmos e atualizações dos mesmos do seu motor de buscas. O que isso significa? Primeiro que eles estão constantemente tentando servir o melhor resultado possível para os usuários que pesquisam. Como consequência, isso também quer dizer que regras que um dia eram seguidas, de um dia para o outro podem se tornar obsoletas ou até mesmo más práticas. Dessas mudanças e algoritmos, podemos destacar três:
+
+Panda: Essa atualização foi lançada em Fevereiro de 2011 e seu objetivo principal era priorizar os sites com conteúdo de qualidade. Mas como ele pode saber isso? Analisando alguns fatores, como a qualidade da escrita do conteúdo (sim, erros de gramática são penalizados), a profundidade com que o assunto é coberto, o conteúdo é original ou duplicado. Em resumo, o Panda é uma atualização intimamente ligada com a qualidade do conteúdo oferecido em seu site.
+Penguin: O Penguin é uma atualização lançada em Abril de 2012, com o objetivo de identificar e reduzir a importância dos links feitos para seu site de forma não natural. Como vamos ver durante o curso, os links existentes para suas páginas são uma forma de indicar o quão relevante essa sua página é em determinado assunto. Com isso em mente, muitos webmasters passaram a colocar links para suas páginas em sites que serviam apenas como um diretório de links. Uma estratégia simples para conseguir bons rankings, não? Não, depois do Penguin. Com essa atualização, esses sites com diretórios de links perderam relevância e passou a prevalecer a naturalidade e a contextualização com que o link aparece.
+Hummingbird: Em meados de setembro de 2013, o Google lançou essa atualização para entender de uma forma mais precisa a intenção do usuário nas buscas. Como assim? Se você digitar "pizzaria belo horizonte" em uma busca, ele vai reconhecer que você esteja interessado nos endereços de pizzarias dentro ou próximo de Belo Horizonte. Com isso, ele vai te sugerir endereços e pizzarias bem avaliadas da região. Dessa forma ele tenta descobrir o que o usuário quer com aquela busca e devolve resultados indicados para isso.
+Vale reforçar que esses algoritmos ainda são constantemente atualizados, portanto, fique sempre atento às novidades.
+
+Além disso, é importante reforçar que os detalhes do algoritmo dos buscadores são guardados a 7 chaves. Ou seja, muito do que temos hoje em SEO é baseado em resultados empíricos, ou seja, testes que foram feitos e resultados que foram avaliados. Existem diversas empresas focadas em SEO, cujo objetivo é realizar mudanças em sites e monitorar as variações existentes nos resultados do rankeamento, para então determinar o que é relevante ou não para SEO.
+
+Fazer com que um site apareça bem nos resultados de busca, eu diria que é o principal papel de um profissional de SEO (Search Engine Optimization). Porém, para isso, é preciso se manter atualizado, estar atento às novidades dos algoritmos e é preciso experimentar, monitorar e analisar os resultados dos seus sites. Pode parecer muita coisa, mas garanto que é algo muito divertido. Os resultados não são imediatos e surtem efeito com o passar do tempo, você vai ver, mas são de suma importância para qualquer negócio.
+
+E então, está preparado para começar?
+
+##### 7. Entendendo o projeto e o objetivo do site #####
+
+Então você quer ter um site?
+Bruce Clay -- "It is not the job of Search Engine Optimization to make a pig fly. It is the job of the SEO to genetically re-engineer the web site so that it becomes an eagle"
+
+Eu sou um viciado em cozinhar. Sempre que vejo que estou entediado, arrisco-me na cozinha e consigo me virar relativamente bem (confesso que algumas vezes as coisas dão errado). Mas na verdade eu não sabia cozinhar até uns 4 anos antes de eu criar este curso. Foi aí que eu decidi fazer um curso de culinária para quem nunca havia sequer fritado um ovo antes na vida.
+
+Nesse curso foi que aprendi a fazer um risoto. Para quem não conhece, risoto é um arroz cremoso, que pode ser feito em conjunto de qualquer outra coisa: camarão, aspargos, cogumelos, bacon. Enfim, as possibilidades são infinitas.
+
+Com o passar do tempo e após alguns risotos feitos, percebi que na verdade ele é um prato excelente para quem está começando na cozinha. O preparo é simples, poucos ingredientes são utilizados, o resultado geralmente é saboroso e, com uma apresentação bem feita, tem o poder de impressionar algumas pessoas.
+
+
+
+Então decidi criar um site (fictício). Quero que seja um local onde as pessoas tenham acesso a receitas, aprendam a fazer, vejam dicas e ideias de acompanhamentos e sobremesas. Além disso, o site também servirá para divulgar um serviço de "jantar em casa", dessa forma, a pessoa que contratar o serviço escolherá um cardápio e um chef irá preparar o jantar na casa da pessoa.
+
+Em termos de negócio, as receitas e dicas de culinária serão uma forma de atrair pessoas para o site e que acabam se interessando também no "chef em casa", que é o que torna o negócio rentável.
+
+No site, deveremos ter receitas, dicas, imagens, avaliações e muitos outros fatores técnicos e não técnicos que vamos explorar durante todo o projeto de SEO.
+
+Mas como será que teremos que estruturar nosso site para que sejamos encontrados? Como as pessoas nos encontrariam? Qual domínio devo comprar? E com quais palavras-chave devemos trabalhar?
+
+Quais são as perguntas que você deve fazer sempre, antes de começar um projeto de SEO?
+
+Na verdade, 3 perguntas são primordiais:
+Qual serviço ou produto você vende em seu site?
+Como seus clientes procuram por seus produtos e serviços nos buscadores?
+Quais são os objetivos de negócio com o projeto de SEO?
+Sempre antes de começar um projeto de SEO, você precisa entender o que está sendo vendido, pra dessa forma, saber como as pessoas irão procurar por esses produtos e serviços. A partir desse conhecimento, você precisará saber também qual é o objetivo da empresa com as otimizações. Será que ela quer aumentar visitas? O foco é vender mais? Trazer mais faturamento? Promover um conjunto específico de produtos?
+
+##### 8.  Explorando a concorrência e a diferença entre Ads e Orgânico #####
+
+Explorando a concorrência e a diferença entre Ads e Orgânico
+Nós já respondemos as seguintes três perguntas:
+
+Qual produto estamos vendendo em nosso site?
+Quais os objetivos de negócio com o projeto de SEO?
+Como os clientes procuram nosso produto na Internet?
+Agora que já temos uma ideia das respostas para estas três perguntas, vamos começar nosso caminho de SEO pela terceira. O que os usuários observam hoje em dia?
+
+Vamos ver um exemplo prático: o usuário tem como intenção comprar uma camiseta da marca Abercrombie. Ele pesquisa no Google:
+
+
+
+Na página de resultados podemos observar vários com a marcação "Ad" (propaganda) ou "Anúncio", ou seja, são patrocinados. Empresas ou pessoas pagam para que os primeiros resultados sejam seus sites. Eles também aparecem no canto direito da página:
+
+
+
+Quem está patrocinando paga por cada clique dado no link desses resultados. Por um lado, essa alternativa pode sair cara, principalmente se houver muitos cliques e pouca conversão, e por outro é garantido que o resultado sempre estará numa boa posição.
+
+A abordagem mais barata para ter uma boa posição no Google é com o SEO, a qual, se bem elaborada, também será duradoura. Os próximos resultados logo após os Ads são os que chamamos de Orgânicos, não pagos. Esses resultados são de sites muito bem trabalhados e otimizados.
+
+Numa busca de lojas de camisetas da Abercrombie no Google, o primeiro resultado Orgânico poderia ser este:
+
+
+
+Vamos analisá-lo como um concorrente. O que ele possui de features e como aborda as vendas, o que ele espera que o cliente veja quando entra no link do resultado.
+
+Se fizermos isso, já conseguimos observar que o site é bem organizado, possui informações bem visíveis de preço e descontos. Vamos clicar em algum dos produtos para ver as informações. O primeiro detalhe é que ele rankeia a página definindo um título para ela:
+
+
+
+Este é o termo-chave da página.
+
+Se visualizarmos o conteúdo principal da página, podemos notas que as características do produto em questão estão em destaque: sua foto, seu nome, seu preço, etc:
+
+
+
+Descendo um pouco mais a página temos a descrição do produto e mais uma vez o nome "Camiseta Abercrombie". É dado bastante destaque para esse termo. Isso acontece para otimizar o site na hora que um usuário escrever tais palavras no mecanismo de busca, deixando-o acima de outras páginas.
+
+Tendo tudo isso em vista, podemos afirmar que esse site é um concorrente forte para nossa loja fictícia. Esse processo de pesquisa de mercado, para observar as ações de tais concorrentes, é muito importante. Devemos focar nosso olhar para as palavras-chave das páginas, sua organização, o título, etc. Ou seja, elementos que rankeariam melhor o site numa busca.
+
+Na hora de criação do nosso site, é importante lembrarmos o que possivelmente um cliente iria procurar em um mecanismo de busca. Com isso em mente trabalhamos a abordagem com SEO.
+
