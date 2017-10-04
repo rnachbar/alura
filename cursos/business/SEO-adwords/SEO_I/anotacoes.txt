@@ -17,8 +17,6 @@ Se tem algo que acompanha para sempre a vida de alguém que usa a internet, isso
 
 Todo mundo usa buscas. Não acredita? Dê uma olhada no relatório do Alexa, órgão que provê dados sobre o acesso a internet no mundo todo, com os principais sites acessados em 2014:
 
-
-
 Dos cinco primeiros, dois são apenas buscadores: Google e Baidu, um buscador chinês. Já o Yahoo também é um buscador, mas em sua página inicial traz também notícias atuais.
 
 Ou seja, dos cinco sites mais acessados do mundo, três são buscadores. O mundo inteiro usa os buscadores para encontrar algo.
@@ -27,8 +25,6 @@ Agora, imagina você, dono de um negócio, precisando de clientes e sem ser vist
 
 Por que eu deveria me preocupar em aparecer no resultado das buscas?
 Seu chefe acabou de colocá-lo em um novo projeto. Você vai criar um novo sistema para sua empresa usando o framework Ruby on Rails, tecnologia que você não conhece e vai ter que aprender. Você decide procurar um livro para aprender, vai ao Google e procura por "livro de rails".
-
-
 
 Se nenhuma dessas lojas aparecesse na busca, como elas conseguiriam vender?
 
@@ -58,11 +54,7 @@ Nos sites de busca, a ideia é a mesma. Não basta só estar nos resultados de b
 
 Em junho de 2013, a Chitika, uma empresa especializada em marketing digital, divulgou um estudo mostrando que, quanto melhor a posição em que seu site aparece nas buscas do Google, mais pessoas clicam para entrar no seu site. Os 3 primeiros resultados possuem juntos 50% dos cliques.
 
-
-
 Quando você observa no estudo a quantidade de tráfego de acordo com a página em que o resultado aparece na busca, temos um número que parece mais absurdo ainda, mas que faz todo o sentido: 91% dos sites acessados através de uma busca estão na primeira página dos resultados (considerando que o padrão do Google é mostrar 10 resultados por página).
-
-
 
 Ou seja, é primordial ter uma forte presença nos resultados de busca. Claro, cada tipo de negócio poderá ter uma expectativa diferente com relação aos seus resultados. Negócios que tradicionalmente são offline ainda podem levar algum tempo para gerar bons retornos diretamente pelas buscas, mas ainda assim, sites, lojas e serviços estarem disponíveis na internet é uma tendência para o futuro e sem volta. Portanto, quanto antes você estiver preparado para se dar bem nisso, melhor.
 
@@ -70,8 +62,6 @@ E o que eu posso fazer?
 Você deve ter percebido que aparecer nos resultados de busca é importante, mas aparecer bem é primordial. E tenha em mente que você terá concorrência. Então, como conseguir aparecer bem?
 
 Uma primeira possibilidade é através dos resultados patrocinados, como o Adwords. Nesse caso, você paga uma quantia por clique, que pode variar desde de poucos centavos até muitos reais, de acordo com a palavra chave. Quanto mais concorrência pelo termo, mais caro custará o clique. Note como normalmente é feita a distribuição quando há resultados patrocinados:
-
-
 
 A primeira vista pode parecer interessante pagar para ter seu site nos primeiros resultados sempre, no entanto, a longo prazo pode não ser uma estratégia financeiramente sustentável, já que pode facilmente se tornar cara de acordo com o número de cliques que há.
 
@@ -108,8 +98,6 @@ Aaron Wall é fundador do site SEObook.com -- "The success of a page should be m
 Como já falamos, qualquer usuário com um conhecimento mínimo de como usar a internet já deve ter feito uma pesquisa no Google. Acredito que seja o local da internet com melhor usabilidade e onde toda complexidade está mais bem abstraída do usuário final.
 
 Você só acessa uma tela com um único campo para digitar o que quer e, em menos de um segundo, ele já mostra vários resultados para aquela sua pesquisa, sugere variações para ela, caso não saiba exatamente o que estava procurando e assim por diante.
-
-
 
 Para a grande maioria dos usuários da internet, isso é só mais um serviço interessante que a internet tem pra nos oferecer. No entanto, para um profissional de SEO não é bem assim. Há muito acontecendo quando o usuário faz uma simples pesquisa no Google. Aliás, há muito acontecendo bem antes de essa pesquisa ser feita!
 
@@ -162,8 +150,6 @@ Na realidade, o Google (e outros buscadores) fazem uma criteriosa análise dos s
 
 Quando a busca é submetida, o Google faz mais de 200 considerações sobre cada página, para saber se ela deve ser mostrada ou não, e para saber o que é mais relevante entre os resultados encontrados e, dessa forma, saber o que priorizar no resultado.
 
-
-
 Esses 200 critérios são o ponto vital para conseguir fazer com que seu site apareça bem nas buscas. Eles vão desde fatores ligados ao domínio, como a idade do domínio (quanto mais antigo, melhor) ou então se a palavra-chave (falaremos mais disso mais à frente) faz parte do nome do domínio; passando por fatores ligados com a página em si, como títulos que são dados para as páginas através da tag <title> do HTML, existência e densidade da palavra-chave no conteúdo, uso adequado das tags <h1>, <h2> e <h3>, exibição adequada de imagens; passa também por uma avaliação dos links, verificando a relevância dos sites para os quais o seu site faz links, existência de links quebrados, contextualização; e também passa por diversos outros fatores como velocidade de carregamento da página, existência de certificado de que o site é seguro (SSL), análise de relevância nas redes sociais e muito mais.
 
 A lista é extensa e bem maior do que a do parágrafo anterior, mas não se preocupe. Naturalmente vamos passar por esses fatores durante o curso e aprender como usá-los a nosso favor.
@@ -212,8 +198,6 @@ Nesse curso foi que aprendi a fazer um risoto. Para quem não conhece, risoto é
 
 Com o passar do tempo e após alguns risotos feitos, percebi que na verdade ele é um prato excelente para quem está começando na cozinha. O preparo é simples, poucos ingredientes são utilizados, o resultado geralmente é saboroso e, com uma apresentação bem feita, tem o poder de impressionar algumas pessoas.
 
-
-
 Então decidi criar um site (fictício). Quero que seja um local onde as pessoas tenham acesso a receitas, aprendam a fazer, vejam dicas e ideias de acompanhamentos e sobremesas. Além disso, o site também servirá para divulgar um serviço de "jantar em casa", dessa forma, a pessoa que contratar o serviço escolherá um cardápio e um chef irá preparar o jantar na casa da pessoa.
 
 Em termos de negócio, as receitas e dicas de culinária serão uma forma de atrair pessoas para o site e que acabam se interessando também no "chef em casa", que é o que torna o negócio rentável.
@@ -242,11 +226,7 @@ Agora que já temos uma ideia das respostas para estas três perguntas, vamos co
 
 Vamos ver um exemplo prático: o usuário tem como intenção comprar uma camiseta da marca Abercrombie. Ele pesquisa no Google:
 
-
-
 Na página de resultados podemos observar vários com a marcação "Ad" (propaganda) ou "Anúncio", ou seja, são patrocinados. Empresas ou pessoas pagam para que os primeiros resultados sejam seus sites. Eles também aparecem no canto direito da página:
-
-
 
 Quem está patrocinando paga por cada clique dado no link desses resultados. Por um lado, essa alternativa pode sair cara, principalmente se houver muitos cliques e pouca conversão, e por outro é garantido que o resultado sempre estará numa boa posição.
 
@@ -254,23 +234,68 @@ A abordagem mais barata para ter uma boa posição no Google é com o SEO, a qua
 
 Numa busca de lojas de camisetas da Abercrombie no Google, o primeiro resultado Orgânico poderia ser este:
 
-
-
 Vamos analisá-lo como um concorrente. O que ele possui de features e como aborda as vendas, o que ele espera que o cliente veja quando entra no link do resultado.
 
 Se fizermos isso, já conseguimos observar que o site é bem organizado, possui informações bem visíveis de preço e descontos. Vamos clicar em algum dos produtos para ver as informações. O primeiro detalhe é que ele rankeia a página definindo um título para ela:
 
-
-
 Este é o termo-chave da página.
 
 Se visualizarmos o conteúdo principal da página, podemos notas que as características do produto em questão estão em destaque: sua foto, seu nome, seu preço, etc:
-
-
 
 Descendo um pouco mais a página temos a descrição do produto e mais uma vez o nome "Camiseta Abercrombie". É dado bastante destaque para esse termo. Isso acontece para otimizar o site na hora que um usuário escrever tais palavras no mecanismo de busca, deixando-o acima de outras páginas.
 
 Tendo tudo isso em vista, podemos afirmar que esse site é um concorrente forte para nossa loja fictícia. Esse processo de pesquisa de mercado, para observar as ações de tais concorrentes, é muito importante. Devemos focar nosso olhar para as palavras-chave das páginas, sua organização, o título, etc. Ou seja, elementos que rankeariam melhor o site numa busca.
 
 Na hora de criação do nosso site, é importante lembrarmos o que possivelmente um cliente iria procurar em um mecanismo de busca. Com isso em mente trabalhamos a abordagem com SEO.
+
+##### 9. A importância das palavras-chave #####
+
+Faça o keyword research
+Larry Page, cofundador do Google -- "The perfect search engine would understand exactly what you mean and give you back exactly what you want."
+
+Para conseguir fazer com que as pessoas nos encontrem nas buscas, precisamos descobrir como ela procurará pelo nosso produto ou serviço. Mas há muita coisa envolvida nessa descoberta e todas elas giram em torno das palavras-chaves (::keywords::) que vamos decidir utilizar nas nossas páginas e que serão determinantes no rankeamento das nossas páginas.
+
+Mas descobrir quais palavras-chaves atacar não é uma tarefa tão simples. É preciso um estudo cuidadoso, conhecido como ::keyword research:: (estudo de palavras-chaves) para podermos decidir a quais palavras queremos associar nosso site ou não.
+
+Durante o estudo que faremos neste capítulo, vamos responder várias perguntas, como:
+
+O que será que a pessoa digitaria nas buscas para nos encontrar?
+O que já está sendo devolvido nos resultados por essas buscas?
+Quais palavras-chaves devo utilizar?
+Devo priorizar palavras-chaves populares ou a cauda longa?
+Como saber se vale a pena rankear para determinada palavra-chave?
+Como calcular o ::Keyword Effectiveness Index ─ KEI:: (Índice de efetividade da palavra-chave) para saber se ela é uma palavra interessante ou não?
+Quais palavras devo atacar no começo e quais guardar para o futuro?
+E várias outras que serão naturalmente respondidas durante o capítulo.
+Pronto para começar?
+
+Saiba como funcionam as palavras-chaves e os termos de busca
+Quando submetemos uma pesquisa ao buscador, os termos utilizados na pesquisa são confrontados com os índices do banco de dados desse motor de busca. Quando usamos o termo "como cozinhar um risoto", o buscador vai identificar o que pode ser devolvido para ele.
+
+O termo "como cozinhar um risoto" vai ser quebrado palavra por palavra para que o motor de busca identifique o que dentro dele pode ter mais ou menos relevância. Geralmente, preposições e artigos como "o", "a", "um", "uma" e seus plurais possuem pouca relevância e são descartados da busca. Dessa forma, sobraram "como", "preparar" e "risoto" com alta relevância.
+
+
+
+Quando o resultado é devolvido, os termos encontrados nas páginas são mostrados para nós em negrito. Quando esse termo importante é encontrado dentro da página, ele é uma palavra-chave. Ou seja, na figura figBuscaCozinharRisoto, ele encontrou a palavra-chave risoto no endereço da página (URL) e também encontrou as palavras-chaves cozinhar e risoto dentro do seu conteúdo.
+
+O fato de a página conter essas palavras-chaves, seja na URL, seja no seu conteúdo, as torna minimamente relevante nesse assunto. Claro, como já vimos e ainda vamos ver muito mais durante o curso, existem outros fatores que influenciaram para que esses resultados aparecessem primeiro, mas, com certeza, a existência das palavras-chaves dentro da página foram primordiais.
+
+Outro ponto a que podemos prestar bastante atenção na figura figBuscaCozinharRisoto é que a existência da palavra-chave na URL também tem importância. Teremos ainda uma longa discussão sobre como projetar as URLs dos seus sites, mas essa já é uma dica do que está por vir.
+
+Má prática: Keyword Stuffing
+Há algum tempo atrás, quando os webmasters descobriram que as palavras-chaves tinham papel fundamental para que seu site aparecesse no resultado de buscas, uma prática comum era repetir várias vezes a palavra-chave no texto, a fim de fazê-la se tornar mais relevante naquele assunto. Essa é uma prática chamada keyword stuffing.
+
+Ou seja, era muito comum ver sites com textos como:
+
+-- "Para você fazer um risoto, você precisa comprar o arroz para risoto. O primeiro passo para fazer o risoto é derreter a manteiga na panela onde fará o risoto."
+
+Em apenas duas frases, eu consegui fazer a palavra risoto aparecer quatro vezes. Se nesse pequeno trecho a leitura já é horrível, imagine um site inteiro assim? Impossível de ler e não querer encher o autor do texto de xingamentos.
+
+Justamente para combater isso (e outras más práticas), em abril de 2012 o Google lançou uma atualização chamada Penguin, que possuía diversos ajustes no algoritmo para combater o webspam, ou seja, sites que usam brechas para fazer conteúdo ruim e irrelevante e ainda assim conseguirem se manter no topo das buscas.
+
+Atualmente, se você quer mostrar que sua página é importante em determinado assunto, não é necessário repetir a palavra-chave várias vezes pela sua página. Na prática, ela aparecer duas ou três vezes é suficiente. Após isso, ela passa a quase não ter importância e caso a repetição seja excessiva, sua página pode ser penalizada, sendo até retirada do índice do Google.
+
+Agora que sabemos que as palavras-chaves são os termos relevantes que aparecem dentro do nosso site e de nossas páginas; e que não devemos fazer keyword stuffing, como sei quais palavras-chaves devo usar para o meu site?
+
+
 
