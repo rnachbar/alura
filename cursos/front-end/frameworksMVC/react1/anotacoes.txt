@@ -1,0 +1,795 @@
+##### 1. Criando e configurando o projeto #####
+
+### Instalação React App ###
+
+https://github.com/facebookincubator/create-react-app
+npm install create-react-app
+cd node_modules
+cd .bin
+create-react-app cdc-admin
+cd cdc-admin/
+npm start
+
+Bem-vindo ao curso de React. Meu nome é Alberto Souza, vou estar com vocês apresentando este Framework tão famoso no mundo JavaScript.
+
+Você pode se perguntar: "Por que eu vou usar o React?". A grande vantagem é que ao usá-lo, você facilitará a construção, a manipulação e a atualização do estado da sua tela.
+
+Cadastro de livro
+
+Nosso projeto terá um cadastro com dois cruds, um de "Autores" e outro de "Livros".
+
+Neste primeiro curso, veremos o básico do React para que depois você consiga criar as suas aplicações. Nos próximos cursos veremos as tecnologias adjacentes a esse Framework - que foi criado pelo Facebook e é focado em construir uma View.
+
+Veremos como construir a seguinte tela.
+
+Autores
+
+Após preenchermos os campos e enviarmos os dados, o estado ficará em branco novamente e a tabela abaixo será atualizada.
+
+Autores II
+
+São recursos que podem ser úteis em aplicações de dashboard, por exemplo, em que muitos elementos podem ser atualizados na tela. O React facilitará a nossa vida!
+
+Precisaremos realizar ações semelhantes na página de cadastro de livros.
+
+Livros
+
+A nossa aplicação será composta por uma única tela, após carregarmos o arquivo index.html, a partir dali não daremos mais reload. Isto é o que chamamos de Single Page Applicantion (SPA), que são aplicações com uma única página.
+
+Nossa recomendação é que neste curso, você foque em aprender o básico de React, a navegação, a comunicação entre os componentes e aproveitar bem o que o Framework te oferece. Não se preocupe em conhecer os vários frameworks adjacentes, vamos aprender primeiramente o que é essencial.
+
+A nossa aplicação do Front-End irá consumir informações do Back-end, sendo está outra vantagem do React.
+
+Nós vamos disponibilizar um arquivo .jar, que contem o projeto em Java já pronto e você poderá executá-lo na sua máquina.
+
+Ao rodarmos localmente, não veremos os dados dos outros alunos e teremos a garantia de que a aplicação estará no ar. Você encontrará explicações mais detalhadas aqui!
+
+Com a API pronta poderemos cadastrar os autores e livros.
+
+Espero que você embarque nesta aventura e aprenda como trabalhar com o Framework mais famoso do mercado JavaScript atualmente. Ele é bastante útil!
+
+Assista aos vídeos e resolva os exercícios, caso tenha alguma dúvida, acesse o nosso fórum.
+
+Mais adiante, veremos como fazer as instalações necessários para que a aplicação funcione e para que seja possível rodar o React.
+
+Vimos como será nossa aplicação, agora montaremos o ambiente inicial para termos o "Hello World" funcionando.
+Eu aconselho que você faça o download do arquivo JAR e rodá-lo sempre localmente. Pode ser que a aplicação saia do ar em algum momento e você não ficará dependente do nosso suporte.
+
+Primeiramente, vamos fazer funcionar o React versão para Front-End.
+
+O React é uma biblioteca do Facebook e podemos baixá-lo no seu Github.
+
+React Download
+
+Qual foi a motivação do Facebook para criar o React? Nós queremos manter ou alterar o estado dos componentes da nossa aplicação. Mas no Facebook, eles precisam trabalhar com diferente notificações no menu visualizado pelo usuário.
+
+Aula1_Menu Facebook
+
+Eles precisam gerenciar muita coisa na tela e o React é ótimo para isto!
+
+Às vezes também o time precisa trabalhar com diferentes pontos de acesso do Back-End, não é necessário criar três aplicações diferentes. Você criará uma que devolve um formato de dados que pode ser lido por diferentes aplicações. Por exemplo, no nosso caso estamos retornando um JSON.
+
+Json
+
+Com este formato, podemos consumi-lo em uma aplicação Android ou iOS, por exemplo, ambas criadas com o React. Quando trabalhamos com JSON - um formato bastante conhecido - você tem a opção de trabalhar com diferentes clientes.
+
+Em seguida, vamos começar a montar a nossa configuração. É possível baixar manualmente o React versão 15.3.1..
+
+Download React2
+
+Você tem a opção de fazer o download do react.js (com a core do framework) e react-dom (que permite manipular os elementos da página).
+
+No entanto, no curso iremos seguir o que o Facebook nos sugeriu fazer: eles criaram um projeto que se chama create-react-app e que nos permite criar uma aplicação com React muito rapidamente. Com ele não precisaremos nos preocupar com as configurações do React. Às vezes você tem o interesse de trabalhar com ECMAScript 6 ou um transpiler.
+
+Neste curso, consideramos que você já tem um conhecimento de JavaScript. Recomendamos que você faça também o curso de JavaScript Avançado I<), você pode aprender mais sobre ECMAScript 6.
+Para que o usuário não se precisasse se preocupar com isso, tudo já foi configurado . No fim do curso, temos um vídeo em que veremos como instalar o React e fazer as configurações manualmente.
+
+Então, eu recomendo que você tenha o create-react-app para seguirmos.
+
+Este é um projeto com um código JavaScript de Back-End escrito do lado do servidor, por isso, precisaremos ter instalado também o Node.js, versões posteriores à versão 4 LTS.
+
+Node.js
+
+Se já tivermos instalado, podemos descobrir qual versão estamos usando o comando node -v. Na minha máquina, eu estou usando a versão v4.2.3.
+
+Alura-Azul:alberto alura$ node - v
+v4.2.3
+Alura-Azul:alberto alura$
+Precisaremos do Node para usarmos o create-react-app, não iremos desenvolver efetivamente uma aplicação de back-end com JavaScript.
+
+Você encontrará os passos para a instalação do Node.js clicando aqui.
+Com o Node.js instalado, faremos um teste no terminal se ele foi instalado e se o npm - a ferramenta de execução de script prontos - está disponível.
+
+Alura-Azul:alberto alura$ node - v
+v4.2.3
+Alura-Azul:alberto alura$ npm -v
+3.8.3
+Com os dois instalados, chegou o momento de adicionarmos o create-react-app.
+
+create-react-app
+
+Vemos que devemos escrever a seguinte linha no terminal:
+
+npm install -g create-react-app
+O -g gera uma instalação global na sua máquina. Mas eu segui uma outra opção, criei um pasta chamada alberto e vou usá-la como inicio dos código JavaScript. Para instalação, vou usar o seguinte comando:
+
+Alura-Azul:alberto alura$ npm -v
+3.8.3
+Alura-Azul:alberto alura$ pwd
+/Users/alura/Documents/alberto
+Alura-Azul:alberto alura$ npm install create-react-app
+Então, o create-react-app será instalado. Após a instalação, será criada a pasta node_modules e dentro dela, a pasta .bin.
+
+Aula 1_Instalação Node
+
+Depois, vamos adicionar a seguinte linha:
+
+Alura-Azul:alberto alura$ ./node_modules/.bin/create-react-app
+Estamos fazendo desta forma, porque não fizemos a instalação global. Se o -g foi usado anteriormente, você rodará apenas o create-react-app.
+
+Alura-Azul:alberto alura$ create-react-app
+Meu conselho é que você faça com o .bin forma, porque desta forma você terá controle do create-react-app usada e não precisará em ficar atualizando essa informação.
+
+Agora, criaremos o cdc-admin.
+
+Alura-Azul:alberto alura$ ./node_modules/.bin/create-react-app cdc-admin
+Será feita a instalação de todas as depedências que o create-react-app fará o download. Já virá o Babel, WebPack. Agora, se precisamos usar o código de ECMAScript 6, que não funcionará no navegador, teremos que ter o suporte dentro do Node.js. Nós precisamos que o código seja transcrita para uma versão que o Node suporte - neste ponto, será útil o Babel, que será o responsável por fazer esta compilação. Porém, ele irá gerar um código final que terá um monte de coisas de Back-End e JavaScript. Ele então, precisará do WebPack. A configuração não é algo trivial. Ela tomará bastante tempo, então, ao eliminar esta parte do processo, o React facilitará bastante.
+
+Após alguns minutos de instalação, será criado um servidor local para você subir sua aplicação JavaScript,
+
+Aula 1_instalação react 2
+
+Você também terá a opção de empacotar a aplicação para disponibilizá-la para o deploy.
+
+Vamos entrar no cdc-admin e depois, rodaremos a aplicação.
+
+Alura-Azul:alberto alura$ cd cdc-admin/
+Alura-Azul:cdc-admin alura$ npm start
+
+> cdc-admin@0.1.0 start /Users/alura/Documents/alberto/cdc-admin
+> react-scripts start
+Após subi-la, o nosso projeto estará criado.
+
+Welcome to React
+
+Importante: O Facebook não criou uma ferramenta para ser customizável. Eles incluíram apenas o que acreditam ser suficiente para o desenvolvimento de uma aplicação. Então é necessário seguir alguma convenções.
+
+Vamos abrir o cdc-admin no Sublime - você poderá utilizar outro editor de texto. Veremos que foi criada uma pasta chamada src, nela encontraremos o arquivo index.html com o código fonte.
+
+Aula 1_index html
+
+Este é um arquivo obrigatório. O servidor local que será configurado entende que o ponto de entrada da aplicação é o index.html. Não é possível modificar esta condição.
+
+O código-fonte que chegará no navegador, terá incluído uma modificação no arquivo, ao inserir uma chamada para o arquivo JS gerada pelo webpack. Podemos ver isso na seguinte linha localizada no fim:
+
+<script type="text/javascript" src="/static/js/bundle.js">
+Dentro do arquivo bundle.js encontraremos o CSS, além diversas bibliotecas JS e as classes que serão usadas. Ele também assumirá que foi criado um arquivo chamado index.js, em que encontraremos código de ECMAScript 6.
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import './index.css'
+Nós veremos um pouco sobre o assunto, mas você encontrará mais sobre o assunto nos curso de JavaScript Avançado da Alura. Observe que encontraremos a informação de que o arquivo index.css foi importado. O responsável por disponibilizar isso é o Webpack.
+
+Temos também um trecho com código do React:
+
+ReactDOM.render(
+  <App />
+  document.getElementById('root')
+);
+Nós veremos isso detalhadamente mais adiante. Outro ponto que iremos ver é o uso do JSX, um JavaScript que tem suporte a XML declarado dentro do código.
+
+Então, esta é a estrutura que trabalharemos. O Hello World já está funcionando, entenderemos mais adiante o que foi feito e depois, iremos deixá-lo com a cara da nossa aplicação.
+
+Já subimos a nossa aplicação, configurou o ambiente, falamos do Node.js e do npm. Também usamos o create-react-app para criar a nossa aplicação. Mas antes de começarmos a modificar o Hello World, vamos rever o que foi gerado, para não termos a impressão de que tudo foi criado magicamente.
+
+Com o comando npm start vamos subir a aplicação. Ao usarmos o create-react-app, ele trouxe um servidor simples que subiu o nosso HTML rapidamente. Desta forma, tornou-se possível acessá-lo usando uma porta.
+
+Outro ponto é que quando rodamos o npm start, ele executara um comando. Quando criamos um projeto que rodará dentro do Node e usa o npm, automaticamente, será gerado um arquivo chamado package.json que terá as explicações do seu projeto.
+
+{
+  "name": "cdc-admin",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.3.1"
+  },
+  "dependencies": {
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "built": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/react-scripts/config/eslint.js"
+  }
+}
+Temos o nome do projeto, a versão, as dependências que declaramos do projeto. Iremos analisar uma propriedade do arquivo chamada scripts e dentro, uma que chama start. Quando executarmos npm start no Terminal, ele deve executar o comando react-scripts start.
+
+O create-react-app criou a pasta node_modules e podemos ver que uma grande quantidade de itens foi configurado.
+
+Node_module
+
+Dentro da pasta da pasta react-script, encontraremos a bin, que quando selecionada, veremos react-scripts.js. O arquivo executará os comandos necessários para o create-react-app, podemos ver que ele chamará o node.
+
+var result = spawn.sync(
+  'node',
+  [require.resolve('.../scripts/' + script)].concat(args),
+  {stdio: 'inherit'}
+);
+Outro ponto que você deve observar está no arquivo index.js.
+
+ReactDOM.render(
+  <App />
+  document.getElementById('root')
+);
+A linha <App /> é uma marcação XML, que se fosse simplesmente declarado no código JS não seria válido.
+
+Com o React, nós escrevemos uma linguagem escrita sobre JS. Nós utilizamos a linguagem JSX que nos permite usar marcações XML.
+
+JSX github
+
+Porém, o seguinte trecho do App.jstambém não seria válido dentro de um componente do React.
+
+  <div className="App">
+    <div className="App-header">
+      <img src={logo} className="app-logo" alt="logo" />
+      <h2>Welcome to React</h2>
+    </div>
+    <p className="App-intro">
+      To get started, edit <code>src/App.js</code> and save to reload.
+    </p>
+  </div>
+Precisamos conseguir transformar este código não válido, para outro em JS que seja aceito.
+
+Babel j
+
+O Babel que está é instalado juntamente com o create-react-app é o Babel, um compilador (ou um transpiler) de código fonte JavaScript.
+
+Neste caso, ele pegará um código escrito com ECMAScript 6, que ainda só é exportada pelo Node.js, e irá suportar a sintaxe inválida do JS. Precisaremos usar o Babel, no entanto, na última versão do mesmo, ele vem puro. Isto significa que se você quer que as chamadas do JSX sejam convertidas em de React, precisaremos de um plugin do React chamado JSX transform. No site, vemos o exemplo de uma entrada e saída de um código:
+
+Aula 1_Babel entrada e saida
+
+Seria desanimador ter que escrever este código.
+
+O Babel também nos ajudará a escrever classes, usando herança, graças aos imports da versão mais nova do JS.
+
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+      </div>
+    );
+  }
+}
+export default App;
+Nós podemos declarar uma biblioteca e importar os módulos expostos por esta. Todas estas features não funcionariam automaticamente dentro do Node.
+
+Vamos conhecer a utilidade de outro plugin do Babel: ES2015 preset.
+
+Aula 1_ES2015
+
+Com ele, podemos fazer diversas conversões para versões antigas do JS. Este é outro plugin que já vem configurado com o create-react-app. Ele ainda possui um script que ficar verificando se existem falhas no nosso código. Veja o que aconteceria se esquecêssemos de fechar a <div>.
+
+Aula 1_Failed to compile
+
+Observe que ele apontou a falha de compilação no console.
+
+Apenas esses benefícios já fariam valer a pena usar o create-react-app, porém, mais adiante conheceremos outros benefícios. Veremos como o seguintes imports serão suportados:
+
+import logo from './logo.svg';
+import './App.css';
+Conheceremos bem o que é feito pelo framework e ver que as coisas não acontecem magicamente no nosso código.
+
+No vídeo anterior comentamos sobre o JSX, o Babel e outros elementos que vieram incorporado pelo create-react-app e que não seriam tão fáceis de serem configuradas manualmente. Encontramos alguns itens na versão mais nova do JavaScript no nosso código.
+
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import "./App.css";
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+      </div>
+    );
+  }
+}
+export default App;
+Lembre-se que se você não domina ainda JavaScript Avançados, temos uma série de cursos na Alura!
+Então, nós temos a sintaxe de import. Está é uma das maiores vantagens do React, ele permite criar boa parte do código usando sintaxe que será suportada, por exemplo, pelo Babel. Mas o diferencial é que instalamos o React como módulo do Node.Js - não foi necessário baixar o JavaScript. Após a importação, o seu código já funcionará "magicamente" no navegador.
+
+Vamos ver o que o create-react-app teve que configurar:
+
+
+
+No entanto, o HTML que roda no navegador não é o mesmo que está no arquivo index.html. A seguinte linha no fim do script recebeu uma alteração.
+
+<script type="text/javascript" src="/static/js/bundle.js"></script></body>
+Ele adicionou o bundle.js, arquivo JS que foi gerado e possibilita que a sua aplicação funcione no navegador. Iremos nos aprofundar mais no assunto.
+
+O Babel irá transformar boa parte do código em JS que irá rodar no Node.Js. Os imports que vimos no nosso código não irão ser usados no navegador. Na versão mais atual do JavaScrit, é possível importar módulos, funções e classes.
+
+Você pode ver mais visitando a página do Mozilla Develloper Network e ir na seção Export.
+Mesmo que o código do index.html seja convertido pelo Node, que não funcionará no navegador. No código teremos que importar logo.svg, que não é suportado em nenhuma versão do JS.
+
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import "./App.css";
+Observe que importamos CSS em um arquivo JS, tudo isso seria impossível, mas nós conseguiremos que ele funcione.
+
+Um detalhe ainda não citado, como estamos usando o JSX, a definição das classes que queremos no nosso HTML, precisam estar acompanhadas do className:
+
+<div className="App">
+  <div className="App-header">
+    <img src={logo} className="App-logo" alt="logo" />
+    <h2>Welcome to React</h2>
+  </div>
+  <p className="App-intro">
+    To get started, edit <code>src/App.js</code> and save to reload.
+  </p>
+</div>
+Isto acontece, porque class se tornou palavra reservada do JavaScript. Podemos notar outros pontos que deveriam impedir o funcionamento, como os imports de módulos que estão na parte do navegador, mas deveriam estar na parte de Back-End. O responsável pela "mágica" é o Webpack.
+
+
+
+Ele irá converter tudo que escrevemos e não deveria rodar no navegador, como podemos ver no diagrama abaixo:
+
+
+
+Ele irá pegar o SVG e o CSS e colocará no bundle.js. Você pode analisar todo o contudo gerado no arquivo, mas é um código gerado pela ferramenta. A sugestão é que você entenda que o código foi gerado pelo Webpack, mas compreender cada uma das linhas não é importante (a menos que você tenha o desejo de desenvolver plugins para o Webpack ou Babel).
+
+Então, precisamos saber que apenas o Babel não faria o código funcionar no navegador. Uma outra opção além do create-react-app é a ferramenta chamada Browserify.
+
+
+
+Ele é usado com o mesmo objetivo que o Webpack. É provável que no futuro, ferramentas como estas que apresentamos não sejam mais necessárias e os navegadores conseguiram suportar as versões mais atuais do JavaScript.
+
+Então, aproveite para visitar o site do Mozilla e pesquise sobre como importar e exportar um módulo. No nosso projeto, dentro do arquivo React.js, vemos que está sendo exportado o React:
+
+ module.exports = React;
+O Webpack irá englobar tudo isso e colocar no arquivo bundle.js.
+
+Antes de seguir para a próxima aula, dê uma olhada no projeto na aplicação. Nós ainda criaremos outras classes e nos aprofundaremos no React. Conheceremos elementos mais específicos no decorrer do curso. Aproveite e faça os exercícios!
+
+Durante a aula debatemos alguns motivos para uma empresa decidir criar uma aplicação usando uma tecnologia como o React, que favorece a construção de Single Page Applications(aplicações que possuem uma página só). Assinale a alternativa que contém todas opções discutidas.
+
+Separação de times, reaproveitamento de API's e telas com muitos pontos de atualização
+
+Quando você decide construir uma aplicação que vai ser inteiramente baseada em Javascript, HTML e CSS a primeira coisa que você ganha é um time super focado nesses itens. Claro que você pode possuir pessoas que dominem backend e frontend, mas não é incomum você ter pessoas com mais habilidade em um lado ou outro.
+O segundo ponto é que se a sua aplicação vai ser acessada por diferentes tipos de clientes, como: android, iOS, navegador ou uma aplicação terceira, você ficou obrigado a disponibilizar os dados em um formato diferente de respostas HTML. O formato mais usado hoje em dia é o JSON e nesse caso frameworks Javascript se integram muito bem.
+
+O terceiro ponto é quando você possui telas que, em função de um evento, precisam ter alguns pontos atualizados. Quanto mais complexa é a tela, mais complicado isso fica. O React deixa esse tarefa consideravelmente mais simples. Você vai atualizar uma informação e vai avisar a ele que agora uma atualização é necessária.
+
+Pode ser que seu projeto decida usar o React pelos três motivos, ou talvez até por apenas um. Apenas lembre que é importante você usar a ferramenta por conta de uma necessidade específica.
+
+Lembre que você precisa ter o Node.js instalado na sua máquina, assim como o NPM, para poder subir o projeto usando o Create React App. Como estamos usando apenas a versão client do React, aquela produzida para ser usada no navegador, isso não é necessariamente obrigatório, mas a sua utilização facilita, e muito, a nossa configuração. Evita que tenhamos que configurar ferramentas para compilar ES6 para ES5 por exemplo. Além disso, instalamos as libs Javascript do nosso projeto como dependências do Node e tudo já fica disponível para que possamos usar nos nossos arquivos(veremos isso). Tudo isso através do webpack, que é a ferramenta de build escolhida por eles.
+
+Por qual motivo não podemos criar outro arquivo para ser o inicio da aplicação, que não seja o index.html?
+
+Posso criar os arquivos html que eu quiser, mas apenas o index.html vai ser processado e modificado pelo servidor
+
+A ideia é que a gente não tenha que se preocupar com nenhuma configuração. O index.html é o arquivo padrão do mundo para ser o ponto de entrada de uma aplicação web. Por esse motivo, o React Create App estabeleceu essa configuração padrão e que não pode ser modificada, a não ser que você não queira mais que ele gerencie o seu projeto.
+
+Passos para a instalação do Node
+Acesse https://nodejs.org/en/
+Clique no botão de dowload para a versão 6.X do Node.
+Você também pode acessar o menu downloads, em cima da página e escolher uma opção específica.
+Siga os passos do instalador
+Também existe uma explicação no curso de Node => https://cursos.alura.com.br/course/node-js/section/1/task/8
+Instalação do create-react-app
+Escolha uma pasta de sua preferência e crie, dentro dela, uma outra pasta chamada projetos-javascript
+Execute o comando npm install create-react-app@0.5.0, caso esteja no mac ou linux. Está usando windows? Leia a próxima opção.
+No windows, depois de instalado local, o create-react-app apresentou um erro na hora da criação do projeto. Então, para evitar dores de cabeça, instale ele global na sua máquina com o comando npm install -g create-react-app@0.5.0 .
+Observação importante
+Caso você opte por instalar uma versão mais nova do create-react-app e, consequentemente uma versão mais nova do react, pode ser que apareça uma mensagem de warning no seu projeto.
+
+Warning: Accessing PropTypes via the main React package is deprecated. Use the prop-types package from npm instead.
+Warning: RouterContext: React.createClass is deprecated and will be removed in version 16. Use plain JavaScript classes instead. If you're not yet ready to migrate, create-react-class is available on npm as a drop-in replacement.
+Fique tranquilo, essa mensagem está dentro do react e não atrapalha o seu desenvolvimento.
+
+Criação do nosso projeto e execução do Hello World
+De dentro da pasta projetos-javascript, execute o comando ./node_modules/.bin/create-react-app cdc-admin
+Está no Windows e tentou instalar local? Então, para criar o projeto, execute assim: node node_modules/.bin/create-react-app cdc-admin
+Está no Windows e instalou global? Então, para criar o projeto, execute assim: create-react-app cdc-admin
+Acesse a pasta do projeto que acabou de ser criado, o cdc-admin, e execute o comando npm start
+Abra seu navegador e acesse o endereço http://localhost:3000
+Download do jar para rodarmos a api localmente
+Você pode fazer o download do arquivo seguindo o link http://bit.ly/jar-api-curso-react . Lembrando apenas que vamos usá-lo um pouco mais para frente, quando formos implementar a listagem dinâmica.
+
+Código da API que vai ser consumida pela nossa aplicação
+O código de Back-end da API que vai ser consumida pela aplicação está disponível em https://github.com/alberto-alura/cdcadmin-api.
+
+##### 2. Definindo a estrutura do html do cadastro de autor #####
+
+Nós já conseguimos importar o projeto, mostramos um pouco de tudo que o create-react-app pode fazer. Ele trouxe parte do Webpack que pegou o nosso código escrito para Node.js e transformou em um código que pudesse rodar no navegador. Usamos também o Babel que fez as transformações de JSX para códigos válidos.
+Agora, vamos começar a deixar a aplicação com a cara que desejamos. Usaremos um projeto que tem vários CSS prontos, chamado Pure CSS - mais simples que o Bootstrap.
+
+Pure CSS
+
+O projeto é bastante simples, usaremos um layout semelhante ao do Pure CSS, teremos a navegação no menu da lateral esquerda, enquanto o cadastro estará no conteúdo central da página.
+
+Primeiramente, faremos o download do arquivo .zip do Pure CSS. Você encontrará explicações clicando aqui. O site também oferece o CSS de estilos prontos, nós aproveitaremos o Responsive Side Menu.
+
+Aula 2_Pure Css Responsive Side Menu 
+
+Os arquivos serão salvos na pasta Downloads.
+
+Pasta de Dwnloads
+
+Queremos entrar na pasata pure-release-0.6.0 e depois, selecionar o pure-min.css.
+
+pure min
+
+Vamos voltar para o Terminal. Lembrando que todos os arquivos referentes ao código-fonte, guardaremos no src.
+
+Vamos criar uma nova pasta css.
+
+Alura-Azul: src alura$ pwd
+/Users/alura/Documents/alberto/cdc-admin/src
+Alura-Azul:src alura$ mkdir mkdir css
+Depois, navegaremos dentro dessa pasta.
+
+Alura-Azul: css alura$ pwd
+/Users/alura/Documents/alberto/cdc-admin/src/css
+Alura-Azul:css alura$ cp ~/Downloads/pure-release-0.6.0/
+Em seguida, vamos entrar e copiar o pure-min.css.
+
+Alura-Azul:css alura$ cp ~/Downloas/pure-release-0.6.0/pure-min.css
+Após fazermos a cópia, navegaremos para layouts.
+
+Alura-Azul:css alura$ cp ~/Downloads/pure- .
+pure-layout-side-menu/     pure-release-0.6.0/
+pure-layout-side-menu.zip  pure-release-0.6.0.zip
+Alura-Azul:css alura$ cp ~/Downloads/pure-layout-side-menu/css/layouts/side-menu.css .
+Alura-Azul:css alura$
+Vamos copiá-lo igualmente.
+
+Alura-Azul:css alura$ ls -l
+total 56
+-rwxr-xr-x@ 1 alura  staff   17286 Sep 5 15:38 pure-min.css
+-rwrr-xr-x@ 1 alura  staff    5016 Sep 5 15:38 side-menu.css
+Alura-Azul:css alura$
+Agora, copiamos os dois arquivos CSS. Até o momento, estamos importando um arquivo App.css, que já existia desde que baixamos o create-react-app.
+
+App css
+
+Mas não queremos usar este arquivo.
+
+Este importe de CSS só será possível, porque o Webpack transforma o CSS em um código JS. Na documentação do JavaScript não existe nenhuma especificação que nos permita importar CSS.
+
+O arquivo que queremos importar é o pure-min.css.
+
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './css/pure-min.css';
+import './css/side-menu.css';
+Observe que também importaremos o arquivo side-menu.css.
+
+Para verificarmos se tudo corre bem, podemos usar o comando start na pasta padrão. Ele subirá o projeto, e irá inicializá-lo no servidor de desenvolvimento.
+
+Compilado com sucesso
+
+Agora, que já temos o CSS importado, vamos começar a brincar com o React. Nós já citamos que ele é muito utilizado para a construção de páginas e seus componentes. Vimos também que com ele podemos escrever HTML, dentro do JS. Vamos voltar para o nosso arquivo HTML e apagar o extenso comentário que havia nele. Observe que temos uma div de marcação: id="root". Ele irá procurar automaticamente o index.js dentro da pasta src. Depois, ele importará itens do React. Temos dois módulos baixados: react e o react-dom.
+
+Você também teria a opção a opção de baixar o React e criar manualmente a estrutura. Nós pulamos esta parte, mas no fim do curso veremos detalhadamente.
+
+Usando o create-react-app, nós estamos rodando o código basicamente usando o Node.js. Nele, nós instalamos módulos, que carregam classes expostas por estes. Existem dois módulos que vamos usar com maior frequência: o ReactDOM é uma classe que cria os elementos em memória e simula o DOM do seu navegador. Também precisaremos do módulo React, que permite criar novos componentes.
+
+No github do Facebook, vemos que é possível criar novos elementos diretamente. Vamos acessar a documentação que é bastante detalhada.
+
+criar elemento diretamente
+
+Nós vemos como poderíamos criar uma li ou uma ul, mas como usamos o JSX não foi necessário. Mas até aqui, estaríamos utilizado tags normais do HTML.
+
+Mas vamos consultar na documentação o que seria necessário para criar novos componentes.
+
+ReactComponents
+
+Vemos que a classe React tem um método chamado createClass, com ele podemos criar os nossos componentes.
+
+Se acessarmos o arquivo App.js, veremos que estamos criando um Component.
+
+class App extends Component{
+  render() {
+    return (
+      <div className="App>"
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+      </div>
+    );
+  }
+E além de importarmos o módulo React, faremos o import do Component que está dentro do módulo React do Node.js:
+
+import React, { Component } from 'react';
+Se vamos escrever o Component em classes, faremos o extends Component. Se formos usar a sintaxe do JavaScript mais antigo, será preciso invocar o método createClass e depois, passaremos as diversas funções que serão chamadas durante a construção da View. Por enquanto, a mais relevante é a função render().
+
+Vamos ver o render(), no arquivo index.js:
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+);
+Nós estamos importando o módulo App.
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import './index.css';
+Que exportará a si mesmo no fim do arquivo App.js.
+
+export default App;
+Como ele exporta por default não é preciso usar as chaves ({}) quando vamos importar no index.js.
+
+Já o Component não é o módulo default do react, precisamos especificar que queremos o Component no App.js.
+
+import React, { Component } from 'react';
+Nós importamos o módulo App, o que permite usar JSX que irá transformar a chamada de tag < App/> em React.createElement() passando como parâmetro o módulo. Vemos o que acontecerá por debaixo do pano, na documentação do React.
+
+documentação React.createElement
+
+O módulo App exportará a classe que herda de Component, como vimos no App.js.
+
+class App extends Component {
+}
+E então, a mágica começa a acontecer. Na DOM virtual será criado o seu componente.
+
+Agora, qual método será chamado na class App? O que será retornado pelo render(). Por isso, precisamos que ela esteja definida na nossa classe.
+
+Porém, nós queremos retornar outro HTML. Vamos no pure-layout-side-menu, depois em index.html e então, selecionaremos o layout padrão do código. A parte selecionada começará a partir da seguinte linha:
+
+<div id="layout">
+Copiaremos tudo, até o fechamento da <div>. Atualmente, o arquivo App.js, está assim:
+
+class App extends Component{
+  render() {
+    return (
+
+    );
+  }
+}
+ export default App;
+Em seguida, vamos colar o HTML copiado do index, logo após o return. Fizemos a proeza de usar código HTML em um arquivo de formato JavaScript. Se não pudéssemos fazer isto, nunca poderíamos usar o React.
+
+Mas se formos testar no navegador, teremos problemas com a compilação.
+
+falha na compilação
+
+Vemos na mensagem que o token é inválido. Esse comentário de HTML não é aceito. Se quisermos manter o comentário, teremos que fazer um código dinâmico, usando as chaves({}).
+
+  { /*Menu toggle*/}
+Criamos um comentário comum de JS. Ele já será aceito pelo navegador, mas faltaram coisas para serem alterados.
+
+Falha na compilação 2
+
+Ele apontou que falta fechar algumas tags. Vamos começar pela linha 52 que tem um <img>. Podemos ter um código XML no código JavaScript, mas para que ele seja válido precisamos fechar as tags.
+
+Depois, veremos um outro tipo de mensagem.
+
+Compiled with warning
+
+Este problema com o warning nós resolveremos mais adiante. É um caso de propriedade duplicada, então por enquanto, não veremos isso. Não é um erro, mas sim um aviso.
+
+Se testarmos a página no navegador, veremos que ela foi carregada...
+
+Previa pagina
+
+Mas sem o CSS. Isto aconteceu porque utilizamos o class para definir a classe dos elementos no arquivo App.js.
+
+<a href="#menu" id="menuLink" class="menu-link">
+Já explicamos que o class é uma palavra reservada do ECMAScript. No JSX, precisamos substituir por ClassName. Nós podemos usar o "Find > Replace" do editor ou fazer as alterações manualmente. A parte inicial do código ficará assim:
+
+import React, { Component } from 'react';
+import './css/pure-min.css';
+import './css/side-menu.css';
+
+class App extends Component {
+  render() {
+    return (
+<div id="layout">
+//...
+Lembre-se de que o JSX suporta marcação HTML, mas o atributo class das tags HTML já é uma palavra reservada.
+
+Observe que não substituímos a class do App, porque se trata da classe em si.
+
+Se rodarmos a página no navegador, já veremos que o CSS foi carregado.
+
+Pagina com css
+
+Até aqui começamos a mexer com o React, herdamos de Components, pedimos para ReactDOM renderizar. Nós adicionaremos o layout padrão do cadastro mais adiante.
+
+Agora que já conseguimos importar o pure-css, aplicamos o CSS do projeto e já adicionamos o componente do React funcionando, vamos deixar a tela central com o conteúdo do cadastro.
+Pagina com css
+
+Nós criamos um único componente, chamado App que está sendo utilizado pelo arquivo index.js. Trata-se de uma classe que herda de Component. Também implementamos o método render().
+
+Em seguida, queremos adicionar o nosso cadastro e não o conteúdo que visualizamos na parte central.
+
+Vamos começar fazendo algumas alterações no header. Depois, retiraremos a classe content, que contem o conteúdo atual da parte central da página.
+
+< div id="main">
+    <div className="header">
+        <h1>Home</h1>
+    </div>
+</div>
+Vamos alterar o número de itens do menu da lateral. Dentro da <ul>, deixaremos um <li> apenas para "Autores" e "Livros".
+
+<ul className="pure-menu-list">
+    <li className="pure-menu-item"><a href="#" className="pure-menu-link">Home</a></li>
+    <li className="pure-menu-item"><a href="#" className="pure-menu-link">Autor</a></li>
+    <li className="pure-menu-item"><a href="#" className="pure-menu-link">Livro</a></li>
+</ul>
+Agora, o nosso menu ficará assim:
+
+Menu com 3 itens
+
+Temos um Websocket rodando que o servidor do create-react-app fornece.
+
+websocket
+
+Tudo o que é alterado no editor, ele já publicará as mudanças.
+
+Para nossa primeira página de cadastro, vamos mudar o texto do <h1> para "Cadastro de autores".
+
+< div id="main">
+    <div className="header">
+        <h1>Cadastro de autores</h1>
+    </div>
+</div>
+Temos agora que adicionar o HTML do cadastro. Como suponho que este código não será uma novidade para você, foi disponibilizado nos exercícios (ou aqui o trecho referente ao código.
+
+Iremos copiar o código que começa a partir da linha <div id="main">, depois adicionaremos no arquivo App.js.
+
+Fique atento para não copiar divs a mais no fim.
+Se rodarmos no navegador, veremos os campos para o cadastro de autores.
+
+Cadastro de autores 2
+
+Ao clicarmos dentro dos campos e digitarmos os dados, eles serão enviados para a aplicação. Se tivermos problema de autenticação, o usuário precisa ver uma mensagem. E quando o dado for salvo, queremos que apareça na tabela abaixo com a listagem - que deverá ser dinâmica. No código atual, a listagem ainda é estática.
+
+Sem o JSX, teríamos que ser verdadeiros "guerreiros" para conseguir criar tudo o que planejamos fazer. O JSX é extremamente importante para os nosso projetos com o React.
+
+Mais adiante, o nosso cadastro já ganhará vida.
+
+Faça os exercícios e siga para a próxima aula!
+
+Usamos o create-react-app para facilitar a configuração da nossa aplicação. Ele já traz junto dele o Babel que é um compilador de código Javascript para Javascript, também chamado de transpiler. Por exemplo, podemos usar sintaxe suportada pelo ES6 e o JSX justamente por conta dele, que já veio configurado com os plugins necessários para essa compilação. Falando especificamente do JSX, qual o motivo da sua utilização?
+
+O JSX possibilita que utilizemos sintaxe de XML, HTML por exemplo, como se isso fizesse parte do Javascript
+
+Quando usamos o React, trabalhamos com os componentes que utilizam código HTML diretamente do código Javascript. Até poderia ser usado as funções do próprio React para isso, mas, como vimos, acabaríamos com um código complicado de ler. O JSX nos ajuda justamente nisso, permitindo que escrevamos código "html" que na verdade vai ser convertido para Javascript exigido pelo React. Por sinal, essa conversão só é possível porque já está habilitado o React JSX Transform, do Babel. Confira aqui => http://babeljs.io/docs/plugins/transform-react-jsx/
+
+Durante a apresentação do código gerado pelo create-react-app, vimos que foram usadas classes e imports de módulos. Assinale a alternativa que indica o(s) motivo(s) desse código funcionar no seu navegador.
+
+O react-create-app traz junto Babel e o webpack. Essas duas ferramentas, combinadas, possibilitam que todo o código ES6 seja transformado para um Javascript válido no navegador.
+
+O Babel é um famoso transpiler que tem a capacidade, utilizando plugins, de pegar o seu código fonte escrito na versão mais nova do Javascript(ES6) e transformá-lo num código da versão antiga do Javascript(ES5). Por exemplo, a versão recomendada de download do Node.js ainda não implementa todas as funcionalidades do ES6.
+Só que esse código Javascript gerado ainda é um código válido para o ambiente de servidor, por exemplo se você estiver usando um Node.js. Como o objetivo é que o código rode no navegador, precisamos de alguém para fazer uma segunda transformação, e é justamente aí que entra o Webpack. Ele vai transformar, por exemplo, as linhas de import de módulo JavaScript e CSS em um código válido no navegador. Como foi explicado no vídeo, essa transformação toda é "cuspida" no arquivo bundle.js.
+
+Deixe o servidor rodando
+Lembre sempre de deixar o seu servidor no ar, para que cada mudança já seja analisada e para que você possa ir analisando o resultado. Entre na pasta do projeto e, a partir do terminal, digite o comando npm start.
+
+Realizando o download do pure.css
+Primeiro passo é fazer o download do projeto base do pure. Acesse o link http://purecss.io/start/ e clique no link "download Pure".
+Agora precisamos fazer o download do css do template. Basta acessar o endereço http://purecss.io/layouts/side-menu/download .
+Trazendo o css para o nosso projeto
+Crie uma pasta chamada css, dentro do diretório src do nosso projeto.
+Faça a extração do zip do projeto base do pure.css e copie o arquivo pure-min.css para a pasta do css.
+Faça a extração do zip do projeto do template do pure.css. Dentro da pasta do template, existe o arquivo side-menu.css em css/layouts. Copie esse arquivo para a pasta css do nosso projeto.
+Alteração o arquivo App.js para aplicar o layout
+Abra o arquivo App.js e altere o conteúdo dele. O resultado deve ser o que segue abaixo:
+
+import React, { Component } from 'react';
+import './css/pure-min.css';
+import './css/side-menu.css';
+
+class App extends Component {
+  render() {
+    return (
+<div id="layout">
+
+    <a href="#menu" id="menuLink" className="menu-link">
+
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div className="pure-menu">
+            <a className="pure-menu-heading" href="#">Company</a>
+
+            <ul className="pure-menu-list">
+                <li className="pure-menu-item"><a href="#" className="pure-menu-link">Home</a></li>
+                <li className="pure-menu-item"><a href="#" className="pure-menu-link">Autor</a></li>
+                <li className="pure-menu-item"><a href="#" className="pure-menu-link">Livro</a></li>
+
+
+            </ul>
+        </div>
+    </div>
+
+        <div id="main">
+            <div className="header">
+              <h1>Cadastro de Autores</h1>
+            </div>
+            <div className="content" id="content">
+              <div className="pure-form pure-form-aligned">
+                <form className="pure-form pure-form-aligned">
+                  <div className="pure-control-group">
+                    <label htmlFor="nome">Nome</label> 
+                    <input id="nome" type="text" name="nome" value=""  />                  
+                  </div>
+                  <div className="pure-control-group">
+                    <label htmlFor="email">Email</label> 
+                    <input id="email" type="email" name="email" value=""  />                  
+                  </div>
+                  <div className="pure-control-group">
+                    <label htmlFor="senha">Senha</label> 
+                    <input id="senha" type="password" name="senha"  />                                      
+                  </div>
+                  <div className="pure-control-group">                                  
+                    <label></label> 
+                    <button type="submit" className="pure-button pure-button-primary">Gravar</button>                                    
+                  </div>
+                </form>             
+
+              </div>  
+              <div>            
+                <table className="pure-table">
+                  <thead>
+                    <tr>
+                      <th>Nome</th>
+                      <th>email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Alberto</td>                
+                      <td>alberto.souza@caelum.com.br</td>                
+                    </tr>
+                  </tbody>
+                </table> 
+              </div>             
+            </div>
+          </div>            
+
+
+</div>     
+    );
+  }
+}
+
+export default App;
+Caso você não queira escrever todo o código, você pode simplesmente copiar do endereço https://raw.githubusercontent.com/asouza/projeto-react-alura/d9d00c295949d4187771c766d46160d4d511b0af/src/App.js.
+
+Download do projeto pronto para continuar
+Caso você não queira ir implementando as modificações, você pode baixar o zip do projeto com o código necessário para avançar no curso. Acesse o endereço https://github.com/asouza/projeto-react-alura/releases/tag/aula_2 e baixe o zip. Depois de extrair o zip, entre na pasta e execute o comando npm install. Você vai precisar fazer isso para todos os stages.
+
+
+
