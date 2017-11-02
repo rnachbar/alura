@@ -3789,3 +3789,1551 @@ angular.module('alurapic')
     };
 });
 
+
+##### 8. Dados inconsistentes? Precisamos removê-los ou alterá-los! #####
+
+Temos dados inconsistentes, precisamos removê-los!
+Quem viu e quem vê nossa aplicação! O único problema é que temos dados inconsistentes cadastrados que precisam ser removidos, aliás, a funcionalidade de remoção é fundamental para o usuário, assim como poder alterar fotos já cadastradas. Vamos atacar primeiro a remoção, mas já aproveitaremos para adicionar o botão de edição.
+
+Vamos adicionar um link para o botão editar e um botão para o botão remover dentro da diretiva meu-painel, abaixo da diretiva minha-foto:
+
+<!-- public/partials/principal.html -->
+<!-- código anterior omitido -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <a class="btn btn-primary btn-block" href="">Editar</a>
+        <button class="btn btn-danger btn-block" >Remover</button>
+
+    </meu-painel>
+</div>
+Usamos um link para edição porque uma navegação será gerada e usamos botão para remoção porque a ação de remover manterá o usuário na mesma página.
+
+Sabemos que o Angular interage com a interface de eventos do JavaScript através de diretivas. Vamos adicionar a diretiva ng-click no botão "remover" que chamará a função remover em FotosController:
+
+<!-- public/partials/principal.html -->
+<!-- código anterior omitido -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <a class="btn btn-primary btn-block" href="">Editar</a>
+        <button class="btn btn-danger btn-block" ng-click="remover()">Remover</button>
+
+    </meu-painel>
+</div>
+Agora, vamos implementar em FotosController a função remover:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+    $scope.remover = function() {
+
+        // como saber qual foto será removida?
+    };
+});
+Sabemos que o click do botão remover chamará nossa função, mas qual foto deverá ser removida? Aquela que nossa função receber como parâmetro! Voltando para a view principal.htmL, passaremos foto como parâmetro de remover:
+
+<!-- public/partials/principal.html -->
+<!-- código anterior omitido -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <a class="btn btn-primary btn-block" href="">Editar</a>
+
+        <!-- novidade aqui! -->
+        <button class="btn btn-danger btn-block" ng-click="remover(foto)">Remover</button>
+
+    </meu-painel>
+</div>
+Lembre-se que a diretiva ng-repeat constrói nosso template, repetindo o elemento no qual foi adicionada para a quantidade de elementos da lista, e que podemos dar um apelido para termos acesso ao elemento, em nosso caso, usamos foto. Sendo assim, quando o usuário clicar em remover, nossa função receberá o objeto foto correspondente! Maravilha! Agora basta alterarmos nosso controller e utilizarmos $http.delete para apagarmos nosso foto no servidor. Já temos uma rota no servidor criada para tal tarefa com a seguinte estrutura:
+
+/v1/fotos/IDdaFotoQueDesejamosApagar
+Caso você trabalhasse em outra empresa, o endereço poderia ser diferente, o importante aqui é saber que o desenvolvedor front-end que não cria seu próprio back-end deve estar em sintonia com a equipe de back-end e solicitar os pontos de acesso. Ninguém fez curso "mãe Diná" para saber que endereços são esses!
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+    $scope.remover = function(foto) {
+
+        $http.delete('/v1/fotos/' + foto._id)
+        .success(function() {
+            console.log('Foto ' + foto.titulo + ' removida com sucesso!');
+
+        })
+        .error(function(erro) {
+            console.log('Não foi possível apagar a foto ' + foto.titulo);
+        });
+    };
+});
+Antes de testarmos, que tal exibirmos também em principal.html uma mensagem de sucesso ou erro de acordo com o resultado da operação? Simples, da mesma maneira que fizemos em foto.html:
+
+<!-- public/partials/principal.html -->
+
+<div class="jumbotron">
+    <h1 class="text-center">Alurapic</h1>
+</div>
+
+<!-- novidade aqui! -->
+<p ng-show="mensagem.length" class="alert alert-info">
+    {{mensagem}}
+</p>
+
+<!-- código posterior omitido -->
+Agora, vamos alterar nosso controller para exibir as mensagens no lugar de imprimi-las no console. Porém, quando temos uma mensagem de erro, esta sim, exibimos no console:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+    $scope.remover = function(foto) {
+
+        $http.delete('/v1/fotos/' + foto._id)
+        .success(function() {
+            $scope.mensagem = 'Foto ' + foto.titulo + ' removida com sucesso!';
+
+        })
+        .error(function(erro) {
+            console.log(erro);
+            $scope.mensagem = 'Não foi possível apagar a foto ' + foto.titulo;
+        });
+    };
+});
+E agora? O que falta? Testar!
+
+Removeu do servidor, mas continua exibindo
+
+Não removeu? Não se preocupe, a solução será performática
+Opa! Recebemos uma mensagem de sucesso dizendo que a foto com o título "Cachorrinho" foi removida, porém ela continua sendo exibida. E se recarregarmos a página?
+
+Lista atualizada após o recarregamento
+
+O problema é que quando removemos a foto do servidor, $scope.fotos ainda contém nossa foto. Podemos resolver isso facilmente solicitando novamente a lista de fotos do servidor, porém estaríamos realizando uma requisição extra e evitar o número de requisições é sempre uma boa ideia, ainda mais se o usuário estiver numa rede móvel de alta latência.
+
+Que tal removermos a foto da lista quando a operação de remoção for bem sucedida? Evitaríamos assim a requisição extra. Como $scope.fotos nada mais é do que uma array, podemos usar a tão conhecida função splice para remover a foto:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+    $scope.remover = function(foto) {
+
+        $http.delete('/v1/fotos/' + foto._id)
+        .success(function() {
+            var indiceDaFoto = $scope.fotos.indexOf(foto);
+            $scope.fotos.splice(indiceDaFoto, 1);
+            $scope.mensagem = 'Foto ' + foto.titulo + ' removida com sucesso!';
+
+        })
+        .error(function(erro) {
+            console.log(erro);
+            $scope.mensagem = 'Não foi possível apagar a foto ' + foto.titulo;
+        });
+    };
+});
+Agora, vamos remover o cavalo:
+
+Removendo foto e lista atualizada ao mesmo tempo
+
+Excelente, funcionou, inclusive a remoção foi animada (ngAnimate)! Agora podemos remover os dados inválidos que cadastramos durante nossos testes. Não estranhe se receber a mensagem foto undefined foi removida, porque existem fotos cadastradas sem título! Agora, precisamos atacar a edição fotos.
+
+Quero editar! Como chegar até minha foto?
+A estratégia de edição será a seguinte: quando o usuário clicar no botão editar, iremos para a parcial foto.html, porém enviaremos o ID da foto como parâmetro. Em FotoController, capturaremos este ID. Quando o ID for passado, buscaremos a foto através deste ID atualizando o $scope.foto com seus dados.
+
+O primeiro passo é registrarmos uma nova rota no Angular que saiba lidar com o ID da foto:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+    .config(function($routeProvider, $locationProvider) {
+
+        $locationProvider.html5Mode(true);
+
+        $routeProvider.when('/fotos', {
+            templateUrl: 'partials/principal.html',
+            controller: 'FotosController'
+        });
+
+        $routeProvider.when('/fotos/new', {
+            templateUrl: 'partials/foto.html',
+            controller: 'FotoController'
+        });
+
+        // novidade aqui! Nova rota!
+        $routeProvider.when('/fotos/edit/:fotoId', {
+            templateUrl: 'partials/foto.html',
+            controller: 'FotoController'
+        });
+
+        $routeProvider.otherwise({redirectTo: '/fotos'});
+
+    });
+Repare que registramos nossa nova rota da seguinte maneira:
+
+'/fotos/edit/:fotoId'
+No final da rota, usamos o curinga :fotoId que serve para duas coisas: indicar que a rota pode aceitar qualquer valor na posição do curinga e para indicar como teremos acesso ao parâmetro passado em nossos controllers. Veja também que estamos utilizando o mesmo controller e mesma view.
+
+Criando URLs dinamicamente
+Agora que já temos nossa rota cadastrada, vamos alterar o botão editar da nossa view parcial principal.html. Precisamos construir um endereço diferente para cada foto, levando em consideração seu ID. Isso é fácil, basta usarmos uma AE:
+
+<!-- public/partials/principal.html -->
+
+<!-- código anterior omitido -->
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <!-- novidade aqui! -->
+        <a class="btn btn-primary btn-block" href="/fotos/edit/{{foto._id}}">
+            Editar
+        </a>
+
+        <button class="btn btn-danger btn-block" 
+            ng-click="remover(foto)">
+            Remover
+        </button>
+
+    </meu-painel>
+</div>
+Depois de recarregarmos a página para que nossas alterações surtam efeito, quando clicamos em uma das fotos somos jogados para a view parcial foto.html, mas com a diferença de que o ID da foto é exibido como parte da URL:
+
+ID da foto como parte da URL
+
+Achei! mas onde estão os dados da foto?
+Excelente, mas ainda precisamos ter acesso ao ID da foto em FotoController para que possamos buscá-la em nosso servidor. Existe um serviço especializado do Angular que nos fornecerá este parâmetro, o $routeParams. Como qualquer serviço no Angular, ele é recebido como parâmetro na função que define nosso controller:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http, $routeParams) {
+        // código do controller omitido
+    });
+Como utilizar o serviço? Basta sabermos o nome do curinga que usamos em nossa rota e utilizá-lo como propriedade de $routeParams:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http, $routeParams) {
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            // busca a foto no servidor
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                $http.post('/v1/fotos', $scope.foto)
+                .success(function() {
+                    $scope.foto = {};
+                    $scope.mensagem = 'Foto cadastrada com sucesso';
+                })
+                .error(function(erro) {
+                    console.log(erro);
+                    $scope.mensagem = 'Não foi possível cadastrar a foto';
+                })
+            }
+        };
+
+    });
+Se o parâmetro foi passado, buscamos a foto no servidor através de $http.get. O importante é saber que receberemos na função passada para success a foto que buscamos. Mais uma vez o programador front-end precisa conhecer os endereços e os dados retornados, caso ele não tenha sido o responsável pelo back-end:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http, $routeParams) {
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            $http.get('/v1/fotos/' + $routeParams.fotoId)
+            .success(function(foto) {
+                $scope.foto = foto;
+            })
+            .error(function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                $http.post('/v1/fotos', $scope.foto)
+                .success(function() {
+                    $scope.foto = {};
+                    $scope.mensagem = 'Foto cadastrada com sucesso';
+                })
+                .error(function(erro) {
+                    console.log(erro);
+                    $scope.mensagem = 'Não foi possível cadastrar a foto';
+                })
+            }
+        };
+
+    });
+Dados da foto
+
+Ótimo! Agora, precisamos alterar a lógica de $scope.submeter para que consiga tomar uma ação diferente para inclusão e alteração de fotos. Na alteração, normalmente se usa o verbo HTTP PUT, é por isso que utilizaremos $http.put:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http, $routeParams) {
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            $http.get('/v1/fotos/' + $routeParams.fotoId)
+            .success(function(foto) {
+                $scope.foto = foto;
+            })
+            .error(function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                if($routeParams.fotoId) {
+
+                    $http.put('/v1/fotos/' + $scope.foto._id, $scope.foto)
+                    .success(function() {
+                        $scope.mensagem = 'Foto alterada com sucesso';
+
+                    })
+                    .error(function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível alterar';
+                    });
+
+                } else {                
+                    $http.post('/v1/fotos', $scope.foto)
+                    .success(function() {
+                        $scope.foto = {};
+                        $scope.mensagem = 'Foto cadastrada com sucesso';
+                    })
+                    .error(function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível cadastrar a foto';
+                    })
+                }
+            }
+        };
+
+    });
+Agora só nos resta testar. Vamos alterar o nome da foto e colocar uma descrição qualquer. Quando salvamos, recebemos a mensagem de sucesso:
+
+Foto alterada com sucesso
+
+E agora? Se clicarmos em "voltar', nossa parcial principal.html buscará as fotos novamente no servidor, inclusive a que alteramos:
+
+Listagem alterada
+
+Podemos ainda querer exibir o nome o título da foto que foi alterado. Para isso, basta realizar uma simples concatenação. Nosso código fica assim:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http, $routeParams) {
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            $http.get('/v1/fotos/' + $routeParams.fotoId)
+            .success(function(foto) {
+                $scope.foto = foto;
+            })
+            .error(function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                if($routeParams.fotoId) {
+
+                    $http.put('/v1/fotos/' + $scope.foto._id, $scope.foto)
+                    .success(function() {
+                        $scope.mensagem = 'Foto ' + $scope.foto.titulo + ' foi alterada';
+
+                    })
+                    .error(function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível alterar a foto ' + $scope.foto.titulo;
+                    });
+
+                } else {                
+                    $http.post('/v1/fotos', $scope.foto)
+                    .success(function() {
+                        $scope.foto = {};
+                        $scope.mensagem = 'Foto cadastrada com sucesso';
+                    })
+                    .error(function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível cadastrar a foto';
+                    })
+                }
+            }
+        };
+
+    });
+O que aprendemos neste capítulo?
+a diretiva ng-click
+deleção de recurso com $http.delete
+o truque com a função splice para evitar uma nova requisição
+rotas do Angular com curingas (parametrizadas)
+$routeParams e acesso a parâmetros
+alteração de recurso com $http.put
+único formulário para inclusão e alteração
+
+Sabemos que o Angular interage com a interface de eventos do JavaScript. Pensando nisto, qual das diretivas abaixo devemos utilizar para detectar o click do usuário em um botão e executar alguma função ?
+ng-click
+ 
+Correto! Para cada evento padrão do JavaScript, existe sua diretiva correspondente no mundo Angular. É claro, se novos eventos forem criados, a biblioteca core do Angular precisará ser atualizada para suportar esses eventos.
+
+
+Quando usamos o padrão REST, nossa API do servidor deve estar preparada para responder ao verbo DELETE, quando desejamos apagar um recurso, no caso da nossa aplicação, uma foto. Qual das opções abaixo apresenta sintaxe correta?
+
+$http.delete('v1/fotos/12')
+.success(function() {
+})
+.error(function(erro) {
+});
+ 
+Perfeito!
+$http.delete('v1/fotos/12')
+.success(function() {
+})
+.error(function(erro) {
+});
+
+Mesmo após apagarmos uma foto do nosso servidor, quando voltamos para página inicial ainda vemos seu painel, como podemos observar abaixo:
+Lista atualizada após o recarregamento
+
+Dado seu conhecimento em Angular, por que isto acontece? Pense um pouco a respeito!
+
+E aí? Lembra do porquê?
+A foto continua sendo exibida porque a lista de fotos no lado do cliente (navegador) não foi atualizada. Angular não fez "curso de adivinhação" para saber que deve atualizá-la. Uma solução é realizar uma nova consulta do servidor, que retornará a lista atualizada sem o elemento, porém estaríamos realizando mais uma requisição para o servidor. É uma boa prática, sempre que possível, evitar esse round trip até o servidor e neste caso, podemos evitá-lo conhecendo um pouco de JavaScript.
+
+O $scope.fotos nada mais é do que um array, podemos usar a tão conhecida função splice do JavaScript para remover a foto:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+    $http.get('/v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(erro) {
+        console.log(erro)
+    });
+
+    $scope.remover = function(foto) {
+
+        $http.delete('/v1/fotos/' + foto._id)
+        .success(function() {
+            var indiceDaFoto = $scope.fotos.indexOf(foto);
+            $scope.fotos.splice(indiceDaFoto, 1);
+            $scope.mensagem = 'Foto ' + foto.titulo + ' removida com sucesso!';
+
+        })
+        .error(function(erro) {
+            console.log(erro);
+            $scope.mensagem = 'Não foi possível apagar a foto ' + foto.titulo;
+        });
+    };
+});
+Conhecendo um pouco melhor a função:
+
+$scope.fotos.splice(indiceDaFoto, 1);
+`
+A função splice recebe dois parâmetros. O primeiro é o índice da posição que desejamos partir. Dado uma foto, conseguimos descobrir seu índice através da função do array indexOf, que recebe como parâmetro a foto. O segundo parâmetro de splice é a quantidade de elementos que desejamos remover, em nosso caso, apenas um.
+
+Do que adianta um cadastro se não podemos alterar nem remover dados? Neste exercício, implemente essas funcionalidades de acordo com o que foi explicado no capítulo. Passos gerais estão aqui para ajudá-lo nesta tarefa:
+1) Cada painel terá os botões Editar e Remover. Adicione uma âncora para o Editar e um botão para o Remover.
+
+2) O Editar deve ter em seu href o endereço para a rota /fotos/edit/, porém deve ser completada com o ID da foto. Use uma AE (Angular Expression) para isso. Já o botão Remover chamará a função remover em FotosController, com a diferença de que passará como parâmetro a foto que desejamos remover.
+
+3) Em FotosController, implemente a função remover. Ela deve fazer uso de $http.delete.
+
+4) principal.html também exibirá mensagens de sucesso ou fracasso para a operação de remoção. Adicione a marcação correspondente e faça as alterações necessárias em FotosController para que guarde corretamente as mensagens que serão exibidas na view. Use splice do array para remover o elemento de $scope.fotos, evitando assim uma requisição ao servidor.
+
+5) Com a remoção funcionando, hora de atacar a edição. O sistema de rotas do Angular ainda não possui uma rota para esta tarefa. Crie-a usando o padrão /fotos/edit/:fotoId. Tanto o controller quanto o template serão os mesmos usados para inclusão.
+
+6) Como usamos o mesmo controller e template da inclusão, nosso controller precisará saber se estamos incluindo ou alterando um formulário, para saber que ação tomar. Implemente essa funcionalidade e use $http.put para atualizar dados. Lembre-se do papel de $routeParams.
+
+Mãos à obra!
+
+Uma implementação válida é a seguinte:
+<!-- public/partials/principal.html -->
+
+<div class="jumbotron">
+    <h1 class="text-center">Alurapic</h1>
+</div>
+
+<p ng-show="mensagem.length" class="alert alert-info">
+    {{mensagem}}
+</p>
+
+<!-- código anterior omitido -->
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <!-- novidade aqui! -->
+        <a class="btn btn-primary btn-block" href="/fotos/edit/{{foto._id}}">
+            Editar
+        </a>
+
+        <button class="btn btn-danger btn-block" 
+            ng-click="remover(foto)">
+            Remover
+        </button>
+
+    </meu-painel>
+</div>
+FotosController:
+
+// public/js/controllers/fotos-controller.js 
+angular.module('alurapic').controller('FotosController', function($scope, $http) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+    $http.get('v1/fotos')
+    .success(function(retorno) {
+        $scope.fotos = retorno;
+    })
+    .error(function(error) {
+        console.log(error);
+    });
+
+    $scope.remover = function(foto) {
+        console.log('remover foto:');
+        console.log(foto);
+        $http.delete('v1/fotos/' + foto._id)
+        .success(function() {
+            var indiceFoto = $scope.fotos.indexOf(foto); // obtem o índice da foto que está sendo removida.
+            $scope.fotos.splice(indiceFoto, 1); // remove um elemento da lista de fotos de acordo com o índice da foto removida.
+            $scope.mensagem = 'Foto ' + foto.titulo + ' foi removida com sucesso.';
+        })
+        .error(function(erro) {
+            console.log(erro);
+            $scope.mensagem = 'Não foi possível remover a foto ' + foto.titulo;
+        });
+    };
+});
+O "super" foto-controller.js:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $http, $routeParams) {
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            $http.get('/v1/fotos/' + $routeParams.fotoId)
+            .success(function(foto) {
+                $scope.foto = foto;
+            })
+            .error(function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                if($routeParams.fotoId) {
+
+                    $http.put('/v1/fotos/' + $scope.foto._id, $scope.foto)
+                    .success(function() {
+                        $scope.mensagem = 'Foto alterada com sucesso';
+
+                    })
+                    .error(function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível alterar';
+                    });
+
+                } else {                
+                    $http.post('/v1/fotos', $scope.foto)
+                    .success(function() {
+                        $scope.foto = {};
+                        $scope.mensagem = 'Foto cadastrada com sucesso';
+                    })
+                    .error(function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível cadastrar a foto';
+                    })
+                }
+            }
+        };
+
+    });
+E a nova rota:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute'])
+.config(function($routeProvider, $locationProvider) {
+
+    $locationProvider.html5Mode(true);
+
+    $routeProvider.when('/fotos', {
+        templateUrl: 'partials/principal.html',
+        controller: 'FotosController'
+    });
+
+    $routeProvider.when('/fotos/new', {
+        templateUrl: 'partials/foto.html',
+        controller: 'FotoController'
+    });
+
+    // novidade aqui! Nova rota!
+    $routeProvider.when('/fotos/edit/:fotoId', {
+        templateUrl: 'partials/foto.html',
+        controller: 'FotoController'
+    });
+
+    $routeProvider.otherwise({redirectTo: '/fotos'});
+
+});
+
+##### 9. Tornando nosso cadastro ainda melhor! #####
+
+Já conseguimos adicionar, alterar e remover fotos, mas há uma informação que também precisamos cadastrar: cada foto pode pertencer a 3 grupos: esportes, lugares e animais. Uma maneira de forçarmos o usuário a escolher um desses grupos é usar uma combobox que, ao ser clicado, exibe todas opções possíveis. No mundo HTML usamos a tag select, onde cada uma das opções é representada pela tag option.
+
+Nossa primeira combobox!
+No lugar de deixarmos as opções fixas no HTML, montaremos nossa combobox dinamicamente pelo Angular com os dados retornados pelo endereço http://localhost:3000/v1/grupos. Já sabemos obter dados do nosso servidor com o serviço $http.get.
+
+Em primeiro lugar, vamos adicionar a marcação da nossa combobox em foto.html:
+
+<!-- public/partials/foto.html -->
+
+<div class="page-header text-center">
+    <h1>{{foto.titulo}}</h1>
+</div>
+
+<p ng-show="mensagem.length" class="alert alert-info">{{mensagem}}</p>
+
+<form novalidate name="formulario" class="row" ng-submit="submeter()">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Título</label>
+            <input name="titulo" class="form-control" 
+                ng-model="foto.titulo" required
+                ng-maxlength="20">
+            <span ng-show = "formulario.$submitted && formulario.titulo.$error.required" 
+                class="form-control alert-danger">
+                Título obrigatório
+            </span> 
+            <span ng-show="formulario.$submitted && formulario.titulo.$error.maxlength" class="form-control alert-danger">
+                No máximo 20 caracteres!
+            </span>   
+        </div>
+        <div class="form-group">
+            <label>URL</label>
+            <input name="url" class="form-control" 
+            ng-model="foto.url" required>
+
+            <span ng-show = "formulario.$submitted && formulario.url.$error.required" 
+                class="form-control alert-danger">
+                URL obrigatória
+            </span> 
+
+        </div>
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea name="descricao" class="form-control" ng-model="foto.descricao">
+            </textarea>
+        </div>
+
+        <!-- novidade aqui! -->
+
+        <div class="form-group">
+            <label>Grupo</label>
+            <select name="grupo" class="form-control" required>
+                <option value="">Escolha um grupo</option>
+            </select>
+            <span ng-show="formulario.$submitted && formulario.grupo.$error.required" class="form-control alert-danger">
+                Grupo obrigatório
+            </span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" ng-disabled="formulario.$invalid">
+            Salvar
+        </button>
+         <a href="/" class="btn btn-primary">Voltar</a>
+        <hr>
+    </div>
+    <div class="col-md-6">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+    </div>
+</form>
+Agora, vamos criar um controller que fornecerá única e exclusivamente nossa lista de grupos. Vamos criar o arquivo public/js/controllers/grupos-controller.js:
+
+// public/js/controllers/grupos-controller.js
+
+angular.module('alurapic')
+    .controller('GruposController', function($scope, $http) {
+
+    $scope.grupos = [];    
+
+        $http.get('/v1/grupos')
+        .success(function(grupos) {
+            $scope.grupos = grupos;
+        })
+        .error(function(erro) {
+            console.log(erro);
+        });
+    });
+Não podemos deixar de importá-lo em index.html:
+
+<!-- public/index.html -->
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <base href="/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>    
+        <script src="js/controllers/foto-controller.js"></script>
+
+        <!-- novo aqui! -->
+        <script src="js/controllers/grupos-controller.js"></script>
+
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <ng-view></ng-view>
+        </div><!-- fim container -->
+    </body>
+</html>
+Prontinho! Mas como iremos associar GruposController com a tag select? Simples, através da já conhecida diretiva ng-controller. Aproveitaremos também para associar a tag com $scope.foto.grupo através da diretiva ng-model.
+
+<!-- public/partials/foto.html -->
+<!-- código anterior omitido -->
+
+        <div class="form-group">
+            <label>Grupo</label>
+            <select name="grupo" 
+                    ng-model="foto.grupo" class="form-control" required
+                    ng-controller="GruposController">
+                <option value="">Escolha um grupo</option>
+            </select>
+            <span ng-show="formulario.$submitted && formulario.grupo.$error.required" class="form-control alert-danger">
+                Grupo obrigatório
+            </span>
+        </div>
+
+<!-- código posterior omitido -->
+Por mais que foto.html seja gerenciada por FotoController, definido no cadastro de rotas do Angular, nossa tag select será gerenciada por GruposController. Fantástico!
+
+Mais uma diretiva do angular para nos ajudar! A ng-options
+Agora, vamos montar nossas opções através da diretiva ng-options:
+
+<!-- public/partials/foto.html -->
+<!-- código anterior omitido -->
+
+        <div class="form-group">
+            <label>Grupo</label>
+            <select name="grupo" 
+                    ng-model="foto.grupo" class="form-control" required
+                    ng-controller="GruposController"
+                    ng-options="grupo._id as grupo.nome for grupo in grupos">
+                <option value="">Escolha um grupo</option>
+            </select>
+            <span ng-show="formulario.$submitted && formulario.grupo.$error.required" class="form-control alert-danger">
+                Grupo obrigatório
+            </span>
+        </div>
+
+<!-- código posterior omitido -->
+Adicionamos a diretiva ng-options, que possui comportamento parecido com ng-repeat, porém a sintaxe "grupo._id as grupo.nome" indica que o valor do elemento será o ID do grupo e o que será exibido para seleção será seu nome. O restante "for grupo in grupos" percorrerá a lista de grupos disponibilizada no escopo do controller, construindo cada item de nossa lista.
+
+Já podemos visualizar o resultado:
+
+Combobox de grupo
+
+Melhor que isso só "dois disso"!
+
+Filtros que transformam!
+Podemos alterar o grupo, salvar, listar e alterar novamente e verificarmos que o grupo é modificado realmente. Mas podemos ainda melhorar um detalhe: veja que quem cadastrou lá no servidor o nome dos grupos utilizou caixa baixa. Para melhorar a experiência do usuário, seria interessante colocar o nome dos grupos em caixa alta. Será que precisaremos incomodar o fera do back-end para que retorne os dados em caixa alta? Não, o Angular consegue dar conta disso através de filtros. Utilizamos o filtro filter em ng-repeat, agora podemos utilizar o filtro uppercase para colocar o nome do grupo em caixa alta. Vamos alterar a diretiva ng-options:
+
+<!-- public/partials/foto.html -->
+<!-- código anterior omitido -->
+
+        <div class="form-group">
+            <label>Grupo</label>
+            <select name="grupo" 
+                    ng-model="foto.grupo" class="form-control" required
+                    ng-controller="GruposController"
+                    ng-options="grupo._id as (grupo.nome | uppercase) for grupo in grupos">
+                <option value="">Escolha um grupo</option>
+            </select>
+            <span ng-show="formulario.$submitted && formulario.grupo.$error.required" class="form-control alert-danger">
+                Grupo obrigatório
+            </span>
+        </div>
+
+<!-- código posterior omitido -->
+Verificando o resultado:
+
+Aplicação de filtro
+
+Terminamos, mas vamos fechar esta aula com mais uma diretiva. Topa?
+
+Facilitando mais uma vez nossa vida com diretivas
+Vamos criar a diretiva meu-botao-perigo. Na verdade, ela é um atalho para a seguinte estrutura que usamos em principal.html:
+
+<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>
+Fica claro que ela terá dois parâmetros: a função que desejamos executar e o nome do botão. Também vamos restringir seu uso à tag:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        // código omitido
+    })
+    .directive('minhaFoto', function() {
+        // código omitido
+    })
+    .directive('meuBotaoPerigo', function() {
+        var ddo = {};
+        ddo.restrict = "E";
+        ddo.scope = {
+            nome: '@',
+            acao : '@'
+        }
+        ddo.template = '<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>';
+
+        return ddo;
+    });
+Excelente, até agora nenhuma novidade. Vamos agora substituir o botão Remover em principal.html pela nossa diretiva:
+
+<!-- public/partials/principal.html -->
+<!-- código anterior omitido -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <a class="btn btn-primary btn-block" href="/fotos/edit/{{foto._id}}">
+            Editar
+        </a>
+        <meu-botao-perigo nome="Remover" acao="remover(foto)"></meu-botao-perigo>
+
+    </meu-painel>
+</div>
+Será que funciona? Recarregando nossa página o botão é exibido, ufa! Porém, quando clicamos nada acontece. Se abrirmos o console do navegador vemos uma mensagem de erro:
+
+Diretiva exibida, porém não funciona
+
+Este problema acontece porque no escopo isolado da nossa diretiva, usamos @ para a propriedade acao. Esse modificador realiza uma cópia do valor passado para a diretiva, guardando-a no escopo isolado como string. Isso não funciona porque o valor de acao é uma expressão que deve ser avaliada no contexto do controller. A diretiva de nada sabe do seu resultado, mas deve ser capaz de executar a referência passada como parâmetro. Nem tudo está perdido, pois Angular possui o modificador &, que permite fazer binding para uma referência. Alterando nossa diretiva:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        // código omitido
+    })
+    .directive('minhaFoto', function() {
+        // código omitido
+    })
+    .directive('meuBotaoPerigo', function() {
+        var ddo = {};
+        ddo.restrict = "E";
+        ddo.scope = {
+            nome: '@',
+            acao : '&'
+        }
+        ddo.template = '<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>';
+
+        return ddo;
+    });
+Agora sim! Nossa diretiva funciona como esperado!
+
+O que aprendemos neste capítulo?
+criar uma combobox com Angular
+o papel da diretiva ng-options
+transformação com filtros (ex. uppercase)
+a diferença entre @ e & em diretivas
+
+Qual das opções abaixo possui a estrutura sintática correta para criação de uma combobox através da diretiva ng-options?
+
+<select 
+  ng-model="foto.grupo"
+  ng-controller="GruposController"
+  ng-options="grupo._id as grupo.nome for grupo in grupos">
+    <option value="">Escolha um grupo</option>
+</select>
+ 
+A diretiva ng-options possui comportamento parecido com ng-repeat, porém a sintaxe grupo._id as grupo.nome indica que o valor do elemento será o ID do grupo e o valor exibido será seu título. O trecho for grupo in grupos percorrerá a lista de grupos disponibilizada no controller, construindo cada item de nossa lista.
+
+Vejamos a seguinte expressão:
+<p>{{frase}}</p>
+Baseado no que conheceu sobre Angular, altere o código acima para colocar {{frase}} em caixa alta.
+
+Você poderia escrever o seguinte código:
+<p>{{frase | uppercase}}</p>
+Angular possui filtros (não confundir com filter, da diretiva ng-repeat). Eles são aplicados através de | seguido do nome do filtro. Mas cuidado: os filtros não funcionam com a diretiva ng-model!
+
+Bootstrap ajuda bastante, mas temos que decorar zilhões de classes pode ser algo um tanto tedioso. Porém, podemos isolar a complexidade de seus componentes, em diretivas. Um exemplo disso é o simples botão Remover da nossa listagem. Vejamos sua marcação:
+<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>
+Criar diretiva não é novidade para nós. Segue o código da diretiva meu-botao-perigo:
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        // código omitido
+    })
+    .directive('minhaFoto', function() {
+        // código omitido
+    })
+    .directive('meuBotaoPerigo', function() {
+        var ddo = {};
+        ddo.restrict = "E";
+        ddo.scope = {
+            nome: '@',
+            acao : '@'
+        }
+        ddo.template = '<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>';
+        return ddo;
+    });
+Nem tudo é perfeito, aliás, nossa diretiva está quase perfeita, a não ser por um erro. Que erro é esse que impedirá o funcionamento da diretiva meuBotaoPerigo?
+
+Olhe com cuidado o código e veja se consegue resolver o problema.
+
+E aí? Conseguiu encontrar?
+Não podemos usar @ para scope.acao. Este modificador sempre passa para diretiva um valor em string . No caso da nossa diretiva, precisamos que scope.acao esteja associada à uma função de um controller, isto é, do escopo pai na qual a diretiva está inserida. Para conseguirmos isso, usamos o modificador &. Sendo assim, para que nossa diretiva funcione, basta uma simples modificação:
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        // código omitido
+    })
+    .directive('minhaFoto', function() {
+        // código omitido
+    })
+    .directive('meuBotaoPerigo', function() {
+        var ddo = {};
+        ddo.restrict = "E";
+        ddo.scope = {
+            nome: '@',
+            acao : '&' // mudei aqui!
+        }
+        ddo.template = '<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>';
+        return ddo;
+    });
+Observação: Encontrar erros e resolver códigos problemáticos é uma ótima maneira de praticar. De quebra, podemos ainda ajudar colegas da comunidade na resolução de problemas em diferentes contextos. Podemos encontrar diversos forums e tópicos na web onde podemos aprender, ajudar e sermos ajudados. Inclusive, dê uma olhada no fórum da Alura, você pode postar suas dúvidas e também ajudar seus colegas.
+
+Nosso cadastro é funcional, mas ainda precisamos cadastrar o grupo a qual cada foto pertence. Nosso back-end possui a rota v1/grupos, que retorna uma lista de grupos disponíveis. Integração do front-end com o back-end não é novidade para nós, porém a novidade neste exercício é representar os grupos retornados do servidor como uma combobox em foto.html, inclusive garantindo que as opções aparecerão sempre em caixa alta. Para completar, criaremos no final uma nova diretiva que substituirá o botão Remover em principal.html. Preparado? Sem perder o hábito, seguem os passos fundamentais que devem ser seguidos, mas sem fazer spoiler da solução:
+1) O novo campo, isto é, nossa combobox ficará imediatamente após o campo descrição. Para ajudá-lo, segue a "cola" da marcação com o código de validação que já aprendemos, mas sem as novidades deste capítulo:
+
+<!-- novidade aqui! -->
+
+        <div class="form-group">
+            <label>Grupo</label>
+            <select name="grupo" class="form-control" required>
+                <option value="">Escolha um grupo</option>
+            </select>
+            <span ng-show="formulario.$submitted && formulario.grupo.$error.required" class="form-control alert-danger">
+                Grupo obrigatório
+            </span>
+        </div>
+2) Um controller será necessário para fornecer os dados que popularão a combobox! Chame-o de GruposController. Acesse a URL (endpoint) v1/grupos através de $http.get. Não há novidade, "recordar é viver".
+
+3) Angular possui uma diretiva especial para criar os option de um select. Difícil lembrar?
+
+4) Não basta popularmos a lista, precisamos de alguma maneira capturar a opção escolhida. Você precisará da diretiva ng-model para guardar o grupo selecionado diretamente na foto que estamos cadastrando.
+
+5) Mais uma novidade! Bootstrap é fantástico, mas termos que decorar zilhões de classes não é uma tarefa trivial. Já isolamos a complexidade da marcação do panel-default em uma diretiva, agora faremos a mesma coisa, criando a diretiva meuBotaoPerigo. Quando usarmos essa diretiva, sequer precisaremos adicionar as classes do Bootstrap, justamente por estarem encapsuladas em sua definição. Sua interface de uso será nome e acao. O 'nome' usa o já conhecido modificador @ no escopo isolado da diretiva, porém, acao usará um novo. Lembra dele? Ele é usado quando queremos avaliar uma expressão dentro da diretiva. Essa expressão avaliada geralmente roda no contexto de um controller e a diretiva nada sabe do que acontece.
+
+6) Com a diretiva criada, faça a troca do botão Remover por ela, não esquecendo de passar todos os dados que ela precisa através de usa interface.
+
+Mãos à obra e bom exercício!
+
+Você poderia ter seguido esses passos.
+Nossa combobox em foto.html:
+
+<!-- public/partials/foto.html -->
+<!-- código anterior omitido -->
+
+        <div class="form-group">
+            <label>Grupo</label>
+            <select name="grupo" 
+                    ng-model="foto.grupo" class="form-control" required
+                    ng-controller="GruposController"
+                    ng-options="grupo._id as (grupo.nome | uppercase) for grupo in grupos">
+                <option value="">Escolha um grupo</option>
+            </select>
+            <span ng-show="formulario.$submitted && formulario.grupo.$error.required" class="form-control alert-danger">
+                Grupo obrigatório
+            </span>
+        </div>
+
+<!-- código posterior omitido -->
+Um controller exclusivo para fornecer dados para a combobox! Como todo script, precisa ser importado em index.html:
+
+// public/js/controllers/grupos-controller.js
+
+angular.module('alurapic')
+    .controller('GruposController', function($scope, $http) {
+
+        $http.get('/v1/grupos')
+        .success(function(grupos) {
+            $scope.grupos = grupos;
+        })
+        .error(function(erro) {
+            console.log(erro);
+        });
+    });
+Ok! Agora é a nova diretiva:
+
+// public/js/directives/minhas-diretivas.js
+
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function() {
+        // código omitido
+    })
+    .directive('minhaFoto', function() {
+        // código omitido
+    })
+    .directive('meuBotaoPerigo', function() {
+        var ddo = {};
+        ddo.restrict = "E";
+        ddo.scope = {
+            nome: '@',
+            acao : '&'
+        }
+        ddo.template = '<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>';
+
+        return ddo;
+    });
+E claro, seu uso em principal.html, substituindo o botão por ela:
+
+<!-- public/partials/principal.html -->
+<!-- código anterior omitido -->
+
+<div class="row">
+    <meu-painel class="col-md-2 painel-animado" ng-repeat="foto in fotos | filter: filtro" titulo="{{foto.titulo}}">
+        <minha-foto url="{{foto.url}}" titulo="{{foto.titulo}}">
+        </minha-foto>
+
+        <a class="btn btn-primary btn-block" href="/fotos/edit/{{foto._id}}">
+            Editar
+        </a>
+        <meu-botao-perigo nome="Remover" acao="remover(foto)"></meu-botao-perigo>
+
+    </meu-painel>
+</div>
+Veja que ao limparmos o formulário, automaticamente nossa validação é disparada. Contudo, se você quiser que isso não acontece, logo depois de limpar o formulário faça:
+
+$scope.formulario.$setPristine();
+
+##### 10. E se o nosso back-end mudasse? #####
+
+O problema de URL's espalhadas
+Nossa aplicação é funcional, não podemos negar! Mas o que aconteceria se os endereços dos nossos serviços mudassem? Teríamos que alterar em diversos lugares da aplicação! Outro ponto é que alguns endereços nasceram da concatenação de strings, algo muito sujeito a erro.
+
+Esses problemas aparecem porque $http não é capaz de esconder parte da complexidade que é lidar com nossos endpoints REST.
+
+Interagindo com o servidor em alto nível
+Porém, há um módulo especializado que pode ser aplicado quando usamos este padrão, pelo menos na definição de nomes de URL's, o ngResource. A ideia é substituirmos $http por este serviço para tornar nossa aplicação mais enxuta e fácil de manter.
+
+O primeiro passo para usarmos $resource é importarmos o script do módulo ngResource em nossa view index.html.
+
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <base href="/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/angular-route.min.js"></script>
+
+        <!-- novo aqui! -->
+        <script src="js/lib/angular-resource.min.js"></script>
+
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>    
+        <script src="js/controllers/foto-controller.js"></script>
+        <script src="js/controllers/grupos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <ng-view></ng-view>
+        </div><!-- fim container -->
+    </body>
+</html>
+O segundo, não menos importante, é declararmos ngResource como dependência do módulo principal da aplicação:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute', 'ngResource'])
+    .config(function($routeProvider, $locationProvider) {
+
+          // código omitido 
+    });
+Vamos começar a modificar FotosController, substituindo na injeção de dependências $http por $resource e criando um novo recurso:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $resource) {
+
+    // novidade aqui! Criando o recurso
+    var recursoFoto = $resource('/v1/fotos/:fotoId');
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+   // código posterior omitido 
+});
+Percebam que passamos como parâmetro para $resource a URL de um endpoint REST, porém com um curinga idêntico ao usado em uma das nossas rotas do Angular. Esse curinga é importante, porque permitirá que o serviço monte por debaixo dos panos as URL's de acesso ao recurso. O retorno é um recurso devidamente configurado.
+
+Agora, vamos substituir $http que busca as fotos do servidor por uma chamada à recursoFoto.query que recebe dois parâmetros. O primeiro é uma função que será chamada quando a requisição for bem sucedida, o segundo apenas chamado quando houver um erro. Fazendo uma analogia com $http, o primeiro equivale à função success e o segundo error:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $resource) {
+
+    var recursoFoto = $resource('/v1/fotos/:fotoId');
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+    // novidade aqui! Saiu $http.get!
+    recursoFoto.query(function(fotos) {
+        $scope.fotos = fotos;
+    }, function(erro) {
+        console.log(erro);
+    });
+
+    $scope.remover = function(foto) {
+       // código omitido
+    };
+});
+Agora, vamos substituir a chamada de $http.delete pela chamada de recursoFoto.delete. Precisamos estar atentos, porque o primeiro parâmetro da função é um objeto cujas chaves devem corresponder ao curinga que usamos na definição da URL do recurso. No caso, passamos {fotoId: foto._id}, ou seja, o valor da chave é o ID da foto que desejamos apagar. Os outros dois parâmetros são as funções executadas quando a requisição for bem sucedida e quando houver algum erro respectivamente:
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, $resource) {
+
+    var recursoFoto = $resource('/v1/fotos/:fotoId');
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+    recursoFoto.query(function(fotos) {
+        $scope.fotos = fotos;
+    }, function(erro) {
+        console.log(erro);
+    });
+
+    $scope.remover = function(foto) {
+
+       // novidade aqui!
+        recursoFoto.delete({fotoId: foto._id}, function() {
+            var indiceDaFoto = $scope.fotos.indexOf(foto);
+            $scope.fotos.splice(indiceDaFoto, 1);
+            $scope.mensagem = 'Foto ' + foto.titulo + ' removida com sucesso!';
+        }, function(erro) {
+            console.log(erro);
+            $scope.mensagem = 'Não foi possível apagar a foto ' + foto.titulo;
+        });
+    };       
+});
+Recarregando nossa página, nossa lista continua sendo exibida como antes, porém utilizamos um recurso menos verboso e especializado para consumir dados do servidor. Não acabamos ainda, FotoController, responsável pelo cadastro, também precisa ser modificado para utilizar $resource. Vamos trocar a injeção de $http por $resource e migrar apenas a parte que busca a foto pelo seu ID:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $resource, $routeParams) {
+
+        // novidade!
+        var recursoFoto = $resource('/v1/fotos/:fotoId');
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+       // migrando esta parte do código
+        if($routeParams.fotoId) {
+            recursoFoto.get({fotoId: $routeParams.fotoId}, function(foto) {
+                $scope.foto = foto; 
+            }, function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+           // código omitido
+        };
+
+    });
+Veja que recursoFoto.get também recebe como parâmetro uma chave com o mesmo nome do curinga usado na definição do recurso, assim como fizemos quando usamos recursoFoto.delete. Ótimo, agora precisamos migrar todo o código dentro da $scope.submeter, mas primeiro vamos migrar apenas a condição que cadastra novos fotos, deixaremos a atualização por último.
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $resource, $routeParams) {
+
+        var recursoFoto = $resource('/v1/fotos/:fotoId');
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            recursoFoto.get({fotoId: $routeParams.fotoId}, function(foto) {
+                $scope.foto = foto; 
+            }, function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+                if($routeParams.fotoId) {
+
+                     // código omitido, ainda não tocamos nele!
+
+                } else {
+
+                    // novidade aqui! Alterando apenas a inclusão!
+
+                    recursoFoto.save($scope.foto, function() {
+                        $scope.foto = {};
+                        $scope.mensagem = 'Foto cadastrada com sucesso';
+                    }, function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível cadastrar a foto';
+                    });
+                }
+            }
+        };
+    });
+Usamos recursoFoto.save, que gera por debaixo dos panos uma requisição do tipo POST para o recurso /v1/fotos. Ela recebe como primeiro parâmetro os dados que desejamos enviar, o restante não é novidade.
+
+Alto nível, mas sem poder alterar recursos? Há solução!
+Testando, fica evidente que está funcionando. Para terminar, precisamos alterar o código que utiliza $http.put, contudo temos um sério problema: O serviço $resource não dá suporte ao verbo PUT, importante, pois é através desse verbo HTTP que nosso servidor saberá distinguir entre inclusão (POST) e alteração (PUT) de recurso. E agora, vamos voltar com a injeção de $http e utilizá-lo apenas para as alterações? Não é necessário, se $resource não suporta o verbo PUT, podemos criá-lo!
+
+Vamos criar a função update em nosso recurso durante sua criação:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $resource, $routeParams) {
+
+        // novidade aqui! Alteramos a criação de recursoFoto!
+        var recursoFoto = $resource('/v1/fotos/:fotoId', null, {
+            'update' : { 
+                method: 'PUT'
+            }
+        });
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        // código posterior omitido
+    });
+O serviço $resource recebe mais dois parâmetros além da URL com o curinga. O primeiro, que passamos null, é utilizado quando queremos enviar os parâmetros através de query string, isto é, a URL é construída utilizando ?parametro=valor, algo que não usaremos. O segundo, um objeto com todas as novas ações que desejamos adicionar ao nosso recurso. Em nosso caso, adicionamos a ação update, que possui como parâmetro um objeto que indica qual método será utilizado, em nosso caso PUT.
+
+Agora, podemos terminar de migrar a parte de alteração:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, $resource, $routeParams) {
+
+        var recursoFoto = $resource('/v1/fotos/:fotoId', null, {
+            'update' : { 
+                method: 'PUT'
+            }
+        });
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            recursoFoto.get({fotoId: $routeParams.fotoId}, function(foto) {
+                $scope.foto = foto; 
+            }, function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                if($routeParams.fotoId) {
+
+                   // Novidade aqui! Usando nosso update!
+
+                    recursoFoto.update({fotoId: $scope.foto._id}, 
+                        $scope.foto, function() {
+                        $scope.mensagem = 'Foto alterada com sucesso';
+                    }, function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível alterar';
+                    });
+
+                } else {
+                    recursoFoto.save($scope.foto, function() {
+                        $scope.foto = {};
+                        $scope.mensagem = 'Foto cadastrada com sucesso';
+                    }, function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível cadastrar a foto';
+                    });
+                }
+            }
+        };
+
+    });
+Basta recarregarmos nossa página e testarmos alterando qualquer foto. Excelente, temos um código mais flexível, bem, nem tanto. O problema é que teremos que redefinir a função update em todos os controllers que quiserem a função. Além disso, temos outro problema parecido com o original: se a URL do recurso mudar? Precisaríamos mudar em todos os controllers que fizerem uso do recurso.
+
+Para resolver problemas como esse, o Angular permite a criação de serviços que podem ser injetados, como qualquer recurso do Angular. Podemos esconder a complexidade do nosso $resource criando um serviço que o retorne já configurado.
+
+Primeiro, vamos criar o arquivo public/js/services/meus-servicos.js. Criaremos o módulo meusServicos, que terá como dependência o módulo ngResource.
+
+// public/js/servicos/meus-servicos.js
+
+angular.module('meusServicos', ['ngResource'])
+    .factory('recursoFoto', function($resource) {
+
+        return $resource('/v1/fotos/:fotoId', null, {
+            'update' : { 
+                method: 'PUT'
+            }
+        });
+    });
+É através da função factory que criamos um serviço passando seu nome e uma função que deve retornar um objeto. Em nosso caso, estamos devolvendo $resource já configurado.
+
+Agora, precisamos importar nosso script em nossa página index.html e substituir a dependência ngResource por meusServicos, no módulo principal da aplicação main.js:
+
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="alurapic">
+    <head>
+        <base href="/">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Alurapic</title>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="css/efeitos.css">
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/angular-animate.min.js"></script>
+        <script src="js/lib/angular-route.min.js"></script>
+        <script src="js/lib/angular-resource.min.js"></script>
+        <script src="js/main.js"></script>
+        <script src="js/controllers/fotos-controller.js"></script>    
+        <script src="js/controllers/foto-controller.js"></script>
+        <script src="js/controllers/grupos-controller.js"></script>
+        <script src="js/directives/minhas-diretivas.js"></script>
+
+        <!-- novidade aqui! -->
+
+        <script src="js/services/meus-servicos.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <ng-view></ng-view>
+        </div><!-- fim container -->
+    </body>
+</html>
+Agora main.js:
+
+// public/js/main.js
+
+angular.module('alurapic', ['minhasDiretivas', 'ngAnimate', 'ngRoute', 'meusServicos'])
+    .config(function($routeProvider, $locationProvider) {
+
+        // código omitido
+
+    });
+Agora, tanto em FotoController quanto em FotosController trocaremos a injeção de $resource por recursoFoto, apagando também a linha onde criamos recursoFoto, já que ele agora é recebido via injeção de dependência:
+
+// public/js/controllers/foto-controller.js
+
+angular.module('alurapic')
+    .controller('FotoController', function($scope, recursoFoto, $routeParams) {
+
+        $scope.foto = {};
+        $scope.mensagem = '';
+
+        if($routeParams.fotoId) {
+            recursoFoto.get({fotoId: $routeParams.fotoId}, function(foto) {
+                $scope.foto = foto; 
+            }, function(erro) {
+                console.log(erro);
+                $scope.mensagem = 'Não foi possível obter a foto'
+            });
+        }
+
+        $scope.submeter = function() {
+
+            if ($scope.formulario.$valid) {
+
+                if($routeParams.fotoId) {
+
+                    recursoFoto.update({fotoId: $scope.foto._id}, 
+                        $scope.foto, function() {
+                        $scope.mensagem = 'Foto alterada com sucesso';
+                    }, function() {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível alterar';
+                    });
+
+                } else {
+                    recursoFoto.save($scope.foto, function() {
+                        $scope.foto = {};
+                        $scope.mensagem = 'Foto cadastrada com sucesso';
+                    }, function(erro) {
+                        console.log(erro);
+                        $scope.mensagem = 'Não foi possível cadastrar a foto';
+                    });
+                }
+            }
+        };
+
+    });
+Agora em public/js/controllers/fotos-controller.js.
+
+// public/js/controllers/fotos-controller.js
+
+angular.module('alurapic').controller('FotosController', function($scope, recursoFoto) {
+
+    $scope.fotos = [];
+    $scope.filtro = '';
+    $scope.mensagem = '';
+
+
+    recursoFoto.query(function(fotos) {
+        $scope.fotos = fotos;
+    }, function(erro) {
+        console.log(erro);
+    });
+
+    $scope.remover = function(foto) {
+
+        recursoFoto.delete({fotoId: foto._id}, function() {
+            var indiceDaFoto = $scope.fotos.indexOf(foto);
+            $scope.fotos.splice(indiceDaFoto, 1);
+            $scope.mensagem = 'Foto ' + foto.titulo + ' removida com sucesso!';
+        }, function(erro) {
+            console.log(erro);
+            $scope.mensagem = 'Não foi possível apagar a foto ' + foto.titulo;
+        });
+    };
+});
+Agora é só verificar se a aplicação continua funcionando. Caso algum erro aconteça, basta fazer um checklist de todos os passos que executamos nesta alteração.
+
+O que aprendemos neste capítulo?
+o problema de URL's espalhadas
+$resource para consumir endpoints REST
+criar nossa própria função em $resource
+criar nosso próprio serviço
