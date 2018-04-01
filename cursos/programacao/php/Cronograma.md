@@ -5,3 +5,5 @@
 * PHP II: Avançando com Orientação a objetos
 * CakePHP I: Acelere o desenvolvimento web
 * WordPress I: hospedagem, administração e widgets
+* CodeIgniter I: Programando elegantemente para a web
+* Laravel: facilitando o desenvolvimento PHP
