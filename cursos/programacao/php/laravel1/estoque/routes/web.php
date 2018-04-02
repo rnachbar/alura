@@ -1,11 +1,13 @@
 <?php
 
-// chamando metodo estatico 'get' de dentro de uma classe 'Route' que já é do Laravel
-// primeiro parametro passado é a uri (nesse caso '/')
-Route::get('/', function() {
-	return '<h1>Listagem de Produtos<h1>'; // podemos retornar qualquer HTML válido
+// Chamando metodo estatico 'get' dentro da classe 'Route', que é do Laravel
+Route::get('/', function() { /* primeiro parametro passado é a uri, segundo a função */
+	return '<h1>Listagem de Produtos<h1>';
 });
 
+// Para acessar controller passar segundo parametro como NomeController@metodo
+Route::get('/produtos', 'ProdutoController@lista');
+
 Route::get('/outra', function() {
-  return '<h1>Outra lógica com Laravel</h1';
+  return '<h1>Lógica com Laravel</h1>'; /* pode retornar qualquer HTML válido */
 });
