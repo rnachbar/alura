@@ -12,12 +12,8 @@ class ProdutoController extends Controller {
 		$produtos = DB::select('select * from produtos');
 		// dd($produtos); /* Dump da variável */
 
-		$html = '<h1>Listagem de Produtos</h1>';
-		foreach ($produtos as $p) {
-			$html .= "<br /> Nome: " . $p->nome;
-		}
-
-		return $html;
+		/* retornando view listagem e passando variável $produtos */
+		return view('listagem')->with('produtos', $produtos); 
 	}
 
 }
