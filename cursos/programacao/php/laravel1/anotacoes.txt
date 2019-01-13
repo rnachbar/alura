@@ -430,4 +430,272 @@ Viu só? Isso nada mais é do que bom uso da orientação a objetos, que cada ve
 
 Mas espera, nosso código ainda não obedece o princípio das 3 camadas do MVC, por enquanto todo o trabalho está sendo feito na camada controller! Isso não é bom, vamos resolver?
 
+# 3. Trabalhando com a View
 
+Sabemos que nosso controller está com muitas responsabilidades, mas por onde começar a melhorá-lo? Atualmente, o código está assim:
+
+<?php namespace estoque\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+
+class ProdutoController extends Controller {
+
+    public function lista(){
+
+        $html = '<h1>Listagem de produtos com Laravel</h1>';
+
+        $html .= '<ul>';
+
+        $produtos = DB::select('select * from produtos');
+
+        foreach ($produtos as $p) {
+            $html .= '<li> Nome: '. $p->nome .', Descrição: '. $p->descricao .'</li>';
+        }
+
+        $html .= '</ul>';
+
+        return $html;
+    }
+}
+Isso não é legal por uma infinidade de motivos, por exemplo, como faríamos para estilizar esse HTML? E se eu quisesse adicionar uma imagem, uma tabela, o header, título etc., tudo isso fica mesmo dentro do código do meu controller?
+
+Cada coisa em seu lugar: Camada View
+No lugar de retornar um HTML, o controller deveria delegar esse trabalho para a camada de view, que é a especialista do MVC nesse assunto. A mudança será simples, basta criar um arquivo PHP com toda essa lógica de visualização. Podemos chamá-lo de listagem.php, e é importante que ele esteja no diretório resources/views.
+
+
+
+Nesse arquivo podemos fazer algo muito parecido com o que estamos fazendo no controller, um foreach em todos os produtos, mostrando seu nome, descrição, e agora que estamos no lugar certo, também podemos exibir os outros campos, que são o valor e a quantidade. No lugar de uma lista, podemos usar uma tabela para organizar um pouco melhor os dados. O código poderá ficar parecido com:
+
+<html>
+  <body>
+    <h1>Listagem de produtos</h1>
+    <table>
+      <?php foreach ($produtos as $p): ?>
+      <tr>
+        <td><?= $p->nome ?></td>
+        <td><?= $p->valor ?></td>
+        <td><?= $p->descricao ?></td>
+        <td><?= $p->quantidade ?></td>
+      </tr>
+      <?php endforeach ?>
+    </table>
+  </body>
+</html>
+Agora que temos o arquivo pronto, só precisamos ensinar ao controller que, no lugar de escrever o HTML todo, ele deve simplesmente delegar o trabalho para essa nossa view. Mas como fazer isso?
+
+Vamos por partes, antes de mais nada, vamos tirar todo aquele código HTML do método lista. Ele ficar assim:
+
+class ProdutoController extends Controller {
+
+    public function lista(){
+
+        $produtos = DB::select('select * from produtos');
+
+        return // o que retornar aqui?
+    }
+}
+Ufa, bem melhor, não acha? Tiramos toda a lógica de visualização de nosso controller, já que temos uma camada própria para fazer esse trabalho, a view. O próximo passo é ensinar ao controller que, após fazer seu trabalho, ele deve renderizar o HTML da view listagem.php que acabamos de criar. Para fazer isso, basta mudar o retorno do método para view('listagem'), como a seguir:
+
+class ProdutoController extends Controller {
+
+    public function lista(){
+
+        $produtos = DB::select('select * from produtos');
+
+        return view('listagem');
+    }
+}
+Esse método recebe como parâmetro o nome da página que você quer exibir, sem a extensão, e para utilizá-lo você não precisa fazer nenhum ::import::, já que isso é feito pela classe Controller que herdamos.
+
+Vamos ver se tudo está funcionando? Basta acessar http://localhost:8000/produtos novamente. Diferente do esperado, o resultado será:
+
+
+
+Ops, alguma coisa deu errado, mas como descobrir? A mensagem do navegador não nos diz muito.
+
+Consultando os arquivos de log do framework
+Sempre que você receber uma mensagem como essa, dizendo que alguma coisa deu errado em seu código, você pode e deve consultar os arquivos de log da sua aplicação para ter uma descrição mais detalhada sobre o que está acontecendo. Esses arquivos ficam no diretório /storage/logs/ e são nomeados por data.
+
+
+
+Ao abrir o log da data e hora atual, podemos ver logo no início do arquivo a seguinte mensagem de erro:
+
+[2015-02-25 22:07:50] production.ERROR: 
+    exception 'ErrorException' with message 
+    'Undefined variable: produtos' in 
+    /Users/Turini/Desktop/estoque/resources
+    /views/listagem.php:9
+Veja a mensagem: Undefined variable: produtos. Faz todo sentido, não é? Afinal, se criamos a variável produtos no controller, não podemos acessá-la na view, que é um outro arquivo.
+
+Há ainda uma forma mais interessante de consultar os ::errors:: da nossa aplicação quando estamos em ambiente de desenvolvimento, sem precisar a todo o momento procurar a mensagem nos arquivos de log. É fácil, basta criar um arquivo chamado .env dentro da pasta do projeto, e dentro dele colocar as instruções:
+
+APP_DEBUG=true
+O seu arquivo pode ficar assim:
+
+
+
+Com isso, estamos informando ao Laravel que queremos depurar as mensagens de erro, o que é bastante recomendado quando estamos desenvolvendo a aplicação. Faça a alteração e acesse a página novamente para ver o resultado:
+
+
+
+Excelente! Assim fica muito mais fácil identificar o que aconteceu de errado, não é?
+
+Incluindo parâmetros na view
+O que faltou foi, de alguma forma, mandar esse ::array:: de produtos para a view. Poderíamos, sim, criar o array diretamente no arquivo listagem.php da view, mas não estaríamos respeitando a divisão de responsabilidades do MVC. A view é responsável pela lógica de visualização, não pelo acesso ao banco de dados nem nada desse tipo.
+
+Uma forma muito mais interessante de fazer isso é, no retorno do controller, ensinar ao Laravel que queremos deixar essa variável produtos acessível pela view com auxilio do método with:
+
+$produtos = DB::select('select * from produtos');
+view('listagem')->with('produtos', $produtos);
+Veja que passamos para o método with uma chave e valor, ou seja, a forma como ele será acessado na ::view:: (produtos, nesse caso) e o valor associado a ele. O código completo fica assim:
+
+<?php namespace estoque\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use estoque\Produto;
+
+class ProdutoController extends Controller {
+
+    public function lista(){
+
+        $produtos = DB::select('select * from produtos');
+
+        return view('listagem')->with('produtos', $produtos);
+    }
+}
+Já podemos testar. Acessando a listagem novamente teremos como resultado:
+
+
+
+Pronto, tudo continua funcionando e agora nosso código está muito mais bem organizado. O controller faz seu trabalho e ao final delega a responsabilidade de apresentação do resultado para a view, que é a camada que cuida disso. Bem justo, não é?
+
+Alguns detalhes e curiosidades
+Esse método ::view::, que usamos no retorno do nosso controller, é um ::helper method:: para simplificar esse processo de trabalhar com views. Se você já viu algum código com as versões anteriores do Laravel, vai se lembrar que para fazer o mesmo trabalho tínhamos que escrever:
+
+View::make('listagem')->with('produtos', $produtos);
+No fim das contas, o que acontece é que, ao chamar o método ::view::, sem passar nenhum parâmetro, ele vai retornar uma implementação do contrato ::View:: definido pelo Laravel. Chamando o método com parâmetro, ele delegará a chamada para o método make, assim como era feito anteriormente - só que com uma sintaxe um pouco mais enxuta e agradável.
+
+Incluindo parâmetros com magic methods
+Uma curiosidade é que, no lugar de escrever:
+
+view('listagem')->with('produtos', $produtos);
+Você pode chamar um método withProdutos:
+
+view('listagem')->withProdutos($produtos);
+Faça a alteração para testar, o resultado será o mesmo! Como isso é possível?
+
+Na verdade, esse método "não existe". Em nenhum momento os desenvolvedores escreveram um método withProdutos dentro da view, mas sim um ::magic method:: que faz esse trabalho dinamicamente.
+
+Em outras palavras, se você chamou withAlgumaCoisa, ele usará o algumaCoisa como chave do parâmetro disponibilizado na view.
+
+Passando um array de dados para a view
+Existem diversas outras formas de passar os dados para a view, além do método with. Uma das mais conhecidas e utilizadas é passando um array como segundo parâmetro do método view. Em vez de fazer:
+
+view('listagem')->with('produtos', $produtos);
+Você faria algo como:
+
+return view('listagem', ['produtos' => $produtos]);
+Ou extraindo o array para uma variável:
+
+$data = ['produtos' => $produtos];
+return view('listagem', $data);
+Ou ainda criando o array e adicionando cada item manualmente:
+
+$data = [];
+$data['produtos'] = $produtos;
+return view('listagem', $data);
+O que vai mudar é a sintaxe, mas o efeito será o mesmo. Você pode escolher a forma que preferir.
+
+Mais alguns métodos: exists e file
+Outro ponto é que você pode verificar a existência de uma view com o método exists:
+
+if (view()->exists('listagem'))
+{
+    return view('listagem');
+}
+Ou mesmo usar o método file para gerar a view a partir de um caminho/diretório diferente:
+
+view()->file('/caminho/para/sua/view');
+Legal, não é? Se quiser conhecer um pouco mais sobre a view, eu recomendo que dê uma boa olhada em sua documentação. O link é:
+
+http://laravel.com/docs/5.0/views
+
+Melhorando a aparência da nossa listagem
+Agora que nosso HTML está no lugar certo, que acha de melhorar um pouco o visual da listagem? O Laravel já traz um arquivo chamado app.css com alguns estilos prontos, para ajudá-lo a poupar tempo com esse trabalho também. Esse arquivo usa internamente o conhecido Bootstrap (http://getbootstrap.com) para o estilo, Glyphicons (http://glyphicons.com/) para os ícones e muito mais.
+
+Para começar a usar esse estilo, basta adicionar o head no seu HTML e o link com o caminho do arquivo, algo como:
+
+<html>
+<head>
+    <link href="/css/app.css" rel="stylesheet">
+    <title>Controle de estoque</title>
+</head>
+<body>
+<!-- continuação do seu html aqui -->
+Note que já aproveitamos para colocar um título na página também.
+
+Ao acessar a listagem você já deve perceber alguma diferença, mas por enquanto, só na fonte:
+
+
+
+Ainda queremos estilizar a tabela, mas como? É bem simples, basta adicionar a classe table que você já vai ter algum resultado. O HTML da tabela deve ficar assim:
+
+<table class="table">
+  <?php foreach ($produtos as $p): ?>
+    <tr>
+        <!-- código omitido -->
+    </tr>
+  <?php endforeach ?>
+</table>
+Essa simples mudança já deixa nossa listagem com um visual bem mais agradável:
+
+
+
+Além da classe table, também podemos usar:
+
+table-striped para zebrar as linhas
+table-bordered para adicionar bordas
+table-hover para efeito de hover
+Há diversos outros, que você pode encontrar na documentação do bootstrap:
+
+http://getbootstrap.com/css/#tables
+
+Vamos usar alguns desses estilos? Basta adicionar as novas classes na tabela:
+
+<table class="table table-striped table-bordered table-hover">
+<!-- restante do html omitido -->
+Você pode usar qualquer outro estilo que preferir.
+
+Além disso, para desgrudar a tabela e o título das bordas da página, podemos envolvê-las em uma div com a classe container. O arquivo listagem.php completo pode ficar assim:
+
+<html>
+<head>
+    <link href="/css/app.css" rel="stylesheet">
+    <title>Controle de estoque</title>
+</head>
+<body>
+  <div class="container"> 
+    <h1>Listagem de produtos</h1>
+    <table class="table table-striped table-bordered table-hover">
+      <?php foreach ($produtos as $p): ?>
+      <tr>
+        <td><?= $p->nome ?></td>
+        <td><?= $p->valor ?></td>
+        <td><?= $p->descricao ?></td>
+        <td><?= $p->quantidade ?></td>
+      </tr>
+      <?php endforeach ?>
+    </table>
+  </div>
+</body>
+</html>
+O resultado final será:
+
+
+
+Aonde chegamos e para onde queremos ir
+Nesta aula demos um grande passo, que foi separar a lógica de apresentação das regras de negócio do controller. Vimos que os ganhos são muitos, já que agora cada coisa está em seu efetivo lugar.
+
+Além disso, conhecemos o ::helper method:: view e vimos sobre as diferentes variações para inclusão de parâmetros utilizando, ou não, o método with. Pronto para dar mais alguns passos?
+
+Se você está usando Laravel 5.1, siga o passo a passo do primeiro vídeo dessa aula para instalar o plugin do scafold. Você também pode seguir o passo a passo pelo link do projeto: https://github.com/bestmomo/scafold
