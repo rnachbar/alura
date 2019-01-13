@@ -1,0 +1,110 @@
+##### 01. O que é HTTP? #####
+
+Olá, eu sou o Fábio Pimentel, e serei seu instrutor aqui no curso de HTTP da Alura.
+
+Esse curso focará nesse protocolo tão presente no dia a dia do usuário e do desenvolvedor.
+
+Iremos abordar tópicos como o HTTPS, que é a web segura, entendendo que o HTTP trafega texto puro, já o HTTPS trafega o texto criptografado, e como isso tudo funciona por baixo dos panos.
+
+Veremos também sobre endereços, incluindo domínios, recursos e portas.
+
+Além disso, estudaremos sobre sessão, cookie e o modelo de requisição e resposta do HTTP, mais ainda os parâmetros que são enviados na requisição, seja no seu corpo ou na URL.
+
+Comentaremos também sobre os serviços REST, já que o HTTP não roda somente no browser, ele também roda no seu aplicativo mobile. Veremos como implementar essa comunicação, que tipo de verbo o HTTP utiliza.
+
+Por último, veremos sobre a nova versão do HTTP, o HTTP2, e o que ele adicionou de melhorias e otimizações que ele realiza para nós.
+
+Nesse treinamento focaremos nos fundamentos da web. Isto é importante pois a grande maioria das aplicações hoje em dia a utilizam de alguma forma ou funcionam dentro dela. Não focaremos em nenhuma plataforma específica de desenvolvimento como Java ou PHP. Focaremos nas regras de comunicação da web.
+
+Quando se fala em HTTP, o primeiro pensamento que vem a nossa mente é sobre a utilização da internet, é o cenário onde vemos realmente na prática a utilização do HTTP. Nós acessamos sites em que seus endereços iniciam com http:// e por isso precisamos conhecer o que realmente está acontecendo ao fazer isso.
+
+No momento em que acessou este curso, esta aula, entre o navegador e a Alura aconteceu uma comunicação, e esta comunicação tem duas partes bem conhecidas que chamamos de Client-Server ou em português Cliente-Servidor. Este é um modelo arquitetural, ou seja, a internet inteira é baseada nesta arquitetura onde há um cliente que solicita e um servidor que responde.
+
+Em qualquer comunicação é preciso existir algumas regras para que as duas partes consigam se entender com sucesso. Pensando na comunicação do seu navegador entre a Alura ou algum outro site esse conjunto de regras é basicamente um protocolo, onde neste cenário é o HTTP.
+
+Os protocolos são definidos, especificados e disponibilizados para implementação em ambas as partes, para consultar a especificação do HTTP, você pode utilizar o seguinte endereço: https://tools.ietf.org/html/rfc2616
+
+Resumindo: O HTTP é um protocolo que define as regras de comunicação entre cliente e servidor na internet. Vamos focar nos próximos vídeos e entender melhor esse protocolo tão importante. mãos a obra!
+
+O que aprendemos neste capítulo?
+Na internet sempre tem um cliente e um servidor
+Entre o cliente e o servidor precisam haver regras de comunicação
+As regras são definidas dentro de um protocolo
+HTTP é o protocolo mais importante na internet
+
+Olá Aluno!
+
+Neste treinamento, vamos falar sobre a "sigla" mais importante da internet: o HTTP. O objetivo é entender o protocolo HTTP detalhadamente. Quanto mais o desenvolvedor souber sobre este protocolo, melhor, pois ele é utilizado em todas aplicações web.
+
+No entanto, não focaremos em como essas aplicações são criadas e funcionam internamente. Para isso, existem várias plataformas, como PHP, .NET ou Java (entre muitas outras) que não abordaremos. Temos treinamentos dedicados para conhecer estas plataformas.
+
+Resumindo, nosso foco será o protocolo HTTP!
+
+Falamos tanto sobre essa sigla, mas você sabe qual é o significado do HTTP?
+
+Hypertext Transfer Protocol
+Alternativa correta.
+
+No mundo de TI, temos muitas siglas e abreviações! O que menos importa é decorar esses nomes, mas é preciso entender o que há por trás. Nesse treinamento vamos focar nos principais conceitos do protocolo HTTP, aquilo que realmente importa para o desenvolvedor.
+
+O protocolo HTTP segue o modelo Client-Server. O que o navegador (como Chrome ou Firefox) representa nesse modelo? O cliente ou o servidor?
+
+Cliente
+Exato, nós que estamos utilizando o navegador somos o cliente da Alura, que nos fornece o conteúdo, logo ela é o servidor.
+
+Nesse modelo, o navegador representa o cliente. É importante saber que nem só navegadores dominam o protocolo HTTP. Ainda veremos mais sobre isso neste curso.
+
+O cliente inicia a comunicação e o servidor responde. No entanto, qual é o papel do HTTP entre o cliente e o servidor?
+
+Estabelecer regras de comunicação
+Exatamente, o HTTP foi feito para estabelecer regras de comunicação entre o modelo Cliente-Servidor que funciona na Web.
+
+Se você compreende este texto, é porque você sabe português! Para que alguém consiga se comunicar com você, esse alguém deverá usar o português (supondo que você desconheça outro idioma, é claro). Isso significa que, sua regra (protocolo) de comunicação com o mundo é a língua portuguesa, que define a forma com que as informações devem chegar até você (através do vocabulário, regras de gramática e etc). Uma outra pessoa que conheça português irá usar do mesmo formato, já que vocês possuem um idioma em comum.
+
+Na internet, como já vimos, o idioma mais comum é o HTTP. Ele é responsável por definir a forma de como os dados são trafegados na rede através de várias regras. Portanto, todo mundo que conhece o idioma HTTP poderá receber e enviar dados e participar dessa conversa!
+
+Você já usou torrent para baixar algum arquivo na internet? Caso sim, aproveitou um outro modelo de comunicação, o P2P ou Peer-To-Peer!
+
+O modelo Cliente-Servidor não é o único modelo de comunicação na rede, nem sempre o mais adequado. Por exemplo, imagine que precisemos contar as letras de 20 palavras. No caso do modelo Cliente-Servidor, quem fará esse trabalho é o servidor, certo? E se precisar contar as letras de 1 milhão de palavras? Muito trabalhoso para o servidor, não?
+
+O modelo Cliente-Servidor tenta centralizar o trabalho no servidor, mas isso também pode gerar gargalos. Se cada Cliente pudesse ajudar no trabalho, ou seja, assumir um pouco da responsabilidade do servidor, seria muito mais rápido. Essa é a ideia do P2P! Não há mais uma clara divisão entre Cliente-Servidor, cada cliente também é servidor e vice-versa!
+
+Isto é útil quando você precisa distribuir um trabalho ou necessita baixar algo de vários lugares diferentes. Faz sentido?
+
+Usando algum aplicativo de Torrent, o protocolo utilizado não é o HTTP, e sim o protocolo P2P, como BitTorrent ou Gnutella.
+
+O HTTP não é o único protocolo de comunicação que existe. Aliás, existem milhares de protocolos no mundo de TI, no entanto o HTTP é de longe o mais popular.
+
+Na lista abaixo, há um item que não representa um protocolo para internet.
+
+Qual é exatamente? Pesquise se for necessário!
+
+SQL
+SQL (Structured Query Language) não é um protocolo para internet, e sim uma linguagem de consulta para banco de dados.
+
+Um banco de dados cuida dos dados de uma aplicação, é parecido com uma planilha de Excel. O SQL ajuda muito a acessar esses dados.
+
+Um banco de dados não se preocupa em como os dados serão visualizados, ele só administra os dados! Aqui na Alura, o banco de dados guarda informações sobre os usuários, cursos, perguntas, respostas, etc.
+
+Agora já sabemos que existe um cliente, o navegador, como Chrome e Firefox, e um servidor, a Alura. Para definir as regras de comunicação entre cliente e servidor, existe o protocolo HTTP.
+
+Também já sabemos que o servidor usa alguma plataforma, como PHP, Java, .Net ou outros. Qual plataforma realmente é utilizada? Não é tão fácil de descobrir, pois o HTTP, de propósito, não está focado em alguma plataforma específica e esconde isso de nós. Bom, eu não vou esconder nada e vou contar para vocês que a Alura usa a plataforma Java e o servidor concreto se chama Tomcat.
+
+Também já falamos que o SQL é uma linguagem para consultar o banco de dados. Alura usa SQL para acessar o banco de dados MySQL.
+
+Com essas informações já temos uma breve ideia da arquitetura da Alura!
+
+Cliente  <--- HTTP ---> Servidor Java  <--- SQL ---> Banco de dados
+
+Há arquiteturas muito mais complexas, mas a grande maioria usa o protocolo HTTP no topo. O protocolo HTTP garante a conectividade. Isso quer dizer que o protocolo HTTP funciona em todos os lugares, sem ter problemas com firewalls e outras regras de segurança. Nós podemos nos conectar sem maiores problemas com qualquer servidor no mundo!
+
+
+
+
+
+
+
+
+
+
+
