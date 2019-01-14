@@ -79,4 +79,37 @@
 
 * TCP - protocolo de rede que roda abaixo do HTTP.
 
-* POST envia valores.
+* `GET` - Recebe dados (params na URL).
+* `POST` - Submeter dados (params no corpo da requisição).
+* `PUT` - Atualizar o recurso inteiro, todos os dados.
+* `PATCH` - Atualiza algo mais específico, atualização parcial.
+* `DELETE` - Remover o recurso.
+
+* Request-Response é uma conversa entre aplicações/serviços.
+
+* `Accept: application/json` -> indicamos para o servidor que queremos recerber a resposta nesse formato de `JSON`.
+* Retorno do cabeçalho dessa requisição -> `status code: 200` e `Content-Type: application/json`.
+* Podemos especificar o formato que esperamos que seja devolvido com o `Accept`.
+* Accept: text/html, Accept: text/css, Accept: application/xml, Accept: application/json, Accept:image/jpeg e Accept: image/
+
+* URI + METHOD está ligado a ação que quero representar.
+* Requisições `REST` são feitas pelas ações enviadas (POST - insere / PUT - atualiza).
+* Podemos trabalhar com as mesmas URLs para ações diferentes.
+* http://alurafood.com/api/restaurante via `GET` - Pede todos os restaurantes.
+* http://alurafood.com/api/restaurante via `POST` - Adiciona um restaurante.
+* http://alurafood.com/api/restaurante/1 via `PUT/PATCH` - Atualiza o restaurante 1.
+* http://alurafood.com/api/restaurante/1 via `DELETE` - Remove o restaurante 1.
+
+* REST - REpresentational State Transfer.
+* Trabalhar com a WEb da maneira que ela específica.
+* Temos um recurso (URI), temos as operações (GET/POST/PUT/DELETE - verbos do HTTP) e temos a representação do que queremos trafegar ou receber (HTML/XML/JSON). Então `REST` é uma maneira como conseguimos lidar com serviços WEB usando da mesma forma que o HTTP foi proposto. Um modelo arquitetural específico para quando criamos um WEBSERVICE.
+
+* Logo podemos perceber que o padrão usado pela equipe do webservice define que uma requisição web tem três tipos de componentes importantes: recursos (URI), operações (GET, POST, PUT, DELETE/...) e representação de dados(XML, JSON, ...).
+
+* Esses três componentes em conjuntos seguindo algumas práticas são a base para o modelo arquitetural REST(Representational State Transfer) ou em português Transferência de Estado Representacional.
+
+* REST é um padrão arquitetural para comunicações entre aplicações.
+* Ele aproveita a estrutura do HTTP.
+* Recursos são definidos via URI.
+* Operações com métodos HTTP(GET/POST/PUT/DELETE).
+* Cabeçalhos(Accept/Content-Type) são usados para especificar as representações(JSON,XML,...).

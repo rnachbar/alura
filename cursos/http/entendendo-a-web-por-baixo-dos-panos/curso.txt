@@ -760,3 +760,271 @@ Para finalizar o capítulo, mencionamos que existem outros métodos HTTP como o 
 
 Em geral, há mais recursos que o protocolo HTTP oferece, como vários outros cabeçalhos que especificam mais a requisição e resposta. Aqui nesse treinamento vimos os mais importantes métodos, códigos e cabeçalhos do protocolo HTTP.
 
+
+##### 07. Serviços na web com REST #####
+
+
+Já estudamos como o modelo de requisição-resposta funciona usando o browser para esse estudo. Mas será que toda a requisição HTTP sempre tem como origem um navegador? E toda resposta só possui conteúdo que ele entende: HTML, CSS, Javascript e imagens?
+
+Nesse capítulo veremos como as aplicações conseguem se comunicar e responder as questões levantadas anteriormente.
+
+Serviços WEB
+Hoje existem milhões de softwares rodando ou sendo desenvolvidos em várias linguagens de programação e frameworks. Tais softwares não vivem necessariamente isolados e podem querer se comunicar de alguma forma.
+
+Um exemplo clássico é o login via rede social que estamos cada vez mais habituados. Essa conversa acaba sendo transparente para nós, usuários, já que exige uma autorização de acesso às nossas informações.
+
+Em outros momentos as aplicações conversam sem que nada visual seja implementado ou mesmo uma autorização do cliente seja pedida.
+
+As aplicações que disponibilizam serviços para outras são chamadas de webservices. E uma API de utilização é documentada para uma integração eficiente entre sistemas.
+
+Temos serviços web para trabalhar com pagamentos(Paypal é um exemplo famoso), upload de imagens, transformação de CEP em endereços textuais e diversos outros. Tudo isso é feito através do poderoso protocolo HTTP.
+
+Cenário de trabalho
+Você muito provavelmente já teve uma péssima experiência quando estava sem conexão com a internet usando um aplicativo móvel. Alguns apps não funcionam sem um acesso a rede porque as principais funcionalidades são feitas via requisições HTTP.
+
+Essas requisições são implementadas programaticamente pelo desenvolvedor. Podemos implementá-las em várias linguagens de programação: Java, PHP, Javascript etc.
+
+Para exemplificar vamos imaginar que temos aqui na Alura uma divisão responsável por uma aplicação de pedido de refeições que é a AluraFood.
+
+A AluraFood tem duas equipes em ação: a do serviço web(ou simplesmente API web) e a dos apps mobile(Android e iOS).
+
+Os desenvolvedores responsáveis pela tela de listagem de restaurantes vão precisar receber do serviço os detalhes de cada restaurante. Felizmente o pessoal responsável pelo webservice já documentou exatamente o que seria necessário:
+
+Listagem de todos os restaurantes --> GET - http://alurafood.com/api/restaurante
+Como retorno dessa requisição poderíamos receber o seguinte conteúdo HTML:
+
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <title>AluraFood</title>
+    <link rel="stylesheet" type="text/css" href="principal.css">
+    <script type="text/javascript" src="build.js"></script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>Bob's</td>
+            <td>8</td>
+            <td>R. do México 100</td>
+            <td><img src="http://alurafoods.com/uploads/logos/bobs.png"/></td>
+        </tr>
+        <tr>
+            <td>Subway</td>
+            <td>8.5</td>
+            <td>Av. Rio Branco 202</td>
+            <td><img src="http://alurafoods.com/uploads/logos/subway.png"/></td>
+        </tr>
+        <tr>
+            <td>Experimenta Lanches</td>
+            <td>9</td>
+            <td>R. do Brasil 545</td>
+            <td><img src="http://alurafoods.com/uploads/logos/e-lanches.png"/></td>
+        </tr>
+    </table>
+</body>
+</html>
+Perceba que temos uma listagem de restaurante sendo apresentada dentro de uma tabela(elemento table do HTML) e cada linha(elemento tr) possui 4 colunas(td). Dentro de cada coluna temos as informações dos restaurantes: nome, nota de avaliação, endereço e logo.
+
+Logo percebemos que os responsáveis precisarão realizar uma análise do conteúdo HTML e extrair dele somente as informações necessárias. Esse ato de analisar o documento é chamado de realizar um parsing do arquivo.
+
+Perceba que o HTML tem muito mais do que o necessário para essa equipe, é um formato de verbosidade considerável: temos cabeçalhos e tags diversas. Para piorar estamos trafegando muito mais informações do que o necessário e onerando até mesmo a banda do nosso usuário. Péssimo cenário não é mesmo?
+
+Pensando nessa deficiência do HTML temos outros formatos que fazem mais sentido quando uma representação de um recurso (um restaurante) se faz necessário. Temos como exemplo mais legível o XML(eXtensible Markup Language) que poderia ser devolvido como resposta e ter o seguinte conteúdo:
+
+<?xml version="1.0"?>
+<restaurantes>
+    <restaurante>
+        <nome>Bob'</nome>
+        <avaliacao>8</avaliacao>
+        <endereco>R. do México 100</endereco>
+        <logo>http://alurafoods.com/uploads/logos/bobs.png</logo>
+    </restaurante>
+    <restaurante>
+        <nome>Subway</nome>
+        <avaliacao>8.5</avaliacao>
+        <endereco>Av. Rio Branco 202</endereco>
+        <logo>http://alurafoods.com/uploads/logos/subway.png</logo>
+    </restaurante>
+    <restaurante>
+        <nome>Experimenta Lanches</nome>
+        <avaliacao>9</avaliacao>
+        <endereco>R. do Brasil 545</endereco>
+        <logo>http://alurafoods.com/uploads/logos/e-lanches.png</logo>
+    </restaurante>
+</restaurantes>
+Outro famoso formato e onerando menos ainda a rede, por ser mais leve, é o JSON(JavaScript Object Notation):
+
+[
+   {
+      "nome": "Bob'",
+      "avaliacao": "8",
+      "endereco": "R. do México 100",
+      "logo": "http://alurafoods.com/uploads/logos/bobs.png"
+   },
+   {
+      "nome": "Subway",
+      "avaliacao": "8.5",
+      "endereco": "Av. Rio Branco 202",
+      "logo": "http://alurafoods.com/uploads/logos/subway.png"
+   },
+   {
+      "nome": "Experimenta Lanches",
+      "avaliacao": "9",
+      "endereco": "R. do Brasil 545",
+      "logo": "http://alurafoods.com/uploads/logos/e-lanches.png"
+   }
+]
+Mas como especificar à aplicação de serviço que gostaríamos de receber em um formato JSON? Via cabeçalho HTTP!
+
+Para indicar que queremos resposta no formato JSON usa-se um Accept: application/json como cabeçalho HTTP. Por outro lado já na resposta uma indicação desse conteúdo é especificado pelo cabeçalho Content-Type: application/json.
+
+No desenvolvimento Web, para o envio de dados através de formulários, quais são os métodos HTTP que são mais utilizados pelos desenvolvedores no dia a dia?
+
+GET e POST
+Correto, GET e POST são de longe os métodos mais utilizados.
+
+Os métodos GET e POST são de longe os métodos mais utilizados no desenvolvimento web, mas porque isso?
+
+A resposta está no nosso HTML! Para enviar uma requisição HTTP sem uso do JavaScript é preciso escrever um código HTML, correto? Em detalhe para enviar uma requisição HTTP devemos usar a tag a ou um form e para POST devemos usar sempre a tag form.
+
+E ai está o problema pois não tem uma forma que permite enviar um requisição HTTP pelo HTML a não ser GET ou POST. Para usar os outros métodos como DELETE ou PUT é preciso programar em JavaScript e nem sempre isso é desejável.
+
+Leia abaixo as afirmações sobre o protocolo.
+
+Marque todas as afirmações verdadeiras:
+
+Requisições HTTP podem ser enviadas através de qualquer aplicativo/software que entenda o protocolo.
+Afirmação correta , o HTTP não depende do navegador. Aliás, o tempo todo o nosso celular usa o HTTP para enviar requisições através de aplicativos!
+
+Alternativa correta
+HTTP é totalmente independente do formato dos dados.
+Afirmação correta pois HTTP não depende de um formato especifico!
+
+HTTP pode trafegar tanto dados binários quanto dados textuais.
+Afirmação correta pois HTTP pode trafegar dados binários como imagens e dados textuais como HTML ou CSS!
+
+O protocolo HTTP envia dados em texto puro e já estudamos sobre as implicações disso em questões de segurança. Vimos inclusive como o HTTPS lida com isso.
+
+Em alguns momentos se faz necessário avisar na própria requisição um formato específico esperado para a resposta.
+
+De que forma podemos especificar o formato que esperamos que seja devolvido?
+
+Pelo cabeçalho Accept.
+Através dele podemos usar algum formato específico como:
+Accept: text/html, Accept: text/css, Accept: application/xml, Accept: application/json, Accept:image/jpeg e Accept: image/*
+Ou até mesmo não definir nenhum formato específico colocando:
+Accept: */*
+
+Tudo certo para a listagem de restaurantes. Mas será que o app AluraFood se resume a listar restaurantes? Provavelmente não, dado que o usuário efetua pedidos, um restaurante tem cardápio que poderia sofrer alterações e por aí vai.
+
+Algumas funcionalidades específicas aos responsáveis de um restaurante podem ser necessárias. E para isso o webservice deveria estar preparado também para lidar com essa necessidade:
+
+Listagem de todos os restaurantes --> GET - /restaurante
+
+Adicionar um  restaurante --> POST - /restaurante
+Perceba que no exemplo fictício as duas primeiras URIs são idênticas e a funcionalidade muda completamente a partir do método HTTP usado:
+
+GET -> Listagem
+POST -> Criação
+
+A atualização poderia ter um outro endpoint como por exemplo:
+
+PUT/PATCH - /restaurante/1
+
+O número 1 ao final da URI indica um identificador a um restaurante específico.
+
+A remoção de um restaurante poderia seguir o mesmo modelo:
+
+DELETE - /restaurante/1
+
+Para a busca do cardápio de um restaurante específico o endpoint gerado poderia seguir o modelo:
+
+GET - /restaurante/1/cardapio
+
+O padrão REST
+
+Logo podemos perceber que o padrão usado pela equipe do webservice define que uma requisição web tem três tipos de componentes importantes: recursos (URI), operações (GET, POST, PUT, DELETE/...) e representação de dados(XML, JSON, ...).
+
+Esses três componentes em conjuntos seguindo algumas práticas são a base para o modelo arquitetural REST(Representational State Transfer) ou em português Transferência de Estado Representacional.
+
+Recurso
+
+Ao criar as URIs do nosso sistema devemos levar em conta que elas representam recursos, não ações.
+
+Em sistemas REST, nossas URIs devem conter apenas substantivos, que são nossos recursos: /restaurante/adiciona não é uma boa URI, pois contém um verbo e não está identificando um recurso, mas sim uma operação.
+
+Para representar a adição de um restaurante podemos usar a URI /restaurante com o método HTTP POST, que representa que estamos adicionando alguma informação no sistema.
+
+Operações
+
+O protocolo HTTP possui operações através de métodos como: GET, POST, PUT e DELETE.
+
+Cada método tem uma semântica diferente e juntando o método à URI deveríamos conseguir representar todas as ações do nosso sistema.
+
+As semânticas principais são:
+
+GET - recupera informações sobre o recurso identificado pela URI. Ex: listar restaurante, visualizar o restaurante 1. Uma requisição GET não deve modificar nenhum recurso do seu sistema, ou seja, não deve ter nenhum efeito colateral, você apenas recupera informações do sistema.
+
+POST - adiciona informações usando o recurso da URI passada. Ex: adicionar um restaurante. Pode adicionar informações a um recurso ou criar um novo recurso.
+
+PUT - adiciona (ou modifica) um recurso na URI passada. Ex: atualizar um restaurante.
+
+DELETE - remove o recurso representado pela URI passada. Ex: remover um restaurante.
+
+Representação
+
+Quando fazemos uma aplicação não trafegamos um recurso pela rede, apenas uma representação dele. E essa representação pode ser feita de diferentes formas como JSON, XML ou HTML.
+
+Conclusão
+
+Nossas URIs devem representar recursos, as operações no recurso devem ser indicadas pelos métodos HTTP e podemos falar qual é o formato em que conversamos com o servidor com o Content-Type e Accept que são cabeçalhos do HTTP.
+
+Veja a seguinte URL:
+
+http://alura.com.br/cursos/23/exercicios
+Supondo que você esteja acessando esse recurso através de uma requisição HTTP GET com o cabeçalho Accept: application/xml, o que se espera que aconteça?
+
+Na resposta recebemos os exercícios do curso 23 no formato XML.
+Correto, pois GET tem a semântica de receber dados e o formato foi definido por meio do cabeçalho Accept.
+
+Resumindo, ao enviar um HTTP GET:
+
+http://alura.com.br/cursos/23/exercicios
+Devemos receber os exercícios do curso 23 no formato XML.
+
+É importante mencionar que isso é o esperado, mas o que realmente acontece depende da implementação do servidor. O protocolo HTTP define uma semântica, mas o servidor pode ou não obedecê-la! Também pode ser que o servidor atenda um formato como JSON, mas não trabalhe com XML.
+
+Sabemos que o domínio da Alura é:
+
+cursos.alura.com.br
+Você entrou na equipe de desenvolvedores da Alura e precisa definir o recurso para atualizar uma parte do exercício com a id 3 do curso http. Qual método HTTP e qual URL você escolheria?
+
+PATCH e http://cursos.alura.com.br/cursos/http/exercicios/3
+Correto, PATCH é utilizado para atualização parcial do recurso que foi definido expressivamente: /cursos/http/exercicios/3
+
+Apesar do PATCH fazer parte da especificação e atender corretamente a essa questão, o método mais utilizado para essa finalidade é o PUT.
+
+REST é um padrão arquitetural para comunicações entre aplicações.
+
+Ele aproveita a estrutura do HTTP.
+
+Recursos são definidos via URI.
+
+Operações com métodos HTTP(GET/POST/PUT/DELETE).
+
+Cabeçalhos(Accept/Content-Type) são usados para especificar as representações(JSON,XML,...).
+
+Em alguns cabeçalhos do HTTP devemos especificar algum formato. Os formatos são chamados na documentação de MIME types. E na definição do cabeçalho usamos a seguinte estrutura: tipo/subtipo. São tipos conhecidos:
+
+text, image, application, audio e video
+
+E alguns subtipos:
+
+text -> text/plain, text/html, text/css, text/javascript
+image -> image/gif, image/png, image/jpeg
+audio -> audio/midi, audio/mpeg, audio/webm, audio/ogg, audio/wav
+video -> video/mp4
+application -> application/xml,  application/pdf
+
+Para conhecer outros formatos aceitos você pode acessar aqui: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
