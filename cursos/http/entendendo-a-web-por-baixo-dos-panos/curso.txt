@@ -170,3 +170,140 @@ Essa garantia é feita através de uma assinatura digital. A autoridade certific
 
 Uma autoridade certificadora (CA - Certificate Authority) é um órgão que garante ao navegador e ao usuário que a identidade de um servidor (por exemplo o servidor da Alura) é realmente válida. Portanto, podemos trocar informações com este sem riscos!
 
+Aprendemos no vídeo que o HTTPS usa uma chave pública e uma chave privada. As chaves estão ligadas matematicamente, o que foi cifrado pela chave pública só pode ser decifrado pela chave privada. Isso garante que os dados cifrados pelo navegador (chave pública) só podem ser lidos pelo servidor (chave privada). Como temos duas chaves diferentes envolvidas, esse método de criptografia é chamado de criptografia assimétrica. No entanto, a criptografia assimétrica tem um problema, ela é lenta.
+
+Por outro lado, temos a criptografia simétrica, que usa a mesma chave para cifrar e decifrar os dados, como na vida real, onde usamos a mesma chave para abrir e fechar a porta. A criptografia simétrica é muito mais rápida, mas infelizmente não tão segura. Como existe apenas uma chave, ela ficará espalhada pelos clientes (navegadores) e qualquer um, que tem a posse dessa chave, pode decifrar a comunicação.
+
+Agora, o interessante é que o HTTPS usa ambos os métodos de criptografia, assimétrica e simétrica. Como assim? Muita calma, tudo o que aprendemos é verdade! Só faltou o grande final :)
+
+No certificado, vem a chave pública para o cliente utilizar, certo? E o servidor continua na posse da chave privada, ok? Isso é seguro, mas lento e por isso o cliente gera uma chave simétrica ao vivo. Uma chave só para ele e o servidor com o qual está se comunicando naquele momento! Essa chave exclusiva (e simétrica) é então enviada para o servidor utilizando a criptografia assimétrica (chave privada e pública) e então é utilizada para o restante da comunicação.
+
+Então, HTTPS começa com criptografia assimétrica para depois mudar para criptografia simétrica. Essa chave simétrica será gerada no início da comunicação e será reaproveitada nas requisições seguintes. Bem-vindo ao mundo fantástico do HTTPS :)
+
+
+##### 03. Endereços sob seu domínio #####
+
+
+Você que está usando a Alura, já conhece então o endereço: https://www.alura.com.br. Já sabemos que o endereço começa com http ou https. Repare que depois do nome do protocolo vem :// seguido pelo nome do site, que é www.alura.com.br. No vocabulário de um desenvolvedor o www.alura.com.br é o domínio (ou domain). A abreviação www representa o world wide web.
+
+Analisando o domínio
+
+Vamos dar uma olhada com mais carinho no nome do domínio. Olhando da direita para a esquerda, o domínio começa com br, indicando um site do Brasil. O br representa o top level domain, está na raiz do domínio. Depois vem o com, abreviação de comercial e alura. O com e o alura são sub-domínios.
+
+O www representa também um sub-domínio, no entanto seu uso é opcional, tanto que alura.com.br e www.alura.com.br funcionam e mostram a mesma página. A maioria dos site usam o prefixo www e podemos dizer que isso é algo legado que continua ser popular apesar de não ser necessário.
+
+Subdomínios
+
+Existe também a ideia de subdomínios, que representam sessões específicas dentro de um site. Por exemplo, no caso do Gmail temos o endereço: mail.google.com , ou ainda no caso do Google Drive: drive.google.com. Tanto Gmail como Drive são subdomínios do domínio Google.
+
+Perceba que esses subdomínios apontam para páginas diferentes dentro do mesmo domínio (Google).
+
+Endereços IP's
+
+O nome do domínio é organizado em uma hierarquia que foi criada para organizar os sites na internet e para a gente ter algo fácil para se lembrar. Para ser correto, a internet funciona na verdade sem esses domínios. Aqueles nomes são coisas dos humanos, as máquinas na internet têm uma outra forma de se endereçar. Elas usam o que se chama endereços de IP, que nada mais são do que números - muito difícil para gente decorar.
+
+Sendo assim, podemos acessar o Google usando um IP. Para quem é muito curioso, mas muito curioso mesmo e deseja saber qual é o IP do Google, pode digitar na linha de comando a seguinte instrução:
+
+nslookup google.com
+...
+Name:    google.com
+Address: 216.58.202.238
+Esse comando procura o número IP do Google na internet. Podemos até usar esse endereço no navegador: http://216.58.202.238
+
+A página principal do Google deve ser exibida. IP's são mais importantes para quem trabalha com rede. O desenvolvedor normalmente não precisa mexer com isso.
+
+Observação: Esse IP pode mudar dependendo do servidor concreto onde o Google foi instalado.
+
+DNS
+
+Mas a gente não acessa a Google ou a Alura por um número como 52.206.164.173 e sim pela URL.
+
+Ainda bem, não é verdade? Seria inviável decorar todos os serviços e sites que acessamos diariamente apenas por números.
+
+Acontece que por baixo dos panos quando realizamos uma requisição essa URL é transformada em um número por um serviço transparente chamado de DNS (Domain Name System).
+
+Esse serviço age como um grande banco de dados de domínios. Portanto quando fazemos uma requisição para alura.com.br o DNS age transformando para um IP e a requisição prossegue.
+
+Podemos inclusive escolher um servidor DNS de preferência na nossa internet. Um bastante usado é o da própria Google: https://developers.google.com/speed/public-dns/
+
+Falamos bastante sobre o domínio nessa aula, mas o que é um domínio (ou domain name) e qual a sua importância?
+
+O domínio é o nome do site na Web. Ele facilita a navegação do usuário, que não precisa lembrar o IP de cada site.
+Alternativa correta, o domínio é o nome do site na web e serve para facilitar a navegação do usuário, que acaba não precisando lembrar o IP de cada site.
+
+Qual é o objetivo ou a função do DNS (Domain Name System ou servidor de domínios)?
+
+O DNS tem como função realizar a tradução do nome de um domínio para o endereço de IP correspondente.
+O DNS realiza a tradução do nome de um domínio para o endereço de IP. Existem vários servidores DNS no mundo e é fundamental para a nossa web o funcionamento deles.
+
+Como já falamos, quando usamos a URL https://www.alura.com.br abrimos uma conexão com o servidor que roda em algum lugar na internet. Para estabelecer uma conexão na rede é preciso saber qual é o endereço IP, e já vimos como descobri-lo.
+
+Agora imagine que o servidor é uma casa: dependendo da casa há várias portas disponíveis. O que é preciso saber é qual porta devemos utilizar quando chegarmos na casa. Ou seja, devemos saber qual porta é utilizada para o protocolo HTTP!
+
+Abrindo portas
+
+A porta reservada para o protocolo HTTP é o 80. Novamente um número, e como o navegador já sabe essa porta padrão, podemos omiti-la, mas nada nos impede adicioná-la no endereço, por exemplo:
+
+http://www.alura.com.br:80
+
+Vai funcionar normalmente, tanto que o navegador esconde automaticamente :80. Vamos tentar uma outra porta, outro numero, por exemplo 81:
+
+http://www.alura.com.br:81
+
+Não funciona, pois essa porta não está aberta no servidor, não podemos estabelecer uma conexão e o tempo de conexão vai esgotar. Igualmente, o protocolo HTTPS possui uma porta padrão, a porta 443, que também podemos omitir ao acessarmos um endereço HTTPS. Podemos testar também e ver que funciona normalmente.
+
+https://www.alura.com.br:443
+
+Veja o endereço abaixo:
+http://www.alura.com.br
+Qual é a porta utilizada?
+
+80
+Correto e como ela é o padrão você pode omiti-la no endereço.
+
+Como as portas padrões são conhecidas pelo navegador, elas podem ser omitidas ao escrevermos uma URL.
+
+Vários protocolos definem a sua porta padrão como por exemplo o FTP que usa 21 ou SSH que usa 22.
+
+Navegando dentro da Alura, mais informações aparecem depois do nome e do domínio. Por exemplo, para acessar a página principal dos cursos, usamos https://cursos.alura.com.br/dashboard. O /dashboard é um recurso (resource) do site que gostaríamos de acessar. Existem vários outros recursos na Alura como as carreiras (/careers), ou o fórum de discussões (/forum). O importante é que cada recurso possua o seu nome único.
+
+Navegando um pouco mais na Alura, podemos perceber que entre o domínio e o recurso podem vir outras informações . Por exemplo, para acessar o curso HTML5 e CSS3 I: Suas primeiras páginas da Web, usamos https://cursos.alura.com.br/course/introducao-html-css. Ou seja, para acessarmos o recurso /introducao-html-css, usamos um caminho intermediário, o /course. Há vários outros exemplos na Alura que usam caminhos para chegar ao recurso concreto, como por exemplo /courses/mine, e navegando na Alura você encontrará mais.
+
+Finalmente, a URL
+Repare que estamos usando umas regras bem definidas para descrever a localização de um recurso na web. Todos os endereços na web sempre seguem esse mesmo padrão: protocolo://dominio:porta/caminho/recurso. Esse padrão, na verdade, segue uma especificação que foi batizada de Uniform Resource Locator, abreviada como URL. Então, as URLs são os endereços na web!
+
+Veja a URL abaixo:
+smb://server/download/videos/http.mp4
+Nesse exemplo, como se chama o protocolo?
+
+smb
+Correto, o protocolo especificado na URL se chama smb (aquilo que vem antes do ://)
+
+O protocolo especificado nessa URL se chama smb.
+
+Lembrando que a URL sempre começa com o nome do protocolo:
+
+O protocolo smb realmente existe e é a abreviação de Server Message Block. Ele é utilizado para compartilhar arquivos dentro de uma rede local.
+
+Veja a URL a seguir:
+http://g1.globo.com/index.html
+Qual é o nome do recurso?
+
+/index.html
+Alternativa correta, o recurso é aquilo que vem depois do domínio/.
+
+No início da web, os recursos, na grande maioria, eram arquivos com a extensão .html ou .htm. Até hoje existem vários recursos que são arquivos na web. Mas reparem que a Alura não funciona dessa maneira. Em nenhum momento você acessa um arquivo no Alura. Por exemplo, para ver um curso, você usa a URL:
+
+https://cursos.alura.com.br/course/introducao-html-css
+
+Isso é um pouco mais legível e possui a vantagem que a URL não diz nada a respeito do formato. A URL não fica amarrada ao formato HTML.
+
+Muitas vezes, desenvolvedores usam a sigla URI (Uniform Resource Identifier) quando falam de endereços na web. Alguns preferem URL (Uniform Resource Locator), e alguns misturam as duas siglas à vontade. Há uma certa confusão no mercado a respeito e mesmo desenvolvedores experientes não sabem explicar a diferença. Então, qual é a diferença?
+
+Resposta 1 (fácil): Uma URL é uma URI. No contexto do desenvolvimento web, ambas as siglas são válidas para falar de endereços na web. As siglas são praticamente sinônimos e são utilizadas dessa forma.
+
+Resposta 2 (mais elaborada): Uma URL é uma URI, mas nem todas as URI's são URL's! Existem URI's que identificam um recurso sem definir o endereço, nem o protocolo. Em outras palavras, uma URL representa uma identificação de um recurso (URI) através do endereço, mas nem todas as identificações são URL's.
+
+Humm ... ficou claro? Não? Vamos dar um exemplo! Existe um outro padrão que se chama URN (Uniform Resource Name). Agora adivinha, os URN's também são URI's! Um URN segue também uma sintaxe bem definida, algo assim urn:cursos:alura:course:introducao-html-css. Repare que criamos uma outra identificação do curso Introdução ao HTML e CSS da Alura, mas essa identificação não é um endereço.
+
+Novamente, a resposta 2 vai muito além do que você realmente precisa no dia a dia. Normalmente URL e URI são usados como sinônimos.

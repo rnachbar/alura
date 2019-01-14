@@ -20,15 +20,27 @@
 
 * Uma autoridade certificadora (CA - Certificate Authority) é um órgão que garante ao navegador e ao usuário que a identidade de um servidor é realmente válida. Portanto, podemos trocar informações com este sem riscos!
 
-Aprendemos no vídeo que o HTTPS usa uma chave pública e uma chave privada. As chaves estão ligadas matematicamente, o que foi cifrado pela chave pública só pode ser decifrado pela chave privada. Isso garante que os dados cifrados pelo navegador (chave pública) só podem ser lidos pelo servidor (chave privada). Como temos duas chaves diferentes envolvidas, esse método de criptografia é chamado de criptografia assimétrica. No entanto, a criptografia assimétrica tem um problema, ela é lenta.
+* Endereço: http (`protocolo`) :// www.alura.com.br (`domínio`)
 
-Por outro lado, temos a criptografia simétrica, que usa a mesma chave para cifrar e decifrar os dados, como na vida real, onde usamos a mesma chave para abrir e fechar a porta. A criptografia simétrica é muito mais rápida, mas infelizmente não tão segura. Como existe apenas uma chave, ela ficará espalhada pelos clientes (navegadores) e qualquer um, que tem a posse dessa chave, pode decifrar a comunicação.
+* `$ nslookup google.com` esse comando (feito via terminal do computador) server para informar alguns dados do domínio passado como, por exemplo, o endeço IP do domínio.
 
-Agora, o interessante é que o HTTPS usa ambos os métodos de criptografia, assimétrica e simétrica. Como assim? Muita calma, tudo o que aprendemos é verdade! Só faltou o grande final :)
+* Um domínio é um nome fácil de ser gravado mas as aplicações web são representadas através de endereçamentos de IP (IP do servidor).
 
-No certificado, vem a chave pública para o cliente utilizar, certo? E o servidor continua na posse da chave privada, ok? Isso é seguro, mas lento e por isso o cliente gera uma chave simétrica ao vivo. Uma chave só para ele e o servidor com o qual está se comunicando naquele momento! Essa chave exclusiva (e simétrica) é então enviada para o servidor utilizando a criptografia assimétrica (chave privada e pública) e então é utilizada para o restante da comunicação.
+* DNS (Domain Name System).
+* Não precisamos digitar o IP para acessar sites por causa do DNS.
+* DNS é um serviço que resolve para você o nome de um domínio.
+* Quando eu digito no navegar google.com.br, essa requisição conversa com o servidor DNS, que age como se fosse um banco de dados onde temos números (IP) para vários domínios e ele verifica qual o endereço IP do que foi digitado.
 
-Então, HTTPS começa com criptografia assimétrica para depois mudar para criptografia simétrica. Essa chave simétrica será gerada no início da comunicação e será reaproveitada nas requisições seguintes. Bem-vindo ao mundo fantástico do HTTPS :)
+* HTTP - Porta padrão 80.
+* HTTPS - Porta padrão 443.
+* FTP - Porta padrão 21.
+* SSH - Porta padrão 22.
 
+* Um servidor pode ter várias portas abertas para acessos (`Listen 8081` e configuração de `vhost`).
+* O servidor não responde para uma porta que não esteja aberta e da erro de timeout.
 
+* Quando utilizamos `HTTP` nos omitimos qual porta está sendo utilizada. Mas isso não impede que no fim do domínio coloquemos :80 (portão padrão do HTTP - http://www.google.com:80). Isso indica que estamos fazendo uma requisição para esse domínio mas lá no servidor acessa a porta 80.
 
+* URL (Uniform Resource Locator).
+* URI (Uniform Resource Identifier).
+* URN (Uniform Resource Name).
