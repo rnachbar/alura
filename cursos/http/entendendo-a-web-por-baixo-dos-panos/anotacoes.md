@@ -44,3 +44,18 @@
 * URL (Uniform Resource Locator).
 * URI (Uniform Resource Identifier).
 * URN (Uniform Resource Name).
+
+* HTTP não guarda estado, cada requisição é única (independente) no mundo do WEB.
+* Quando fazemos uma requisição, a requisição seguinte não sabe o que foi passado na anterior.
+
+* Cookies são pares de chaves ou valores onde armazenamos dados, por exemplo, para uma sessão de usuário logado.
+* A tecnologia de sessão só é possível porque o browser consegue guardar cookies.
+
+* O protocolo HTTP segue o modelo REQUISIÇÃO-RESPOSTA.
+* HTTP é STATELESS.
+
+* Um cookie é um pequeno arquivo de texto, normalmente criado pela aplicação web, para guardar algumas informações sobre usuário no navegador. Quais são essas informações depende um pouco da aplicação. Pode ser que fique gravado alguma preferência do usuário. Ou algumas informações sobre as compras na loja virtual ou, como vimos no vídeo, a identificação do usuário. Isso depende da utilidade para a aplicação web.
+
+* É importante lembrarmos que a comunicação sempre começa com o cliente: é ele quem pede as informações. O servidor responde apenas o que foi requisitado e nunca inicia a comunicação.
+
+* No HTTP: Request -> espera -> Resposta
