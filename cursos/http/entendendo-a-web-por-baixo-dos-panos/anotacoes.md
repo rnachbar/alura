@@ -78,3 +78,5 @@
 * https://http.cat/
 
 * TCP - protocolo de rede que roda abaixo do HTTP.
+
+* POST envia valores.
