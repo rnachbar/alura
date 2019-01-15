@@ -55,9 +55,13 @@
 ## Mac OS X
 
 * Para instalar o MariaDB no Mac OS X, abra o terminal e digite o seguinte comando:
-
 * `$ brew install mariadb`
 
 * E, depois da instalação, você pode ativar o MariaDB com o comando:
-
 * `$ mysql.server start`
+
+# Executar o PHP
+
+* Abra o terminal do Windows, ou qualquer outro de sua preferência e navegue até a pasta do projeto.
+
+* Para que o servidor web funcione, usaremos o comando `$ php -S 127.0.0.1:8888` passando como parâmetros o IP e a porta (porta de sua preferência) para o qual queremos que o servidor suba, no caso, a mesma máquina que estamos utilizando, ou o IP local.

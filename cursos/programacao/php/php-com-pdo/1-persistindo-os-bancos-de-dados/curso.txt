@@ -1,4 +1,4 @@
-#################### 01.Introdução ao PDO ####################
+#################### 01. Introdução ao PDO ####################
 
 
 Olá pessoal, meu nome é Mario, sejam bem-vindos à primeira parte do curso de PHP com PDO! Nele, trabalharemos com o nosso sistema de controle de estoques, que envolve categorias e produtos, e lidaremos com tudo aquilo que se refere às categorias nesta primeira parte.
@@ -91,6 +91,265 @@ Aqui você pode baixar o projeto do curso inicial com todo o material do front-e
 
 Baixe o zip ou visualize os arquivos no Github (https://github.com/alura-cursos/PDO-Alura-Parte1/tree/8088bff7408a766cd4a726feec7e1802ea69425d).
 
+No exercício referente a esta aula, vocês terão todos os arquivos utilizados - de criação do banco de dados, as instruções para isso, e os arquivos de front-end. Vamos começar criando uma pasta denominada "classes", em que incluiremos um novo arquivo chamado Categoria.php.
+
+Basicamente, neste arquivo será criada uma classe para representar cada entidade, cujas necessidades estarão sob responsabilidade de cada uma delas em nosso sistema de estoque.
+
+Começaremos com "Categoria", da seguinte maneira:
+
+<?php
+
+class Categoria
+{
+
+}
+?>
+Agora, vamos dar uma olhada em nosso front-end para entendermos o que precisaremos fazer nesta parte de categorias. Neste projeto, não usaremos Apache, IIS, ou qualquer outro servidor web. O PHP possui um servidor web embutido, que poderá ser utilizado para facilitar nosso trabalho.
+
+Abriremos o Windows PowerShell, mas este pode ser substituído por qualquer outro terminal de sua preferência. Navegaremos até a pasta de nosso projeto, digitando os seguintes comandos intercalados com "Enter":
+
+cd ..
+cd .. 
+cd PDO
+ls
+O último comando nos lista todos os arquivos existentes no diretório para verficiarmos se estamos no local correto, ou seja, na raiz do nosso projeto. Para que o servidor web funcione, usaremos o comando php -S 127.0.0.1:8888 passando como parâmetros o IP e a porta para o qual queremos que o servidor suba, no caso, a mesma máquina que estamos utilizando, ou o IP local.
+
+Com "Enter", o prompt fica bloqueado para uso, sendo que poderemos parar o processamento a qualquer momento com "Ctrl + C", e será impresso o log de tudo que está acontecendo no servidor web.
+
+Vamos ver se deu certo?
+
+Abriremos o navegador e digitaremos 127.0.0.1:8888, e nosso sistema é carregado conforme esperávamos:
+
+página com menu de cabeçalho com texto "Controle de Estoque", e os links "Categorias" e "Produtos" em branco numa barra preta ao fundo; abaixo, "Seja bem-vindo ao Sistema de Controle de Estoque" e, mais abaixo, "Selecione uma das opções do Menu para começar a usar o Sistema" e, abaixo, "Ⓒ 2017 Controle de Estoque"
+
+Clicando na seção "Categorias", há um botão que serve para criarmos novas categorias, uma já existente ("Livros") sendo listada na tabela, um botão de "Editar" e outro de "Excluir". Entendemos que precisaremos fazer a lista de categorias, a ser apresentada ao usuário nesta página. Vamos voltar ao código de Categoria.php.
+
+Precisaremos fazer uma busca no banco de dados para obtermos as categorias do nosso projeto, portanto usaremos uma variável $query, que será uma string, e nela usaremos o SELECT para a consulta no banco de dados.
+
+Para executarmos a query, usaremos o PDO, com o qual precisaremos criar uma conexão a partir da variável $conexao, e fazendo uma nova instância da classe PDO passando o parâmetro que é a string de conexão, a única informação que variará de acordo com o banco de dados em uso.
+
+Tecnicamente, esta é a única mudança no caso de trocarmos de banco de dados, desde que o novo siga a mesma estrutura de tabelas e não esteja utilizando nenhuma função específica.
+
+No nosso caso, utilizaremos o MySQL, então a string de conexão será criada com base nele. Em seguida, informaremos o host onde se encontra o servidor MySQL, e o dbname do projeto.
+
+O segundo parâmetro será o usuário de conexão, e o terceiro, a senha:
+
+<?php
+
+class Categoria
+{
+    public function listar()
+    {
+        $query = "SELECT id, nome FROM categorias";
+        $conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+    }
+}
+?>
+Legal, desta forma fazemos a conexão com o banco de dados, e agora precisaremos justamente executar a query, e para isso usaremos o método query() do PDO, passando como parâmetro a string $query. Queremos que isso seja retornado para uma variável $resultado. O trecho do código ficará assim:
+
+$query = "SELECT id, nome FROM categorias";
+$conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+$resultado = $conexao->query($query);
+O método query() retorna um objeto chamado PDOStatement, com várias informações da nossa execução, incluindo o retorno, as linhas retornadas. Para obtê-las, usaremos o método fetchAll(), que retornará um array com todas as linhas que queremos da consulta.
+
+Colocaremos tudo isso em uma lista a ser retornada:
+
+$query = "SELECT id, nome FROM categorias";
+$conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+$resultado = $conexao->query($query);
+$lista = $resultado->fetchAll();
+return $lista;
+Vamos conferir seu funcionamento indo à página de Categorias e instanciando a nova classe para testarmos. Abriremos o arquivo categorias.php, em que consta puro HTML, exceto pelo require_once do cabeçalho e do rodapé.
+
+Começaremos incluindo outro require_once para chamarmos a classe Categoria. Em seguida, abriremos um bloco de PHP para a chamada para o método que acabamos de criar. E queremos que esta informação vá para uma variável chamada lista:
+
+<?php require_once 'classes/Categoria.php' ?>
+<?php
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+?>
+Para verificar se tudo funciona como esperado, voltaremos ao navegador para atualizá-la. Receberemos uma mensagem de erro, pois o PHP, por padrão, precisa que a extensão do PDO esteja ativada no servidor, o que poderemos fazer no arquivo de configuração do PHP, o php.ini.
+
+Para abri-lo e habilitarmos sua extensão de PDO, acessaremos "C: > php > php.ini" (Windows), e abriremos o arquivo no próprio bloco de notas. Veremos que ele é cheio de configurações do PHP, e o que queremos é ativar a configuração do PDO.
+
+Com "Ctrl + F", buscaremos "PDO", o que nos mostra diversas extensões, cada uma para um banco de dados diferente. No nosso caso, como estamos usando o MySQL, habilitaremos a extensão correspondente descomentando-a, isto é, retirando o ponto e vírgula (;) que a antecede, deixando-a assim:
+
+extension=php_pdo_mysql.dll
+Feito isso, salvaremos o arquivo e reiniciaremos o servidor que deixamos rodando no PowerShell, justamente para que se usem as configurações atualizadas.
+
+Então, voltaremos ao PowerShell, em que usaremos "Ctrl + C" para pausar a execução. Em seguida, o executaremos novamente. Vamos ver se isto resolve nosso problema?
+
+Sim! Agora ele está funcionando direitinho. No entanto, nossas categorias ainda não aparecem, então vamos verificar se realmente deu certo debugando a variável para ver se ela está sendo populada corretamente, por meio do método print_r() do PHP. Em categorias.php, teremos:
+
+<?php require_once 'classes/Categoria.php' ?>
+<?php
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+
+    print_r($lista);
+?>
+O print_r() é equivalente ao toString(), e tenta imprimir na tela qualquer tipo de variável, não importa se é um array, inteiro, ou booleano. Ele dará um jeito de convertê-la para uma string e imprimir.
+
+Vamos executar o código e ver o que acontece. No navegador, é indicado que trata-se de um array e nos passa todas as informações... Mas está meio ruim de visualizar assim, não?
+
+Para facilitar a visualização do retorno do print_r(), utilizaremos o echo e a tag <pre> do HTML:
+
+<?php require_once 'classes/Categoria.php' ?>
+<?php
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+
+    echo "<pre>";
+    print_r($lista);
+    echo "</pre>";
+?>
+Isso faz com que se acertem as quebras de linha, ajudando na compreensão de que há quatro categorias com os respectivos ids e nomes. Para cada categoria, existe uma chave com o nome do campo de dados (o id), e uma chave para o mesmo valor, porém numérica (0), possibilitando que se use a que preferir.
+
+Se forem usar o valor numérico, atentem-se para que não haja risco de mudar a ordem dos valores depois, pois esta informação irá variar ali.
+
+Então, poderemos deletar o debug pois já sabemos que está tudo sendo rodado como esperado. Agora, vamos jogar estas informações à nossa lista com o foreach, navegando pelo array linha a linha e capturando as informações para mostrá-las na tela.
+
+Antes da tag <tr> e após <tbody> em categorias.php, digitaremos:
+
+<?php foreach ($lista as $linha): ?>
+    <tr>
+    <!-- ... -->
+    </tr>
+<?php endforeach ?>
+Para melhorar a organização e legibilidade do nosso código quando misturamos o PHP com um arquivo HTML, costuma-se usar o padrão de escrita do PHP em uma mesma linha, usando dois pontos (:), como mostrado acima.
+
+E uma vez que abrimos esta tag com dois pontos, ela será fechada com endforeach. Com isso, simplesmente imprimiremos os valores do id e nome da categoria:
+
+<?php foreach ($lista as $linha): ?>
+    <tr>
+        <td><a href="/categorias-detalhe.php" class="btn btn-link"><?php echo $linha['id'] ?></a><td>
+        <td><a href="/categorias-detalhe.php" class="btn btn-link"><?php echo $linha['nome'] ?></a><td>
+        <td><a href="/categorias-editar.php" class="btn btn-info">Editar</a><td>
+        <td><a href="#" class="btn btn-danger">Excluir</a><td>
+    </tr>
+<?php endforeach ?>
+Vamos rodar o código e verificar o que acontece.
+
+Tudo está funcionando corretamente! Agora, temos o foreach com os nossos dados, ou seja, as categorias "Livros", "Jogos", "Filmes" e "Revistas".
+
+Até agora, criamos a classe Categoria.php, com uma $query para fazermos o SELECT. Implementamos a primeira $conexao com o PDO, em que executamos a query, cujo resultado foi retornado para outra página.
+
+Em categorias.php fizemos a instância da Categoria, a chamada no método listar(), a qual verificamos com o debug para nos averiguar sobre seu funcionamento, e fizemos um loop na tabela para imprimir todos os valores na tela!
+
+Vimos nesta aula, que para você pode usar a classe PDO do PHP para fazer uma conexão com diversos bancos de dados diferentes, apenas mudando a sua string de conexão. Qual das formas a seguir, é a forma correta para se conectar ao banco de dados MySQL/MariaDB utilizando a classe PDO?
+
+$conexao = new PDO('[drive]:host=[host];dbname=[database]', '[usuario]', '[senha]');
+Passamos a string de conexão com o banco de dados, onde nela, informamos o drive de conexão [drive], o hostname ou IP do servidor no qual o banco de dados encontra-se [host] e o database no qual, queremos efetuar a conexão [database]. Além de passar como parâmetros adicionais, o usuário que será usado para efetuar a conexão e como parâmetro opcional, a senha deste usuário.
+
+Nós aprendemos que existem várias formas de trabalhar com o php no meio de um arquivo HTML.
+
+Agora, considerando os seguintes trechos de códigos:
+
+Classe Categoria
+
+public function listar()
+{
+    $query = "SELECT id, nome FROM categorias";
+    $conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+Arquivo categorias.php onde as categorias serão listadas:
+
+<?php
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+Como podemos listar as categorias que estão na variável $lista em nossa página categorias.php?
+
+<?php foreach ($lista as $linha) { ?>
+<tr>
+  <td><a href="categorias-detalhe.php?id=<?php echo $linha['id'] ?>" class="btn btn-link"><?php echo $categoria->id ?></a></td>
+  <td><a href="categorias-detalhe.php?id=<?php echo $linha['nome'] ?>" class="btn btn-link"><?php echo $categoria->nome ?></a></td>
+  <td><a href="/categorias-editar.php?id=#" class="btn btn-info">Editar</a></td>
+  <td><a href="/categorias-deletar.php?id=#" class="btn btn-danger">Excluir</a></td>
+</tr>
+<?php } ?>
+
+Estamos fazendo um loop com o foreach na matriz lista. Onde, cada linha, tem o valor de uma linha retornada pelo banco de dados. Estamos também, usando o echo para imprimir cada casa da nossa matriz.
+
+<?php foreach ($lista as $linha): ?>
+<tr>
+  <td><a href="categorias-detalhe.php?id=<?php echo $linha['id'] ?>" class="btn btn-link"><?php echo $categoria->id ?></a></td>
+  <td><a href="categorias-detalhe.php?id=<?php echo $linha['nome'] ?>" class="btn btn-link"><?php echo $categoria->nome ?></a></td>
+  <td><a href="/categorias-editar.php?id=#" class="btn btn-info">Editar</a></td>
+  <td><a href="/categorias-deletar.php?id=#" class="btn btn-danger">Excluir</a></td>
+</tr>
+<?php endforeach; ?>
+
+Estamos usando a Sintaxe Alternativa no foreach para efetuar um loop na matriz lista. Onde, cada linha, tem o valor de uma linha retornada pelo banco de dados. Estamos também, usando o echo para imprimir cada casa da nossa matriz.
+
+Nesta aula, aprendemos algumas coisas importantes para começar a trabalhar com o PDO do php. Agora, usando esses conhecimentos, vamos fazer uma simples página que vai:
+
+Estabelecer uma conexão com o Banco de Dados;
+Efetuar um SELECT no banco de dados na tabela Categorias;
+Exibir o resultado desse SELECT usando a função print_r().
+
+Precisamos fazer com os passos abaixo para isso:
+
+Primeiro, criamos uma string $query onde vamos colocar o SELECT para buscar todas as categorias do banco de dados.
+
+Depois, vamos abrir uma conexão com o MariaDB via php-PDO com o comando new PDO() passando todas as informações para isso (drive, hostname, database, usuário e senha).
+
+Depois, vamos executar a query com o método ->query() da conexão PDO.
+
+Em seguida, vamos recuperar o resultado de nossa query, usando o método ->fetchAll()
+
+Por fim, apenas precisamos imprimir o resultado na tela usando a função print_r() em volta da tag <pre> do HTML para facilitar a visualização do resultado.
+
+Código:
+
+<?php
+
+$query = "SELECT id, nome FROM categorias";
+$conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+$resultado = $conexao->query($query);
+$lista = $resultado->fetchAll();
+
+echo '<pre>';
+print_r($lista);
+echo '</pre>';
+Resultado:
+
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [0] => 1
+            [nome] => Livros
+            [1] => Livros
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [0] => 2
+            [nome] => Jogos
+            [1] => Jogos
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [0] => 3
+            [nome] => Filmes
+            [1] => Filmes
+        )
+
+    [3] => Array
+        (
+            [id] => 4
+            [0] => 4
+            [nome] => Revistas
+            [1] => Revistas
+        )
+)
 
 
-
+#################### 02. Inserindo categorias com o PDO ####################
