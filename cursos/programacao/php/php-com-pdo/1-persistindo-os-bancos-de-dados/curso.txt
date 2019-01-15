@@ -353,3 +353,186 @@ Array
 
 
 #################### 02. Inserindo categorias com o PDO ####################
+
+
+Continuando nosso projeto, que já tem a listagem funcionando bem, agora precisaremos conseguir inserir categorias novas ao sistema. Na página aberta no navegador, vamos clicar no botão "Criar Nova Categoria" e ver como ele se comporta.
+
+É um formulário bem simples contendo uma caixa de texto a ser preenchida com o nome da categoria que queremos adicionar ao sistema, e um botão de "Salvar".
+
+Vamos criar um método em nossa classe Categoria.php para esta nova inserção:
+
+public function listar()
+{
+    $query = "SELECT id, nome FROM categorias";
+    $conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+
+public function inserir($nome)
+{
+    $query = "INSERT INTO categorias(nome) VALUES('". $nome ."')";
+}
+Em seguida, precisaremos criar a conexão com o MySQL usando o PDO novamente, após o qual faremos a execução da query, só que desta vez não usaremos o método query(), e sim exec(), para usarmos em INSERT, no caso.
+
+public function inserir($nome)
+{
+    $query = "INSERT INTO categorias(nome) VALUES('". $nome ."')";
+    $conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+    $conexao->exec($query);
+}
+Por enquanto, não precisaremos pegar seu retorno. Vamos testar para ver se funciona?
+
+Abriremos categorias-criar.php, em que se encontra o formulário. A única coisa que teremos que fazer nele é indicar o name do input, a nossa caixa de texto. E precisaremos passar a action do formulário, indicando para qual página essas informações serão enviadas.
+
+O código ficará da seguinte maneira:
+
+<form action="categorias-criar-post.php" method="post">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-group">
+                <label for="nome">Nome da Categoria</lab.
+.el>
+                <input name="nome" type="text" class="form-control" placeholder="Nome da Categoria">
+            </div>
+            <input type="submit" class="btn btn-success btn-block" value="Salvar">
+        </div>
+    </div>
+</form>
+Agora, criaremos o categorias-criar-post.php no projeto, abrindo o bloco PHP que não será fechado, isto é, não terá ?>, por conter apenas esta linguagem.
+
+Precisaremos passar o nome da categoria, e para isso criaremos $nome, que pegará nome, lembrando que a chave da variável $_POST equivale ao name do input no formulário HTML.
+
+Após a inserção, redirecionaremos o usuário à tela de lista, por meio da função header().
+
+<?php
+    require_once 'classes/Categoria.php';
+
+    $categoria = new Categoria();
+    $nome = $_POST['nome'];
+    $categoria->inserir($nome);
+
+    header('Location: categorias.php');
+Vamos testar para ver se funciona! No navegador, na página de criação de nova categoria, digitaremos "Eletrônicos" e clicaremos em "Salvar". Ela aparecerá na nossa lista corretamente. Da mesma forma, testaremos incluindo "Eletrodoméstico", o que funcionará bem também.
+
+Então, criamos Categoria.php e o método inserir() passando a variável nome, criamos seu INSERT, fizemos a conexão com o banco de dados e o executamos.
+
+Mas... Pensando que estamos tentando trabalhar com Orientação a Objetos, será que esta é a melhor forma de fazermos tudo isso? Por que não criar atributos para a nossa Categoria, justamente para deixar tudo mais claro e organizado?
+
+Temos duas colunas em nossa tabela: uma para id e outra para nome, então poderemos criar dois atributos, um para cada coluna. E em vez de passarmos como parâmetro $nome em INSERT, usaremos o atributo recém criado.
+
+Em Categoria.php, portanto, teremos:
+
+class Categoria
+{
+    public $id;
+    public $nome;
+
+    public function listar()
+    {
+        //...
+    }
+
+    public function inserir()
+    {
+        $query = "INSERT INTO categorias (nome) VALUES ('" . $this->nome . "')";
+        $conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+        $conexao->exec($query);
+    }
+}
+A diferença é que, agora, antes de instanciarmos a classe Categoria e fazermos o INSERT, vamos popular o atributo com o valor de nome, que vem do POST. Sendo assim, categorias-criar-post.php ficará da seguinte forma:
+
+$categoria = new Categoria();
+$nome = $_POST['nome'];
+$categoria->nome = $nome;
+$categoria->inserir();
+Para testarmos, criaremos a categoria "Quadrinhos", e veremos que ele foi adicionado à lista corretamente, e nosso código está bem mais organizado.
+
+Agora que conseguimos inserir novas categorias, vamos dar uma olhada no código. Os métodos listar() e inserir() se diferenciam ao abrirmos a conexão com o PDO. Em listar(), usamos o método query() para a execução da query, e em inserir(), usamos exec().
+
+Qual a diferença entre estes dois métodos?
+
+Como falado anteriormente, basicamente, o método query() retorna um PHP Statement, que possui várias informações acerca do retorno da query, como o número de linhas, por exemplo, dados que podem acabar sendo úteis para nosso trabalho.
+
+O método exec(), por sua vez, é mais puro e simples, e apenas executa, não trazendo resultados. Simplesmente sabemos se a execução foi bem sucedida ou não. E ele é usado em casos em que há inserts (inserções), updates (atualizações) ou deletes (exclusões).
+
+Podemos reparar também que nestes dois métodos há uma informação duplicada, com a conexão sendo feita exatamente da mesma forma em ambos. Se continuarmos assim, teremos quatro, cinco, seis métodos contendo as mesmas informações.
+
+Imaginando uma situação de troca de computador ou de termos que subir tudo isso para outro ambiente, cujas informações e dados são outros, cada método destes precisaria ser alterado, e isso não é legal.
+
+Poderíamos, então, centralizar estas informações em um único lugar. Da mesma forma que criamos Categoria, responsável por tudo aquilo que se refere a categorias, é possível criar uma classe para as conexões, responsável pelo gerenciamento das mesmas.
+
+Dentro da pasta "classes", então, criaremos um novo arquivo chamado Conexao.php, com a classe Conexao, que irá estabelecer a conexão e retorná-la para quem precisar. Por isso, implementaremos um método estático para este retorno:
+
+<?php
+
+class Conexao
+{
+    public static function pegarConexao()
+    {
+        $conexao = new PDO('mysql:host=127.0.0.1;dbname=estoque', 'root', 'alura');
+        return $conexao;
+    }
+}
+Em seguida, voltaremos à classe Categoria.php e substituiremos o new PDO() tanto no método listar() quanto no inserir(), pelo método recém criado, usando dois pontos duplos (::), já que é um método estático:
+
+public function listar()
+{
+    $query = "SELECT id, nome FROM categorias";
+    $conexao = Conexao::pegarConexao();
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+
+public function inserir()
+{
+    $query = "INSERT INTO categorias (nome) VALUES ('" . $this->nome . "')";
+    $conexao = Conexao::pegarConexao();
+    $conexao->exec($query);
+}
+Para verificarmos seu funcionamento, atualizaremos a lista no navegador novamente... Obtivemos um erro por esquecermos de chamar o arquivo da classe Conexao.php em Categoria.php.
+
+Vamos corrigir digitando:
+
+<?php
+
+require_once 'classes/Conexao.php';
+
+class Categoria
+{
+    //...
+}
+Dessa vez, ao atualizarmos a página no navegador, veremos a lista funcionando direitinho.
+
+Neste vídeo, criamos a classe Conexao.php para centralizar as informações da nossa conexão e, agora, se por acaso alguma delas for alterada, teremos que mexer apenas neste arquivo, o que facilita muito o trabalho.
+
+Os próximos passos consistem em trabalharmos com a edição das categorias existentes!
+
+Nessa aula, vimos uma forma diferente de executar scripts no banco de dados. O PDO::exec(). Por que não devemos usar o PDO::exec() para consultar no banco de dados com SELECT?
+
+Porque ele não vai retornar o resultado da consulta.
+O PDO::exec() retorna apenas um valor inteiro com o número de linhas afetadas pelo script que foi executado. No caso de um SELECT, não existe manipulação de dados no Banco e sim, um retorno de uma consulta. O método PDO::exec() não vai dar erro, mas não vai nos trazer o resultado.
+
+Vimos nessa aula uma forma diferente para executar scripts no banco de dados com o PDO.
+
+Qual dos métodos abaixo é a MELHOR opção para executar um script que vai alterar uma informação dentro do Banco de dados usando o PDO?
+
+$conexao->exec($query);
+O método ->exec($query) apenas retorna um valor inteiro com o número de linhas afetados pelo script. Como em um INSERT, UPDATE ou DELETE não trazem um resultado, usar o ->exec() aqui é o ideal
+
+No nosso projeto, estamos usando constantemente, um comando para importar nossas classes para dentro de nossas páginas. Qual das formas abaixo podemos usar para referenciar um arquivo externo em nosso script php?
+
+require 'caminho/do/arquivo.php';
+O require_once gera um erro fatal no php, caso o arquivo indicado não exista.
+
+require_once 'caminho/do/arquivo.php';
+O require_once gera um fatal error no php, caso o arquivo indicado não exista. O _once significa que caso mais de um arquivo referencie um mesmo arquivo, ele será ignorado, sendo referenciado uma única vez.
+
+include_once 'caminho/do/arquivo.php';
+O include_once gera apenas um warning caso o arquivo indicado não exista, dessa forma, o restande da página continua sendo processada. O _once significa que caso mais de um arquivo referencie um mesmo arquivo, ele será ignorado, sendo referenciado uma única vez.
+
+include 'caminho/do/arquivo.php';
+O include_once gera apenas um warning caso o arquivo indicado não exista, dessa forma, o restande da página continua sendo processada.
+
