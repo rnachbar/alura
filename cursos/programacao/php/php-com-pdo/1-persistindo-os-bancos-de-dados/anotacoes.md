@@ -1,0 +1,3 @@
+# Anotações do curso PHP com PDO parte 1: Persistindo os bancos de dados
+
+* O PDO possui a grande vantagem de realizar a abstração da conexão com o banco de dados. Significa que, após esta conexão, tudo aquilo que será feito é igual para qualquer banco de dados. Ou seja, não teremos métodos específicos para o MySQL, o Oracle ou o SQL Server. Basta informarmos durante a conexão qual o sistema de banco de dados a que nos conectamos para que todo o código permaneça inalterado
