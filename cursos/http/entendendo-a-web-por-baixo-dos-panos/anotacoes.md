@@ -113,3 +113,23 @@
 * Recursos são definidos via URI.
 * Operações com métodos HTTP(GET/POST/PUT/DELETE).
 * Cabeçalhos(Accept/Content-Type) são usados para especificar as representações(JSON,XML,...).
+
+* `$ curl -v www.google.com` - Esse comando é uma maneira de depurarmos uma requisição e entendermos o que acontece.
+
+* No HTTP2 o corpo da resposta foi comprimido com o GZIP.
+* O HTTP2 não envia nem recebe mais texto puro e sim conteúdo binário.
+* O HTTP2, por padrão, já criptografa as informações.
+* HPACK - Comprimi o conteúdo binário ainda mais.
+
+* GET      /
+* Host: www.caelum.com.br
+* User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:34.0)
+* Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+* Accept-Language: pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3
+* Accept-Encoding: gzip, deflate
+
+* No HTTP2 não precisamos enviar novamente os headers que já foram enviados em requisições anteriores.
+
+* O HTTP2 trabalha com o conceito de `SERVER PUSH`, onde o servidor já envia os arquivos necessários para a equisição antes mesmo da requisição pedir. O servidor pode empurrar para o clientes certos recursos antes mesmo de serem solicitados, pois ele consegue analisar o HTML e ver o que mais é preciso para carregar a página fazendo com que não seja necessário gastar tempo pedindo todos os outros recursos.
+
+* O HTTP2 fica mais a nível de servidor.
