@@ -1,0 +1,12 @@
+########## 01. Listagem de produtos ##########
+
+
+Olá, meu nome é Mario, sejam bem vindos à segunda parte do curso de PHP com PDO. Neste curso, falaremos sobre o que envolve os produtos de nosso sistema, além de fazermos algumas melhorias na parte de categorias, desenvolvida na primeira parte.
+
+Então, se você ainda não fez a primeira parte do curso, sugiro fortemente que o faça, para que você tenha toda a base necessária, com dicas sobre as conexões, as formas com as quais poderemos fazer consultas nos bancos de dados, e a manipulação de informações do mesmo.
+
+Com isso, seguiremos trabalharemos com a preparação de queries, funcionalidade muito interessante trazida pelo PDO, que implica em basicamente passarmos um parâmetro em vez de concatenar valores diretamente em uma query.
+
+Isto traz muito mais segurança, além de deixar o código muito mais organizado.
+
+Então, vamos começar?
