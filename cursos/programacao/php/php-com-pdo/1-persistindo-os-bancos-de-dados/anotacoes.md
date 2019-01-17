@@ -16,3 +16,5 @@
 	print_r($variavel);
 	echo '<pre>';
 ```
+
+* O método construtor sempre é executado quando a classe é instanciada.

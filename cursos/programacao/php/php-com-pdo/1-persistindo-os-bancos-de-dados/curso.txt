@@ -536,3 +536,366 @@ O include_once gera apenas um warning caso o arquivo indicado não exista, dessa
 include 'caminho/do/arquivo.php';
 O include_once gera apenas um warning caso o arquivo indicado não exista, dessa forma, o restande da página continua sendo processada.
 
+A partir de agora faremos a configuração da edição das nossas categorias implementando uma ação para quando o usuário clicar no botão "Editar": carregar um formulário preenchido cujas informações poderão ser modificadas e salvas posteriormente no banco de dados.
+
+Para começar, entraremos na classe Categoria e criaremos um novo método para a atualização. O arquivo já possui os métodos listar() e inserir(), e incluiremos atualizar(), com estrutura similar ao que fizemos com os outros.
+
+Criaremos uma query, que terá a instrução SQL que executaremos para a atualização, pegaremos a conexão e executaremos a query com o método exec(), como fizemos em inserir(). As únicas colunas que temos nas categorias são id e nome, sendo que o primeiro é um valor chave que nunca é alterado. Assim, o único dado que o usuário poderá editar é o nome.
+
+Também criaremos a variável conexao que, como o nome indica, receberá a conexão da nossa classe, após o qual executaremos a query.
+
+public function atualizar();
+{
+    $query = "UPDATE categorias set nome = '" . this->nome . "' WHERE id = " . $this->id;
+    $conexao = Conexao::pegarConexao();
+    $conexao->exec($query);
+}
+A partir disso, precisaremos do formulário para a edição das informações. Vamos acessar categorias.php na raiz do nosso projeto, em que se encontra a lista, que já foi criada. Quando formos chamar o formulário de edição, diferentemente do formulário de inserção, que faz o acréscimo de um valor até então inexistente, estaremos mexendo com algo que já existe.
+
+Então, precisaremos indicar a esta página o que será editado, e a melhor forma de fazê-lo é passando o id da categoria a ser editada.
+
+Lembra-se do foreach, com que fizemos a lista contendo as colunas com id e nome, bem como o botão com "Editar" e outro com "Excluir"?
+
+Poderemos aproveitar o id desta lista para passá-lo como parâmetro na url da página de edição, via query string. Em categorias.php já temos o arquivo que estamos chamando na linha do botão "Editar", isto é, categorias-editar.php. Então basta acrescentarmos um ponto de interrogação e o nome da variável, igual seu nome.
+
+Como o valor é dinâmico e definido pelo PHP, colocaremos a tag correspondente, com echo, e imprimiremos linha com o id, fechando o PHP em seguida:
+
+<?php foreach ($lista as $linha): ?>
+    <tr>
+        <td><a href="/categorias-detalhe.php" class="btn btn-link"><?php echo $linha['id'] ?></a><td>
+        <td><a href="/categorias-detalhe.php" class="btn btn-link"><?php echo $linha['nome'] ?></a><td>
+        <td><a href="/categorias-editar.php?id=<?php echo $linha['id'] ?>" class="btn btn-info">Editar</a><td>
+        <td><a href="#" class="btn btn-danger">Excluir</a><td>
+    </tr>
+<?php endforeach ?>
+Vamos ver se isso funciona?
+
+Atualizaremos a tela de listagem no navegador e passaremos o mouse sobre "Editar", e do lado inferior esquerdo é mostrado o link para o qual o botão aponta e, neste caso, o id apontado é 1, o que corresponde ao fato deste ser o primeiro botão.
+
+Se fizermos o mesmo na linha seguinte, o id será 2, como esperado, e assim por diante. Ou seja, cada botão está passando como parâmetro o id de sua categoria.
+
+Vamos testar clicando no botão referente à categoria "Livros". Aparentemente, tudo funcionando bem. Abriremos o arquivo categorias-editar.php para ver como está o código. No campo input do nome da categoria, o value está preenchido com Livros, isto é, este valor está "engessado" e não é real, tanto que se voltarmos à ferramenta e formos editar "Jogos", o placeholder continua como "Livros".
+
+Então, precisaremos fazer com que este valor fique dinâmico, para que se apresente ao usuário o valor do nome real da categoria que foi clicada para alteração. Para isto, carregaremos nesta página o objeto categoria, que representa o id, mais uma vez.
+
+Criaremos mais um método para a classe Categoria, o carregar(), similar ao método da listagem. No entanto, em vez de carregar uma lista com vários registros, carregaremos apenas um, com id específico.
+
+A diferença, portanto, é que no SELECT teremos uma cláusula WHERE, e passaremos um id como parâmetro. Voltando então à Categoria.php, vamos criar um novo método logo abaixo de listar(), cuja query será bem similar, porém, agora adicionaremos WHERE para que se filtre pelo id, e usaremos o método query() para executar o script.
+
+Não usaremos exec() pois ele não nos retorna o PHP Statement, como faz o query().
+
+Ao fazermos uma execução de query(), o PDO não sabe quantas linhas serão retornadas, mesmo que nós saibamos. Sendo assim, ele criará um array com várias linhas, mesmo que saibamos que queremos apenas a primeira delas.
+
+Então, neste caso criaremos a variável lista que receberá o resultado de fetchAll(), assim como em listar() mas, em vez de fazê-lo diretamente, ele será tratada no próprio método para que somente a primeira linha seja devolvida.
+
+public function carregar()
+{
+    $query = "SELECT id, nome FROM categorias WHERE id = " . $this->id;
+    $conexao = Conexao::pegarConexao();
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    foreach ($lista as $linha) {
+        return $linha;
+    }
+}
+Para verificarmos se está tudo certo, testaremos carregando uma categoria na página. Voltaremos ao arquivo categorias-editar.php e instanciaremos a classe Categoria e criaremos um bloco de PHP para instanciarmos a mesma classe.
+
+Lembra que no método carregar() pegamos o valor de id? Precisaremos recuperá-lo neste momento! Acabamos de digitar a página de listagem passando o id como parâmetro de query string, e precisaremos dele para popularmos o atributo id.
+
+Então, invocaremos o método carregar() colocando seu resultado em uma variável resultado:
+
+<?php require_once 'classes/Categoria.php' ?>
+<?php
+    $categoria = new Categoria();
+    $id = $_GET['id'];
+    $categoria->id = $id;
+    $resultado = $categoria->carregar();
+?>
+Tecnicamente, esta variável receberá aquele array com a primeira linha do retorno da query. Então, pegaremos o valor de resultado e utilizaremos o echo com a chave do nome do campo, que se chama nome. Isto significa que, no value do input, onde está Livros, abriremos a tag <php>:
+
+<form action="#" method="post">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-group">
+                <label for="nome">Nome da Categoria</label>
+                <input type="text" value="<?php echo $resultado['nome'] ?>" class="form-control" placeholder="Nome da Categoria">
+            </div>
+            <input type="submit" class="btn btn-success btn-block" value="Salvar">
+        </div>
+    </div>
+</form>
+Vamos ver se funciona? Atualizaremos a página no navegador e veremos que a categoria que queremos editar aparece como o value, como gostaríamos!
+
+Legal, nossa edição está funcionando corretamente, pois o texto no botão em que clicamos e a categoria a ser editada são os mesmos. Mas será que não conseguimos deixar nosso código um pouco mais organizado?
+
+Organizado no que diz respeito à economia de linhas de código, do processo que fizemos para carregar o valor do nome da categoria. Vamos dar uma olhada no código: em categorias-editar.php primeiro fazemos a instância da nossa Categoria, depois pegamos o valor do id da query string, do GET, e então passamos este valor do id ao atributo id da categoria, e chamamos o método carregar(), que nos retorna um resultado, um array com o nome da categoria.
+
+Se estamos utilizando Orientação a Objetos, já temos atributos da categoria, o id, sendo utilizado, assim como o nome. Então, por que não o usamos para ser o nome da categoria, em vez de retornar no método carregar() um array com este nome?
+
+Poderemos simplesmente chamar o método carregar(), o que de fato carregará o atributo nome da nossa categoria. Então, vamos abrir Categoria.php para mexermos no método carregar(), com o foreach, que por sua vez contém return $linha;.
+
+A variável linha já possui o array com o valor que queremos, o nome da categoria, então, em vez de o retornarmos, passaremos este valor como atributo nome, e deletaremos a linha com return. O código ficará assim:
+
+public function carregar()
+{
+    //...
+    foreach ($lista as $linha) {
+        $this->nome = $linha['nome'];
+    }
+}
+Agora, o importante é que não teremos mais um retorno, pois o método carregar() não retorna mais nada, já que o resultado é colocado no atributo categoria do objeto instanciado. Se não temos mais nenhum retorno, é preciso ajustarmos isto em categorias-editar.php, pois quando chamamos o método carregar(), estamos esperando o retorno, a ser colocado na variável resultado (agora inexistente).
+
+O arquivo categorias-editar.php, portanto, ficará sem a variável resultado, e simplesmente chamando o método carregar(), da seguinte forma:
+
+<?php require_once 'classes/Categoria.php' ?>
+<?php
+    $categoria = new Categoria();
+    $id = $_GET['id'];
+    $categoria->id = $id;
+    $categoria->carregar();
+?>
+E quando ele for chamado, o atributo nome estará populado!
+
+No echo, apagaremos onde antes imprimíamos o valor resultado com a chave nome, imprimindo-se o valor de categoria com a chave nome:
+
+<form action="#" method="post">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="form-group">
+                <label for="nome">Nome da Categoria</label>
+                <input type="text" value="<?php echo $categoria->nome ?>" class="form-control" placeholder="Nome da Categoria">
+            </div>
+            <input type="submit" class="btn btn-success btn-block" value="Salvar">
+        </div>
+    </div>
+</form>
+Vamos ver se isto funciona?
+
+Tudo parece funcionar bem quando clicamos no botão "Editar". O que mais poderá ser otimizado na classe Categoria, em relação ao carregamento de informações?
+
+Novamente estamos instanciando a categoria, buscando o id e atribuindo-o à classe Categoria, fazendo o carregamento. Poderemos deixar este processo todo um pouco mais inteligente e, no momento em que instanciarmos a Categoria, já poderemos passar o id diretamente.
+
+Assim, quando ela for instanciada com um valor, já entendemos que este objeto será carregado com o valor do id que está sendo passado. Ou seja, o método carregar() será chamado automaticamente, de forma que vamos conseguir economizar mais linhas de código.
+
+Para isto, criaremos um construtor na classe Categoria, um método que é invocado sempre que a classe é instanciada. No PHP, todo construtor possui um padrão para ser instanciado.
+
+Como dito anteriormente, queremos usar o construtor quando passamos algum valor a ele, porém seu método será chamado sempre que o objeto é instanciado, não importa se estamos ou não passando um valor a ele. E no caso, o valor que podemos ou não passar é o id.
+
+Então, passaremos id na assinatura do construtor e daremos um valor default a ele, que será false. Isso porque caso nada seja passado, este será o valor assumido, e a validação poderá ser efetuada para sabermos se foi passado um valor, e então chamar o método carregar(), ou não.
+
+Portanto, no método construct() teremos um if testando o valor id: se for true, ou seja, se houver algo positivo nele, ele entrará neste if. E uma vez que o id for populado, poderemos chamar carregar().
+
+class Categoria
+{
+
+    public $id;
+    public $nome;
+
+    public function __construct($id = false)
+    {
+        if ($id) {
+            $this->id = $id;
+            $this->carregar();
+        }
+    }
+Com isso, poderemos ajustar o que foi feito em categorias-editar.php para substituir aquilo que já consta no construtor que acabamos de criar. Vamos apagar as seguintes linhas deste arquivo:
+
+$categoria->id = $id;
+$categoria->carregar();
+Porém, para que isso funcione, agora precisaremos passar o id no momento em que instanciamos a classe Categoria, e não depois, como estava acontecendo até então. Basta invertermos a ordem, deixando:
+
+<?php
+    $id = $_GET['id'];
+    $categoria = new Categoria($id);
+?>
+Feito isso, testaremos no navegador e veremos que tudo funciona como gostaríamos!
+
+Nessa aula, usamos pela primeira vez no nosso projeto, o método construtor do php. Sabendo que o método construtor de uma classe php sempre é chamado quando a classe é instanciada, como podemos fazer para diferenciar se uma entidade será ou não carregada nesse momento?
+
+Passamos um parâmetro no método construtor com um valor predefinido, assim, podemos testar com um if se algum valor foi informado no momento que a classe foi instanciada e assim, chamar ou não, o método de carregamento.
+Exatamente, Quando definimos por exemplo, um valor false para um parâmetro de um método. Quando esse método for chamado (no caso, o método __construct é sempre chamado no momento que é feito a instancia da classe), caso nenhum valor seja passado, automaticamente, o valor do parâmetro será = false, caso contrário, ele assumirá o valor passado. Assim, podemos com facilidade, testar essa variável com um if ($variavel)
+
+Nossa tela de edição carrega a categoria direitinho, no entanto, estamos trabalhando com a edição de categorias, que é basicamente a possibilidade de alterarmos seu nome. É para isto que serve a tela de "Editar Categoria".
+
+Vamos testar modificando "Livros" para chamá-la de "Quadrinhos". Clicando no botão "Salvar", nada acontece, isso porque não estruturamos o comportamento desta página para que a edição seja feita. Então, em categorias-editar.php, há o formulário com o input passando o valor da categoria em seu value.
+
+Como já temos uma categoria criada e, além do nome, o seu id (inclusive estamos instanciando a classe com ele), criaremos um campo novo no formulário, um input``hidden, um campo invisível que o usuário não vê, mas que consta em nosso HTML.
+
+A informação que estiver em seu value também será processada. Portanto, teremos:
+
+<div class="form-group">
+    <label for="nome">Nome da Categoria</label>
+    <input type="hidden" name="id" value="<?php echo $categoria->id ?>">
+    <input type="text" value="<?php echo $categoria->nome ?>" class="form-control" placeholder="Nome da Categoria">
+</div>
+Vamos ver se isso funciona?
+
+No navegador clicaremos com o lado direito do mouse em "Exibir código fonte da página", e será exibido o código HTML processado da página. O input type="text" consta com valor Livros, enquanto input type="hidden" aparece com value 1, o que corresponde ao valor da nossa categoria. Isto indica que o formulário funciona corretamente!
+
+Agora, precisaremos submeter estas informações ao servidor. Faremos isto da mesma maneira com que fizemos a inserção de categorias, passando um parâmetro usando o action do nosso form. No mesmo arquivo, substituiremos # por categorias-editar-post.php, deixando a linha assim:
+
+<form action="categorias-editar-post.php" method="post">
+Porém, este arquivo ainda não existe, então o criaremos na raiz do projeto. Para testarmos o fluxo de submissão do formulário, simplesmente deixaremos o arquivo com:
+
+entrou
+Em seguida, atualizaremos a página no navegador e vamos clicar no botão "Salvar". Seremos redirecionados a uma página em branco com o texto "entrou", o que indica que tudo funciona como esperado. Voltaremos ao arquivo categorias-editar-post.php, abriremos o bloco PHP e faremos o require_once da classe Categoria.
+
+Em categorias-editar.php, estamos passando as informações do formulário via method="post", criamos o input hidden com id e já temos o input com o nome da categoria, porém este não possui o atributo nome, sendo preciso criá-lo:
+
+<input type="text" name="nome" value="<?php echo $categoria->nome ?>" class="form-control" placeholder="Nome da Categoria">
+Como estamos submetendo o formulário via POST, resgataremos estas informações da mesma forma. Em categorias-editar-post.php, teremos:
+
+<?php require_once 'classes/Categoria.php' ?>
+
+<?php
+    $id = $_POST['id'];
+    $nome = $_POST['nome'];
+
+    echo $id;
+    echo '<br>';
+    echo $nome;
+Testaremos voltando ao navegador, editando a categoria "Filmes" para "Séries" e clicando em "Salvar". Na nova página, veremos:
+
+3
+Séries
+Em que 3 é o id.
+
+Então, apagaremos os echo que colocamos apenas para validação do código, e instanciaremos a classe Categoria, passando o id; toda aquela estrutura foi criada para que quando passarmos um valor de id no construtor da classe, esta automaticamente carregue o valor que queremos.
+
+A partir deste momento, a categoria virá previamente com o nome original populado. No entanto, queremos mudá-lo para um novo, então chamaremos o método atualizar(), que criamos em Categoria.php.
+
+E como a página não apresentará nada ao usuário, ele será redirecionado à lista novamente. Assim, ele terá um feedback visual de que a categoria editada foi de fato alterada.
+
+O código de categorias-editar-post.php, portanto, ficará da seguinte maneira:
+
+<?php require_once 'classes/Categoria.php' ?>
+
+<?php
+    $id = $_POST['id'];
+    $nome = $_POST['nome'];
+
+    $categoria = new Categoria($id);
+    $categoria->nome = $nome;
+
+    $categoria->atualizar();
+
+    header('Location: categorias.php');
+Testando no navegador, voltaremos à página com todas as categorias, dentre as quais editaremos "Revistas", que alteraremos para "Quadrinhos", e clicaremos em "Salvar". Como esperávamos, somos redirecionados à lista de novo, com o nome da categoria alterado, mesmo tendo o mesmo id de antes!
+
+Estamos conseguindo editar nossas categorias! A partir de agora, vamos focar no outro botão que por ora não faz nada ainda ("Excluir"), para quando o usuário quiser deletar categorias.
+
+Para criarmos o método de exclusão, editaremos novamente a lista de categorias, com o foreach. Da mesma forma que quando passamos o mouse sobre o botão "Editar" é mostrado o id da categoria, faremos o mesmo para "Excluir".
+
+Passaremos ao botão o id da categoria que queremos excluir. No entanto, não teremos uma segunda tela de interação com o usuário, pois trata-se de um processo mais simples, em comparação com "Editar".
+
+Vamos abrir o arquivo categorias.php, que contém o foreach, com cada linha das nossas categorias: uma com id, outra com id, com o botão de editar, e a última com o botão para exclusão, em que substituiremos # por /categorias-excluir-post.php, deixando o código assim:
+
+<td><a href="/categorias-excluir-post.php?id=<?php echo $linha['id'] ?>" class="btn btn-danger">Excluir</a></td>
+Feito isso, vamos atualizar o navegador! Desta vez, ao passarmos o mouse sobre o botão "Excluir", teremos o mesmo efeito visto em "Editar". Então, criaremos categorias-excluir-post.php, em que inicialmente faremos o require_once da classe com que iremos trabalhar para podermos instanciá-la, assim como fizemos nos demais arquivos.
+
+Neste caso, estamos recebendo o valor do id da categoria via query string, portanto usaremos a variável GET para pegá-lo. Por fim, utilizaremos o echo para verificar seu funcionamento:
+
+<?php require_once "classes/Categoria.php" ?>
+
+<?php
+
+    $id = $_GET['id'];
+    echo $id;
+Feito isso, vamos testar excluindo a categoria "Jogos" da listagem no navegador. Isto fará com que sejamos redirecionados à página contendo 2, que é a impressão do id da categoria excluída.
+
+Agora, voltaremos à classe Categoria para criarmos o método referente a esta ação. Assim como fizemos anteriormente com os outros métodos, criaremos uma string com a instrução SQL para o delete, instanciando a conexão e executando a query.
+
+Então, adicionaremos ao arquivo:
+
+public function excluir()
+{
+    $query = "DELETE FROM categorias WHERE id = " . $this->id;
+    $conexao = Conexao::pegarConexao();
+    $conexao->exec($query);
+}
+Para testarmos, voltaremos ao arquivo que acabamos de criar (categorias-excluir-post.php), que deixaremos assim:
+
+<?php require_once "classes/Categoria.php" ?>
+
+<?php
+
+    $id = $_GET['id'];
+    $categoria = new Categoria($id);
+
+    $categoria->excluir();
+
+    header('Location: categorias.php');
+Vamos ver se funciona voltando ao navegador e excluindo a categoria "Quadrinhos" e depois "Eletrodomésticos", o que conseguiremos fazer com sucesso!
+
+Nesta aula aprendemos como carregar uma entidade ao instanciar a classe Categoria e, dessa forma, editá-la ou excluí-la. Faremos agora um script para editar todos os nomes de Categorias que temos cadastradas no banco de dados, acrescentando a palavra "Categoria" seguida de um espaço antes do nome dela, ficando da seguinte forma, por exemplo:
+
+Categoria Livro
+Categoria Jogos
+
+Para fazer isso, vamos criar um arquivo na raiz do nosso projeto chamado editar-categoria-lote.php.
+
+Nesse arquivo, a primeira coisa que vamos fazer é importar a classe Categoria com um require_once.
+
+Em, seguida, vamos utilizar o método ->listar() da classe Categoria para obter uma lista com todas as categorias que temos no banco.
+
+Depois, vamos fazer um foreach() com o resultado para poder atuar linha a linha na alterção do nome da Categoria.
+
+Agora, vamos instanciar um novo objeto de Categoria dentro do foreach() passando como parâmetro o id daquela linha.
+
+Por fim, com o objeto carregado, vamos alterar o atributo nome, passando o valor "Categoria " concatenado com o valor atual dela e em seguida, chamamos o método ->atualizar() para salvar as informações no banco de dados.
+
+OBS: Podemos depois, chamar o método listar de novo para verificar se os dados foram salvos corretamente, usando a função print_r()
+
+Código:
+
+<?php
+
+require_once 'classes/Categoria.php';
+
+$categoria = new Categoria();
+$lista_de_categoria = $categoria->listar();
+foreach ($lista_de_categoria as $linha) {
+    $categoria_edit = new Categoria($linha['id']);
+    $categoria_edit->nome = 'Categoria ' . $categoria_edit->nome;
+    $categoria_edit->atualizar();
+}
+$nova_lista_de_categoria = $categoria->listar();
+echo '<pre>';
+print_r($nova_lista_de_categoria);
+echo '</pre>';
+Resultado:
+
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [0] => 1
+            [nome] => Categoria Livros
+            [1] => Categoria Livros
+        )
+
+    [1] => Array
+        (
+            [id] => 2
+            [0] => 2
+            [nome] => Categoria Jogos
+            [1] => Categoria Jogos
+        )
+
+    [2] => Array
+        (
+            [id] => 3
+            [0] => 3
+            [nome] => Categoria Filmes
+            [1] => Categoria Filmes
+        )
+
+    [3] => Array
+        (
+            [id] => 4
+            [0] => 4
+            [nome] => Categoria Revistas
+            [1] => Categoria Revistas
+        )
+)
