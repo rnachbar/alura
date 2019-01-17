@@ -899,3 +899,402 @@ Array
             [1] => Categoria Revistas
         )
 )
+
+
+#################### 04. Agilidade e organização do código ####################
+
+
+Praticamente finalizamos as categorias; já conseguimos incluir novas, editá-las e excluí-las. Lembra quando refatoramos a parte de conexão? Criamos uma classe Conexao exclusiva para isto, com o método pegarConexao() para todas as informações.
+
+Criamos uma conexao com PDO passando os valores do MySQL, como host name, o nome do database, usuário e senha. Isso já nos ajuda bastante, por centralizarmos todas estas informações em um único arquivo. Se isso porventura vier a mudar, como ambiente, ou no caso de uma instalação nova da aplicação, não será preciso fazer a alteração em vários lugares, e sim apenas em um.
+
+No entanto, estamos na classe Conexao, em que deixamos informações acerca da conexão, como indica o nome. Então, para deixar tudo mais organizado ainda, poderemos criar um arquivo de configuração em nosso projeto, o qual não será uma classe, e sim simplesmente um arquivo com todas as informações de configuração do nosso ambiente, tais como banco de dados e afins.
+
+Portanto, criaremos na raiz do projeto um arquivo denominado config.php, usando o define do PHP, que cria um objeto, com um valor fixo. Isso difere da variável, cujo valor pode ser modificado.
+
+Por conveniência, no PHP, sempre que fazemos um define, ele terá o nome em maiúsculo, então, neste caso, o primeiro deles será o driver de conexão (DB_DRIVE), e depois colocaremos o valor que queremos atribuir a ele (mysql). Faremos isso com as demais informações:
+
+<?php
+
+define('DB_DRIVE', 'mysql');
+define('DB_HOSTNAME', '127.0.0.1');
+define('DB_DATABASE', 'estoque');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', 'alura');
+Precisaremos importar este arquivo de configuração no arquivo Conexao.php por meio do require_once, e com isto teremos os valores instanciados em nosso arquivo!
+
+Então, faremos as substituições nas strings de conexão do PDO, cujos valores fixos colocados anteriormente trocaremos por estes que acabamos de definir. O código ficará assim:
+
+<?php
+
+require_once 'config.php';
+
+class Conexao
+{
+    public static function pegarConexao()
+    {
+        $conexao = new PDO(DB_DRIVE .':host=' . DB_HOSTNAME . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+        return $conexao;
+    }
+}
+Vamos confirmar se tudo funciona da mesma forma como estava antes?
+
+A lista está sendo carregada quando atualizamos a página no navegador, indicando que tudo funciona como esperado, havendo conexão com o banco de dados.
+
+E se quisermos incluir mais parâmetros futuramente, simplesmente aumentaremos a lista de definições em config.php.
+
+Antes de continuarmos, vamos melhorar um pouco o que foi feito até agora - um grande problema em nosso código após a criação do arquivo de configuração é que fazemos muitos requests de arquivos em nosso sistema.
+
+Todos os arquivos estão chamando alguma classe com require_once, o que torna o código um tanto bagunçado. Em um sistema pequeno como este, até que não é um problema tão grave, mas continua sendo um problema e, pensando que um sistema pode crescer exponencialmente, isto tende a gerar muita confusão.
+
+No PHP, há um jeito de resolver este problema tranquilamente, retirando-se todos os require_once, exceto por um único, que cuidará de tudo de forma inteligente. Isto é possível com o autoloader.
+
+Sempre que uma classe é requisitada, instanciada, e ela não existir no contexto do arquivo em que se encontra, o PHP chamará uma função, que verificará se ela existe de fato e, caso positivo, o require_once deste arquivo será feito.
+
+Para isso, criaremos o arquivo global.php fora da nossa estrutura de classes, na raiz de nosso projeto. Este será o arquivo com a função global, para o qual todos os outros que não são classes farão uma requisição, e que fará a busca pela classe certa na hora certa.
+
+Criaremos uma função com o nome de sua escolha, neste caso será carregarClasse(), com parâmetro nomeClasse. Sempre que a função for chamada, o valor que virá como parâmetro será o nome da classe que está sendo instanciada, isto é, aquele que o código está tentando instanciar.
+
+Já seguimos um padrão em que o nome das classes é o mesmo de seus arquivos, como ocorre na classe Categoria, cujo arquivo se denomina Categoria.php. Portanto iremos aproveitá-la, juntamente com a função file_exists(), sendo que o parâmetro a ser utilizado será o caminho do arquivo em questão.
+
+Sabemos que todos os arquivos de classes estão contidos na pasta "classes", então passaremos o caminho completo do arquivo, lembrando que temos a extensão .php, que não existe na variável nomeClasse.
+
+Mas quem se responsabilizará pela chamada desta função, no momento da instância de um objeto?
+
+Trata-se de uma função do ṔHP chamada spl_autoload_register, e passaremos como parâmetro o nome do método de autoload, carregarClasse.
+
+Para organizar ainda mais nosso código, o arquivo de configuração que criamos atualmente só está sendo usado na conexão, mas como é um arquivo de configuração global criado para o sistema, é importante que ele esteja em todas as páginas. E por não ser uma classe, o autoload que criamos não conseguirá carregá-lo.
+
+Neste caso, será necessário um require exclusivo para ele, dentro deste arquivo. Ou seja, todos os arquivos chamarão o arquivo global, e este, por sua vez, chamará o que for necessário, e como sabemos que todas as páginas serão necessárias no arquivo de configuração, teremos que deixar o código assim:
+
+<?php
+
+require_once 'classes/config.php';
+
+spl_autoload_register('carregarClasse');
+
+function carregarClasse($nomeClasse)
+{
+    if (file_exists('classes/' . $nomeClasse . '.php')) {
+        require_once 'classes/' .$nomeClasse . '.php';
+    }
+}
+Vamos testar para ver se isso funciona, acessando inicialmente Conexao.php, deletando o require_once feito ali e salvando. Faremos o mesmo em Categoria.php e em categorias.php, de listagem de categorias. Nele, há um require_once chamando Categoria.php, que não é mais necessário, portanto, usaremos:
+
+<?php require_once 'global.php' ?>
+Agora sim, voltaremos ao navegador e atualizaremos a página de categorias. Testaremos a edição de uma delas, que resultará em erro por não termos colocado o arquivo global nos outros arquivos.
+
+A partir de agora, então, vamos refatorar tudo que foi feito substituindo por <?php require_once 'global.php' ?> quando houver <?php require_once 'classes/Categoria.php' ?>, isto é, em categorias-criar-post.php, categorias-editar.php, categorias-editar-post.php, categorias-excluir-post.php.
+
+Vamos conferir estas alterações no navegador, editando a categoria "Jogos", por exemplo, e criando uma categoria nova, "Roupas".
+
+Assim, o autoload deixa tudo muito mais organizado, permitindo que façamos o require_once do arquivo global, o qual cuidará de tudo se adicionarmos novas classes, desde que sigamos o mesmo padrão de estarem contidas no diretório correto e com o mesmo nome do arquivo que elas representam.
+
+Aprendemos nessa aula a trabalhar com uma função de autoload do php, onde sempre que uma classe é requisitada em um código, essa função é acionada para importar o código da classe.
+
+Das opções abaixo, qual é a forma correta de se fazer a função de autoload no php?
+
+Correto. A função spl_autoload_register($funcao_autoload) recebe como parâmetro, o nome de uma função de callback criada por você. Essa função criada por você por sua vez, terá um único parâmetro string que possuirá o nome da nossa classe. A grande vantagem disso, é que dependendo do nosso projeto, podemos trabalhar com várias funções de callback diferentes. É o que é mais usado hoje com o Composer por exemplo.
+
+Nessa aula criamos os arquivos global.php, onde colocamos nosso código de autoload, e config.php, onde colocamos todos os parâmetros do nosso projeto.
+
+Quais as vantagens de fazer esses tipos de arquivos em um projeto?
+
+Fácil manutenção do Projeto
+Quanto mais organizado nosso código fica, melhor será para você ou outra pessoa trabalhar nele. Arquivos que dizem, pelo nome, claramente para que estão ai ajuda muito. Centralizar as configurações em um arquivo de configuração também facilita muito.
+
+Organização de Código
+Um dos pontos mais importantes para um projeto, não importa a linguagem, e ter seu código o mais organizado possível. Assim qualquer pessoa que precisar abrir o código do projeto para fazer uma manutenção ou melhoria nele, não vai encontrar dificuldades. Centralizar cada funcionalidade em um lugar diferente ajuda bastante para isso, assim, cada arquivo tem seu objetivo bem definido e evitamos duplicidade de códigos em nosso Projeto.
+
+
+#################### 05. Tratamento de erros ####################
+
+
+O código está mais organizado, mas ainda não há nenhum tipo de tratamento de erros nele, e isso é muito importante para um sistema, não importa seu tamanho, pois além de facilitar a identificação deles, com o tratamento de erros poderemos determinar caminhos para solucioná-los.
+
+É interessante trabalharmos com duas formas para o tratamento de erros: uma para produção e outra para não produção. A diferença entre elas é a apresentação do erro ao usuário, porque quando estamos desenvolvendo, queremos facilidade na identificação do erro, mas não poderemos deixar que ele veja detalhes sobre o mesmo. Ele não saberá o que fazer com esta informação.
+
+Vamos começar pelo arquivo de configuração (config.php), em que criaremos uma variável nova para diferenciarmos estes ambientes. Lembrem-se de que este arquivo existe justamente para as configurações de cada ambiente, inclusive deste.
+
+Criaremos uma nova define denominada DEBUG, colocando como seu valor padrão true, isto é, o modo DEBUG estará ligado. Quando este sistema estiver em produção apenas alteraremos o valor para false.
+
+<?php
+
+define('DEBUG', true);
+Feito isso, no arquivo categorias.php, em que fazemos a instância da classe Categoria e depois a listagem chamando o método listar(), criaremos o try.
+
+Se ocorrer algum erro no código e nas funções dentro do try, ele cairá no catch() automaticamente, o qual recebe uma variável do tipo Exception, e, que é uma classe de erro do PHP. E quando ele chegar ao bloco do catch() estará todo carregado com informações úteis acerca do erro, como mensagem, código e afins.
+
+Então, poderemos elaborar a forma como trataremos esta informação. No catch(), apresentaremos a mensagem de erro usando o echo:
+
+<?php
+
+    try {
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+    } catch(Exception $e) {
+        echo $e->getMessage();
+    }
+?>
+Que mensagem será exibida? Vamos testar para ver se tudo funciona direitinho?
+
+Vamos pegar o método listar() para forçar um erro nele, gerando uma exceção:
+
+public function listar()
+{
+    throw new Exception('Erro ao Listar Categorias')
+    $query = "SELECT id, nome FROM categorias";
+    $conexao = Conexao::pegarConexao();
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+Voltaremos ao navegador, testaremos, e receberemos a mensagem de erro como gostaríamos. No entanto, vários outros erros também apareceram, pois sempre que geramos um throw, tudo que vem abaixo dele não é executado, o processamento é pausado e acessa-se o primeiro catch() que é encontrado, no caso, no arquivo categorias.php.
+
+Não sabemos exatamente quando irá acontecer uma exceção, então iremos incluir o exit, já que após o catch() ele continuará processando a página, e não queremos que isto aconteça. O código ficará assim:
+
+<?php
+
+    try {
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+    } catch(Exception $e) {
+        echo $e->getMessage();
+        exit;
+    }
+?>
+Desta vez, ao recarregarmos a página no navegador, apenas obteremos a mensagem "Erro ao Listar Categorias".
+
+No entanto, para o desenvolvedor, este erro não é muito bem apresentado desta forma. Queremos maiores informações para podermos tratá-lo adequadamente.
+
+Lembram-se do print_r, usado para imprimir diversas informações de uma variável? Vamos usá-lo, pois ele cabe perfeitamente neste caso:
+
+<?php
+
+    try {
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+    } catch(Exception $e) {
+        echo '<pre>';
+        print_r($e);
+        echo '</pre>';
+        exit;
+    }
+?>
+Retornando ao navegador e atualizando a página, teremos maiores informações, como a mensagem exibida, seu código, o arquivo que gerou o erro, a linha onde ele se encontra, informações sobre o arquivo que o chamou, ou seja, todo o caminho que foi traçado.
+
+Deste modo, tudo fica bem mais claro para o desenvolvedor, mas não queremos que o usuário final tenha estas informações. E é por isto que usaremos o parâmetro DEBUG que criamos anteriormente.
+
+<?php
+
+    try {
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+    } catch(Exception $e) {
+        if (DEBUG) {
+            echo '<pre>';
+            print_r($e);
+            echo '</pre>';
+        } else {
+            echo $e->getMessage();
+        }
+        exit;
+    }
+?>
+Se atualizarmos o navegador, nada muda. Acessaremos o arquivo config.php, alteraremos true de DEBUG para false, o que fará com que apenas a mensagem seja exibida, tornando o trabalho mais organizado.
+
+Nosso tratamento de erro está bem mais interessante: apresentamos o erro ao usuário com o modo DEBUG ativo ou não. Faremos o mesmo em categorias-editar.php:
+
+<?php
+    try {
+        $id = $_GET['id'];
+        $categoria = new Categoria($id);
+    } catch (Exception $e) {
+
+        }
+?>
+Para o tratamento, teríamos que reescrever o código assim como fizemos anteriormente, o que se tornaria complicado se quiséssemos mudar a forma como apresentamos a mensagem de erro, pois teríamos que mudar todos os arquivos, e não é nada prático ter o mesmo trecho de código em vários locais distintos do projeto.
+
+Vamos, portanto, criar uma classe específica para o tratamento de erro, Erro.php, lembrando que os arquivos de classes seguem o padrão de terem o mesmo nome do arquivo correspondente.
+
+O método estático trataErro() receberá uma Exception $e assim como o catch(), e é nele que iremos fazer o tratamento da classe, cujo if do DEBUG poderá ser copiado e colado de categorias.php:
+
+<?php
+
+class Erro
+{
+    public static function trataErro(Exception $e)
+    {
+        if (DEBUG) {
+            echo '<pre>';
+            print_r($e);
+            echo '</pre>';
+        } else {
+            echo $e->getMessage();
+        }
+        exit;
+    }
+}
+E no catch(), iremos simplesmente chamar o método. Assim, em categorias.php, teremos:
+
+<?php
+    try {
+        $categoria = new Categoria();
+        $lista = $categoria->listar();
+    } catch(Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+Vamos ver se isso funciona? A nossa lista deverá ser executada da mesma forma que antes. Em seguida, também acrescentaremos a linha Erro::trataErro($e); no arquivo categorias-editar.php, assim:
+
+<?php
+    try {
+        $id = $_GET['id'];
+        $categoria = new Categoria($id);
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+        }
+?>
+Feito isso, poderemos voltar à página do navegador e testar a edição de uma categoria, e depois deletar o throw da exceção da função listar() em Categoria.php, para que a lista seja carregada normalmente. E incluiremos a linha abaixo à função carregar():
+
+throw new Exception('Erro ao Carregar a Categoria');
+Atualizando-se a página, obteremos a mensagem de erro. Agora, vamos ligar o modo DEBUG, colocando true como seu valor em config.php, após o qual recarregaremos a página no navegador e teremos todos os detalhes do erro.
+
+Neste caso, saberemos que o erro estava em categorias-editar.php, passando para a classe Categoria, terminando ali, sendo que o erro se deu na linha 28, e a mensagem de erro é exatamente aquela que definimos.
+
+Vamos deletar a linha com a exceção de carregar() e aplicar o Try/Catch nos demais locais necessários, basicamente todos aqueles que não são classe, mas que estão sendo trabalhadas: categorias-excluir-post.php, categorias-editar-post.php, categorias-criar-post.php.
+
+Daqui em diante, todos os nossos arquivos irão ter o tratamento de erros, com tudo funcionando direitinho.
+
+Tendo finalizado o tratamento de erros do nosso projeto, o que será que acontecerá se houver um erro no banco de dados? Para testar, vamos simplesmente deletá-lo!
+
+No PowerShell, abriremos uma conexão com o MySQL a partir do comando mysql -u root -p, ao que será solicitada a senha, que neste caso é alura e, com "Enter", nos conectamos ao banco de dados. O nome do nosso database é estoque, e para termos certeza disto, poderemos usar o comando show databases;, que mostrará todos os bancos de dados criados, dentre os quais o que queremos é o próprio estoque.
+
+Com drop database estoque; "matamos" o banco de dados. Em seguida, abriremos outro PowerShell para subirmos o servidor do PHP a partir do comando php - S 127.0.0.1:8888.
+
+Voltaremos ao Chrome, e ao atualizarmos a página veremos que ocorre uma exceção, como gostaríamos. Vamos, então, deixar o modo DEBUG como false em config.php para verificar o que acontece?
+
+Atualizando a página no navegador, obteremos a mensagem SQLSTATE[HY000][1049]Unknown database estoque, que indica um erro do próprio SQL, isto é, do PDO. Vamos recriar o database estoque para ver se o erro persiste, por meio do comando create database estoque; no PowerShell.
+
+Usaremos o show databases; para confirmar a criação do banco, e notaremos que não criamos tabelas ainda. Com use estoque; selecionaremos o banco, e em seguida usaremos show tables;, e veremos que não há nenhuma tabela. Ao atualizarmos a página no navegador, teremos um erro fatal.
+
+O Try/Catch não pega erros fatais, os quais ocorrem por não termos configurado a conexão com o PDO para informar como queremos considerá-los. O PDO é interessante porque permite setarmos atributos, como a forma como ele irá tratar erros, de forma silenciosa, por padrão - que é mostrar um erro fatal como neste caso -, ou até gerar uma Exception.
+
+Em relação às opções que temos, na página de documentação do PHP há o método PDO::setAttribute, dentro do qual se pode passar 'n' configurações distintas, entre elas a forma como o PHP irá tratar os erros da conexão PDO.
+
+É legal vocês darem uma olhada nesta página para depois conferir os outros atributos que podem ser utilizados, pois eles podem não ser úteis para este caso específico, mas sim para outra situação.
+
+Para o nosso caso, utilizaremos PDO::ATTR_ERRMODE, que contém três opções de erro:
+
+PDO::ERRMODE_SILENT
+PDO::ERRMODE_WARNING
+PDO::ERRMODE_EXCEPTION
+Cujo primeiro não faz nada além de setar um código de erro, o segundo faz um aviso no código (porém, se o PHP estiver configurado para não exibir avisos, nada acontece também), e o terceiro gera um throw de Exception, que é o que queremos, já que estamos tratando tudo com Try/Catch.
+
+Então, usaremos este método logo após abrirmos nossa conexão, na classe Conexao. Passaremos dois parâmetros no método: a chave que queremos setar e seu valor. Mas quais são estes? Eles são definidos pela própria classe PDO com atributos estáticos que ainda desconhecemos, pois precisaremos consultar a documentação novamente.
+
+O código ficará assim:
+
+<?php
+
+class Conexao
+{
+    public static function pegarConexao()
+    {
+        $conexao = new PDO(DB_DRIVE .':host=' . DB_HOSTNAME . ';dbname=' . DB_DATABASE, DB_USERNAME, DB_PASSWORD);
+        $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conexao;
+    }
+}
+Feito isso, atualizaremos a página no navegador e obteremos uma exceção, da forma como tínhamos definido. No arquivo de configuração (config.php), mudaremos o false do DEBUG para true de novo. Todos os detalhes dos erros são exibidos, vindos do PDO como esperado.
+
+Testando com o PDO::ERRMODE_SILENT no lugar de PDO::ERRMODE_EXCEPTION para vermos o que acontece, mantém-se o erro fatal de antes, que é o padrão. Vamos experimentar o PDO::ERRMODE_WARNING. O aviso de erro é exibido corretamente, porém depois ocorre um erro fatal, já que o que vem depois dele não é processado.
+
+Para o nosso caso, o PDO::ERRMODE_EXCEPTION é a melhor opção, pois a Exception pausa a transação em um ponto específico. Agora, só para não esquecermos, vamos rodar o arquivo de base com a criação das tabelas (banco_de_dados.sql) e os inserts padrões, para não perdermos tudo que foi feito.
+
+Voltaremos com o banco como estava antes dando um "Ctrl + C" em todo código referente à criação da tabela, e voltando ao PowerShell para rodarmos tudo. Atualizaremos a página do navegador, e ela estará da mesma forma que antes, com tudo funcionando direitinho.
+
+Vimos na aula que podemos setar diversos atributos na conexão PDO passando um valor para o atributo PDO::ATTR_ERRMODE. Qual dos valores abaixo devemos usar para gerar exceções no php, caso ocorra um erro de PDO?
+
+PDO::ERRMODE_EXCEPTION
+Exatamente, Quando setamos essa constante como valor, o PDO vai gerar excessões sempre que ocorrer um erro relacionado ao Banco de Dados.
+
+Nessa aula, vimos um ponto extremamente importante para qualquer projeto que é o tratamento de erros. Aqui, estamos usando um bloco de try() {} catch() {} e quando alguma excessão acontece, o nosso catch() chama o método estático Erro::trataErro(Exception $e);
+
+<?php
+class Erro
+{
+    public static function trataErro(Exception $e)
+    {
+        if (DEBUG) {
+            echo '<pre>';
+            print_r($e);
+            echo '</pre>';
+        } else {
+            echo $e->getMessage();
+        }
+        exit;
+    }
+}
+Da forma como fizemos, mesmo que a Constante DEBUG não esteja com valor true, quando ocorrer um erro, o mesmo será mostrado na tela de uma forma bem deselegante.
+
+Então, vamos melhorar isso:
+
+Vamos criar um novo arquivo na raiz do nosso projeto chamado erro.php, esse arquivo, seguira o mesmo Layout das outras páginas que já temos em nosso projeto, com a excessão de que não vamos importar o arquivo global.php.
+
+Essa página vai ser carregada com um include 'erro.php'; dentro do método trataErro()
+
+Em nossa nova página, vamos fazer os require_once do cabecalho.php e do rodape.php, no inicio e no final respectivamente.
+
+E por fim, podemos trabalhar em um layout mais agradável para apresentar o erro ao usuário, dai vai da sua imaginação. =)
+
+Vamos começar criando o arquivo erro.php na raiz do nosso projeto e dentro dele, colocar o seguinte código
+
+<?php require_once 'cabecalho.php' ?>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Erro</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <?php echo $e->getMessage() ?>
+    </div>
+</div>
+<?php require_once 'rodape.php' ?>
+Vejá que basicamente, eu usei nosso "template" HTML, para fazer uma página mais elegante e no meio dela, apresento apenas a mensagem de erro que vem da variável $e da Exception.
+
+Depois disso, vamos refatorar nossa classe Erro em classe/Erro.php, alterando a linha do else para chamar o include include 'erro.php'; ficando da seguinte forma:
+
+<?php
+
+class Erro
+{
+    public static function trataErro(Exception $e)
+    {
+        if (DEBUG) {
+            echo '<pre>';
+            print_r($e);
+            echo '</pre>';
+        } else {
+            include 'erro.php';
+        }
+        exit;
+    }
+}
+
+O resultado de disso será como na imagem abaixo
+
+Parabéns! Acabamos de concluir a primeira parte do nosso curso, com as categorias do sistema de estoque. Nesta primeira parte, implementamos:
+
+listagem das categorias em uma única tela;
+inserção de novas categorias;
+atualização das categorias que já existiam;
+exclusão de categorias
+Em relação ao código, começamos a trabalhar com PDO, fizemos nossa classe de conexão com o banco de dados MySQL, ou MariaBD, utilizando a classe PDO. Organizamos o código da melhor forma possível, com informações sobre o drive de conexão, hostname, database, usuário e senha, tudo centralizado no arquivo de configuração.
+
+Além disso, aprendemos a usar o método exec() para execuções para alteração de informações do banco de dados, e o método query(), uma consulta que sempre trará um retorno.
+
+Agora, é legal vocês fazerem a segunda parte do curso, que abordará a parte de produtos do sistema de estoque. Também implementaremos novidades quanto às categorias e o PDO, interessantes para deixar o sistema cada vez mais robusto.
+
+Até mais!

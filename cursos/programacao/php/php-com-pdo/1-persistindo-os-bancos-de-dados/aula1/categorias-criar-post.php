@@ -1,12 +1,16 @@
 <?php
 
-require_once 'classes/Categoria.php';
+require_once 'global.php';
 
-$categoria = new Categoria();
+try {
+    $categoria = new Categoria();
 
-$nome = $_POST['nome'];
-$categoria->nome = $nome;
-$categoria->inserir();
+	$nome = $_POST['nome'];
+	$categoria->nome = $nome;
+	$categoria->inserir();
 
-/* Redirecionando usuário */
-header('Location: categorias.php');
+	/* Redirecionando usuário */
+	header('Location: categorias.php');
+} catch(Exception $e) {
+    Erro::trataErro($e);
+}

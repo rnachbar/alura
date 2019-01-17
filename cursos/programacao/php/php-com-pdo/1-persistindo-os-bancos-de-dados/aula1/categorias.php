@@ -1,8 +1,16 @@
-<?php 
-require_once 'classes/Categoria.php';
+<?php
 
-$categoria = new Categoria();
-$lista = $categoria->listar();
+require_once 'global.php';
+
+try {
+    /* Todo código que estiver dentro do try, caso ocorra algum erro com esse código automaticamente ele cai no catch */
+    $categoria = new Categoria();
+    $lista = $categoria->listar();
+} catch(Exception $e) {
+    /* O catch, por padrão, recebe uma variável do tipo Exception */
+    /* Exception é uma classe de erro do PHP */
+    Erro::trataErro($e);
+}
 
 /*
 // Para Debugar

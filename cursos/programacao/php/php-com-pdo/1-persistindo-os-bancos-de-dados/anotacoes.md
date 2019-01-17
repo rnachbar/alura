@@ -18,3 +18,7 @@
 ```
 
 * O método construtor sempre é executado quando a classe é instanciada.
+
+* O define() do PHP cria um objeto/variável com valor fixo.
+
+* Com o Autoload do PHP sempre que uma classe for requisitada/instanciada, se essa classe não existir no contexto do arquivo que ele está o PHP vai chamar uma função e essa função vai verificar se essa classe existe e se ela existir será feito um require_once do arquivo dentro dessa função.

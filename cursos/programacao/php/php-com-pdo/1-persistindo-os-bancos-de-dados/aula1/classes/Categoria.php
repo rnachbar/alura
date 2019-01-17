@@ -1,6 +1,6 @@
 <?php /* Controle de Categorias */
 
-require_once 'classes/Conexao.php';
+require_once 'global.php';
 
 class Categoria { /* Classe para entidades do sistema */
 

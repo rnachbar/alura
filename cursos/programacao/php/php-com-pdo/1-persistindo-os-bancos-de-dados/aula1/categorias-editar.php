@@ -1,9 +1,13 @@
 <?php 
 
-require_once 'classes/Categoria.php';
+require_once 'global.php';
 
-$id = $_GET['id'];
-$categoria = new Categoria($id);
+try {
+    $id = $_GET['id'];
+    $categoria = new Categoria($id);
+} catch(Exception $e) {
+    Erro::trataErro($e);
+}
 
 require_once 'cabecalho.php'; ?>
 
