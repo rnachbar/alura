@@ -233,3 +233,203 @@ Teremos o mesmo resultado de antes, mas com uma forma diferente de obter os dado
 ########## 02. Inserção de produtos ##########
 
 
+Neste momento, tudo o que fizemos em relação à listagem de produtos funciona bem. Em seguida, queremos conseguir incluir novos produtos no sistema. Para isso, vamos clicar no botão "Criar novo produto" na página do navegador.
+
+Somos redirecionados a outra página com um formulário contendo nome do produto, preço, quantidade e categoria - que não está sendo listado corretamente -, além do botão "Salvar". Começaremos ajustando esta página, produtos-criar.php, para trabalharmos em cima dela depois.
+
+De imediato pode-se notar que estão faltando os names nos inputs, para podermos recuperar as informações quando elas forem submetidas ao servidor.
+
+Assim, em cada um destes campos incluiremos o name correspondente no código: name="nome" para "Nome do Produto", name="preco" para "Preço do Produto", name="quantidade" para "Quantidade de Produto". E no select referente à "Categoria do Produto", acrescentaremos name="categoria_id".
+
+Agora, precisaremos fazer com que esta lista de categorias do formulário funcione, ou seja, é necessário um método para listarmos isso. Ou poderemos usar o método que já criamos na classe Categoria.php, pois listar é uma responsabilidade delas. Vamos relembrá-lo?
+
+Em Produto.php criamos um método estático, o que não ocorre em Categoria.php. A diferença entre eles é que um método estático não se relaciona com nada além do que existe na própria classe, no objeto propriamente dito. Significa que ele não faz referência a outros métodos ou atributos do objeto.
+
+O método estático se encaixa bem no nosso caso, então, aproveitando, vamos regularizar isso, convertendo o método, a ser utilizado na listagem de categorias:
+
+public static function listar()
+{
+    $query = "SELECT id, nome FROM categorias";
+    $conexao = Conexao::pegarConexao();
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+No try de categorias.php, fazemos a instância e depois chamamos o método listar(). Como ele é estático agora, não precisaremos instanciá-lo, e o código ficará assim:
+
+<?php
+    try {
+        $lista = Categoria::listar();
+    } catch(Exception $e) {
+        Erro::trataErro($e);
+    }
+Vamos conferir se a página de listagem de categorias continua funcionando como esperado.
+
+Tendo confirmado isto, voltaremos a produtos-criar.php para fazermos o require_once do arquivo global.php, e criarmos um bloco de PHP para o Try/Catch.
+
+Salvaremos o código e retornaremos à página de inserção de novo produto no navegador. Aparentemente, tudo funciona corretamente, mas para confirmar incluiremos o debug para popularmos o valor:
+
+<?php require_once 'global.php' ?>
+<?php
+    try {
+        $listaCategoria = Categoria::listar();
+
+        echo '<pre>';
+        print_r($listaCategoria);
+        echo '</pre>';
+
+        exit;
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+A listagem de categorias aparece da maneira como esperávamos! Vamos deletar o debug que fizemos, e incluir um foreach no select para termos várias opções.
+
+No select do arquivo produtos-criar.php há dois valores, correspondentes a "Livros" e "Revistas". Vamos manter apenas um deles, e incluir o foreach:
+
+<div class="form-group">
+    <label for="nome">Categoria do Produto</label>
+    <select class="form-control" name="categoria_id">
+        <?php foreach ($listaCategoria as $linha): ?>
+            <option value="<?php echo $linha['id'] ?>"><?php echo $linha['nome'] ?></option>
+        <?php endforeach ?>
+    </select>
+</div>
+Com isso, temos mais opções de seleção na parte de "Categoria do Produto", quando um novo produto for inserido na tabela. Para sabermos se o value está funcionando bem, podemos inspecionar o elemento no navegador e confirmar que cada categoria possui um valor diferente:
+
+<option value="1">Livros</option>
+<option value="2">Jogos</option>
+<option value="3">Filmes</option>
+<option value="4">Roupas</option>
+<option value="5">Revistas</option>
+E já que organizamos os produtos em ordem alfabética a partir dos seus nomes, vamos fazer o mesmo em relação às categorias. Na classe Categoria.php, deixaremos o query da seguinte forma:
+
+$query = "SELECT id, nome FROM categorias ORDER BY nome";
+Agora temos a listagem das categorias da tabela de produtos! Mas e se não houver nenhuma categoria cadastrada no sistema? Imaginem a situação em que um sistema acabou de ser instalado, e não existir nada além do banco de dados, e o usuário quer cadastrar um produto. O que acontecerá?
+
+Não poderemos inserir um novo produto sem que haja uma categoria vinculada a ele.
+
+Portanto, precisaremos fazer uma verificação que contará o número de categorias que temos. E se não existir nenhuma, não deixaremos que um usuário cadastre um novo produto.
+
+Sendo assim, vamos retornar a produtos-criar.php e colocar o if com count antes da exibição do formulário ao usuário, entre as <div>s do título e a abertura do <form>:
+
+<div class="row">
+    <!-- código omitido -->
+</div>
+<?php if (count($listaCategoria) > 0): ?>
+    <form action="produtos-criar-post.php" method="post">
+        <!-- código omitido -->
+    </form>
+<?php else: ?>
+    <p>Nenhuma categoria cadastrada no sistema. Por favor, crie uma categoria antes de cadastrar um produto.</p>
+<?php endif ?>
+Visualmente, nada foi afetado em nossa página. Então, para testarmos, usaremos a técnica de inverter o if, desta vez acrescentando !, o operador de negação, para todo o argumento:
+
+<?php if (!(count($listaCategoria) > 0)): ?>
+A mensagem será exibida corretamente. Vamos tirar a negação para voltarmos ao estado anterior.
+
+Nossa tela de inserção de novos produtos está praticamente finalizada, falta apenas acrescentarmos o método para o cadastro em si. Faremos isto seguindo o padrão definido na parte de categorias. Então, abriremos Produto.php, em que teremos:
+
+public function inserir()
+{
+    $query = "INSERT INTO produtos (nome, preco, quantidade, categoria_id)
+                        VALUES ('" . $this->nome . "', " . $this->preco . ", " . $this->quantidade . ", " . $this->categoria_id . ")";
+    $conexao = Conexao::pegarConexao();
+    $conexao->exec($query);
+}
+Para verificar se o código funciona, precisaremos criar uma página na raiz do projeto, que instanciará a classe Produto.php, irá popular os atributos que queremos inserir, e que depois chamará este método, da mesma forma que fizemos com as categorias.
+
+Também precisamos fazer com que o formulário envie os dados para este arquivo. Portanto, vamos voltar a produtos-criar.php, em que veremos que a tag <form> já está com method="post", corretamente.
+
+Criaremos produtos-criar-post.php, em que chamaremos o require_once do arquivo global, e acrescentaremos o Try/Catch. Precisamos resgatar os valores obtidos por meio do formulário, instanciando uma classe Produto em branco, e populando os atributos desta classe.
+
+<?php
+    require_once 'global.php';
+
+    try {
+        $nome = $_POST['nome'];
+        $quantidade = $_POST['quantidade'];
+        $preco = $_POST['preco'];
+        $categoria_id = $_POST['categoria_id'];
+
+        $produto = new Produto();
+
+        $produto->nome = $nome;
+        $produto->quantidade = $quantidade;
+        $produto->preco = $preco;
+        $produto->categoria_id = $categoria_id;
+        $produto->inserir();
+
+        header('Location: produtos.php');
+
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+Vamos testar e ver o que acontece? Voltaremos à página de cadastro de novos produtos, cujo nome é "Camiseta Azul", o preço é "40", quantidade "10" e categoria "Roupas". Clicaremos no botão "Salvar", e veremos que o produto foi cadastrado com sucesso, constando na listagem junto aos demais.
+
+O método PDO::prepare(), assim como o PDO::query(), retorna um objeto do tipo PDOStatement, mas com a diferença que a query não é executada automaticamente.
+
+O objeto PDOStatement possui diversos métodos que podemos usar, em diferentes situações que podem ajudar. Vamos agora dar uma listada nas possibilidade que temos com esse objeto!
+
+PDOStatement::fetch
+Retorna a próxima linha de um resultset. Podemos usar o método fetch, combinado por exemplo com um while() para buscar cada linha do resultado. Ele sempre começa na primeira linha do resultado de sua query e a cada vez que o método é chamado, ele vai para a próxima linha. Quando chega na ultima linha, o método retorna um valor false.
+
+Veja um exemplo de um SELECT em nossa tabela de produtos com isso:
+
+<?php
+
+require_once 'global.php';
+
+$conexao = Conexao::pegarConexao();
+$query = "SELECT nome FROM produtos";
+$stmt = $conexao->prepare($query);
+$stmt->execute();
+$row = $stmt->fetch();
+
+while ($row) {
+    echo 'Produto:' . $row['nome'] . '<br>';
+    $row = $stmt->fetch();
+}
+PDOStatement::fetchObject()
+O fetchObject() funciona de forma muito parecida com o método fetch(), mas com a diferença simples de que, o retorno não vai ser um array onde, cada indice representa uma coluna na entidade e sim, um objeto, onde, cada atributo representa a entidade.
+
+Veja o mesmo exemplo com a aplicação de PDOStatement::fetchObject():
+
+<?php
+
+require_once 'global.php';
+
+$conexao = Conexao::pegarConexao();
+$query = "SELECT nome FROM produtos";
+$stmt = $conexao->prepare($query);
+$stmt->execute();
+$row = $stmt->fetchObject();
+
+while ($row) {
+    echo 'Produto:' . $row->nome . '<br>';
+    $row = $stmt->fetchObject();
+}
+PDOStatement::rowCount
+Sempre que usamos uma instrução SQL do tipo INSERT, UPDATE ou DELETE, não teremos um resultset, Mas, temos um retorno do Banco de Dados com a quantidades de linhas que foram afetadas pelo nosso script. E esse método justamente retorna isso para nós. Veja o exemplo abaixo:
+
+<?php
+
+require_once 'global.php';
+
+$novo_preco = 11;
+
+$conexao = Conexao::pegarConexao();
+$query = "UPDATE produtos SET preco = :preco";
+$stmt = $conexao->prepare($query);
+$stmt->bindValue(':preco', $novo_preco);
+$stmt->execute();
+echo $stmt->rowCount() . ' Linhas atualizadas!';
+E temos o seguinte resultado: 13 Linhas atualizadas!.
+
+A lista completa de métodos pode ser encontrada na documentação do php (http://php.net/manual/pt_BR/class.pdostatement.php).
+
+
+########## 03. Preparando script de banco de dados no PDO ##########
+
+
+

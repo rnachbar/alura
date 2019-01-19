@@ -1,13 +1,15 @@
 <?php require_once 'global.php' ?>
+
 <?php
     try {
-        $categoria = new Categoria();
-        $lista = $categoria->listar();
+        $lista = Categoria::listar(); // chamando um método estático
     } catch(Exception $e) {
         Erro::trataErro($e);
     }
 ?>
+
 <?php require_once 'cabecalho.php' ?>
+
 <div class="row">
     <div class="col-md-12">
         <h2>Categorias</h2>
