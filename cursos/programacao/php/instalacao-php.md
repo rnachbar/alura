@@ -64,4 +64,4 @@
 
 * Abra o terminal do Windows, ou qualquer outro de sua preferência e navegue até a pasta do projeto.
 
-* Para que o servidor web funcione, usaremos o comando `$ php -S 127.0.0.1:8888` passando como parâmetros o IP e a porta (porta de sua preferência) para o qual queremos que o servidor suba, no caso, a mesma máquina que estamos utilizando, ou o IP local.
+* Para que o servidor web funcione, usaremos o comando `$ php -S 127.0.0.1:8888` (ou `$ php -S localhost1:8888`) passando como parâmetros o IP e a porta (porta de sua preferência) para o qual queremos que o servidor suba, no caso, a mesma máquina que estamos utilizando, ou o IP local.

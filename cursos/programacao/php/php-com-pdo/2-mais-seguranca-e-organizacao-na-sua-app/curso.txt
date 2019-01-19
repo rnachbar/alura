@@ -10,3 +10,226 @@ Com isso, seguiremos trabalharemos com a preparação de queries, funcionalidade
 Isto traz muito mais segurança, além de deixar o código muito mais organizado.
 
 Então, vamos começar?
+
+No curso anterior, conseguimos fazer a inclusão, exclusão e edição de categorias, além de visualizá-las e carregá-las em uma listagem. Porém, nosso sistema também é composto de produtos, e precisamos desenvolver todo o fluxo para lidarmos com eles também, isto é, para cadastramentos, exclusões e listagem.
+
+Vamos começar a trabalhar com isso?
+
+Acessando o menu "Produtos" na página do navegador, veremos "O Senhor dos Anéis" cadastrado, de id 1, com preço R$ 80,55, quantidade 2 e categoria Livros. Esta tela é um pouco mais complexa que a de categorias, por trazer mais informações.
+
+Vamos abrir produtos.php, localizado na raiz do projeto. Ele possui basicamente a mesma estrutura dos demais arquivos com que trabalhamos anteriormente, com tabelas mocadas, isto é, fixas ao HTML, não dinâmico, servindo apenas para termos uma visão do front end.
+
+Começaremos repetindo o que fizemos com as categorias, criando uma classe para representar a entidade Produto no sistema. Ou seja, em classes, criaremos Produto.php, em que representaremos todos os campos da parte de produtos com atributos:
+
+<?php
+
+class Produto
+{
+    public $id;
+    public $nome;
+    public $preco;
+    public $quantidade;
+    public $categoria;
+}
+Porém, como estas informações estão representadas no banco de dados? Para conferir, vamos abrir o script de criação do banco de dados, banco_de_dados.sql. Na parte de produtos, temos o id, nome, preco, quantidade e categoria_id, pois logo em seguida criamos uma FOREIGN KEY, fk_categorias, que funciona como chave estrangeira no banco de dados, cuja categoria_id representa o id da tabela categorias.
+
+Para trabalharmos da mesma forma como fazemos no banco de dados na nossa classe, o atributo categoria, previamente criado, será convertido para categoria_id.
+
+Começaremos pela listagem de produtos, que será apresentada ao usuário, e trabalharemos com o método listar() que a retornará para nós. Vamos manter o padrão estabelecido na parte de categorias - sabemos que todas as classes que representam as entidades terão o método listar() para os registros da entidade.
+
+Para a query de consulta, você poderá estar se perguntando se não teríamos o mesmo efeito se escrevessemos "*$ FROM nome da tabela". Sim, teríamos. No entanto, isto não é nem um pouco recomendado, pois não sabemos como esta estrutura ficará futuramente. É legal sermos fiéis ao que precisamos no SELECT. Neste caso, como todos estes campos serão utilizados, deixaremos isso bem explícito em nosso código.
+
+Faremos também a requisição de conexão, lembrando que agora não precisaremos de nenhum require_once na classe para pegarmos o método de conexão que temos, pois já temos o autoloader, então, quando este ponto for alcançado, ele tentará buscar por esta classe, cairá no autoloader, o qual fará o require, e aí, sim, o método funcionará.
+
+Executaremos a query com o método query() para obtermos retorno a partir da função fetchAll(), da classe PDOStatement.
+
+O código ficará assim:
+
+<?php
+
+class Produto
+{
+    public $id;
+    public $nome;
+    public $preco;
+    public $quantidade;
+    public $categoria_id;
+
+    public static function listar()
+    {
+        $query = "SELECT id, nome, preco, quantidade, categoria_id FROM produtos";
+        $conexao = Conexao::pegarConexao();
+        $resultado = $conexao->query($query);
+        $lista = $resultado->fetchAll();
+        return $lista;
+    }
+}
+Vamos testar para ver se funciona, utilizando a tag <pre> e print_r no próprio arquivo produtos.php, em que serão listadas estas informações. Antes de mais nada, faremos o require_once para o arquivo global.php, acrescentando a linha <?php require_once 'global.php' ?> no topo do código.
+
+Agora temos o arquivo global.php, que carrega todas as informações de que nossa página precisará. Tudo que chamamos de compilador, que é este bloco de código e não é uma classe, precisa estar contido em um Try/Catch.
+
+<?php
+    try {
+        $lista = Produto::listar();
+        echo '<pre>';
+        print_r($lista);
+        echo '</pre>';
+        exit;
+
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+Feito isso, testaremos novamente, e será exibida uma página com uma matriz de vários índices, sendo que cada um é um array que representa uma linha do nosso banco de dados.
+
+Temos os livros cadastrados, jogos, e assim por diante. Vimos, portanto, que nossa lista funciona direitinho. Podemos deletar o debug no try, mantendo apenas o método listar():
+
+<?php
+    try {
+        $lista = Produto::listar();
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+Agora, precisaremos ir à parte do HTML em produtos.php, em que há uma tabela e, entre as tags <tbody> e <tr> faremos o foreach para o laço que irá passar por cada linha do array e imprimir os valores de que precisamos.
+
+Usaremos a forma alternativa de controle do PHP neste momento, pois estamos misturando-o com HTML, para fins de organização do código.
+
+<?php foreach ($lista as $linha): ?>
+<tr>
+    <!-- informações referentes a um dos livros cadastrados -->
+</tr>
+<?php endforeach ?>
+Ao abrirmos um PHP usando um comando e fechando-o logo em seguida, não é preciso utilizar o ponto e vírgula (;), pois o fechamento do PHP já é o suficiente.
+
+Vamos testar o que foi feito até aqui! Serão impressos os mesmos valores em cinco linhas, que é o que temos no nosso banco de dados. Desta vez, queremos que apareçam os valores de cada linha.
+
+Em relação ao preço, só estamos armazenando o valor, não o R$. Sendo assim, manteremos isto no HTML, colocando o PHP depois dele. Voltaremos a produtos.php e o deixaremos assim:
+
+<?php foreach ($lista as $linha): ?>
+<tr>
+    <td><?php echo $linha['id'] ?></td>
+    <td><?php echo $linha['nome'] ?></td>
+    <td>R$ <?php echo $linha['preco'] ?></td>
+    <td><?php echo $linha['quantidade'] ?></td>
+    <td><?php echo $linha['categoria_id'] ?></td>
+    <td><a href="/produtos-editar.php" class="btn btn-info">Editar</a></td>
+    <td><a href="#" class="btn btn-danger">Excluir</a></td>
+</tr>
+<?php endforeach ?>
+Testaremos novamente e veremos que temos o id de cada registro, bem como os nomes, preços e quantidades. Porém são exibidos os números das categorias, e não os nomes, e isto não é o que queremos por não ser nem um pouco prático.
+
+Vamos trabalhar de maneira que tenhamos um carregamento completo do que precisamos desta listagem, alterando nossa query. No arquivo Produto.php, quebraremos a linha referente à query para que ela não fique muito extensa, o que não trará nenhum problema no PHP desde que se coloque o ponto e vírgula no final.
+
+public static function listar()
+{
+    $query = "SELECT p.id, p.nome, preco, quantidade, categoria_id, c.nome as categoria_nome
+                        FROM produtos p
+                        INNER JOIN categorias c ON p.categoria_id = c.id";
+    $conexao = Conexao::pegarConexao();
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+Ao usarmos categoria_nome conseguimos diferenciar o array retornado pelo fetchAll(), que seguirá exatamente o que colocamos no SELECT. Por meio dos alias, com as, damos um apelido para o campo, que em vez de aparecer como nome, será c.nome.
+
+Não alteraremos nada e veremos se tudo continua funcionando como antes. As categorias ainda aparecem com o número, e não o nome. Assim, no campo em que as apresentamos, usaremoscategoria_nome no foreach do HTML, em vez de imprimirmos categoria_id. Em produtos.php, portanto, teremos:
+
+<td><?php echo $linha['categoria_nome'] ?></td>
+Salvaremos e atualizaremos a página, e as categorias são apresentadas como gostaríamos, com seus nomes, e não números!
+
+Nossa listagem de produtos está funcionando direitinho, com um pequeno porém: vocês lembram que na listagem de categorias acrescentamos um if para verificar quantos registros são retornados, e assim exibirmos uma mensagem amigável ao usuário caso não exista nada cadastrado no banco de dados?
+
+Precisaremos fazer o mesmo nesta parte de produtos. Vamos abrir produtos.php e incluir na tabela um if com o método count():
+
+<div class="col-md-12">
+    <?php if (count($lista) > 0): ?>
+    <table class="table">
+        <thead>
+        <tr>
+            <!-- código omitido -->
+        </tr>
+        </thead>
+    </table>
+    <?php else: ?>
+        <p>Nenhum produto cadastrado</p>
+    <?php endif ?>
+</div>
+Testando no navegador, veremos que isso não afeta nossa página, isto é, tudo continua funcionando bem. Para confirmarmos, pode-se forçar a regra inversa, substituindo > por <= na linha abaixo:
+
+<?php if (count($lista) <= 0): ?>
+Assim, quando atualizamos a página, será exibida a mensagem "Nenhum produto cadastrado". Deixaremos o código da maneira como estava anteriormente.
+
+Outro ponto feito nas categorias que ainda não implementamos são os ids dos nossos botões. Ao passarmos o mouse sobre eles, seus endereços não mostram nenhum id ou ação a ser tomada.
+
+Em produtos.php, passaremos então o valor do id do produto via query string, simplesmente acrescentando o ponto de interrogação, e a variável igual a valor, que no caso é dinâmico.
+
+O botão Excluir ainda não possui um link, porém poderemos estipular que ele seguirá com o mesmo padrão da página de categoria. O código ficará da seguinte maneira:
+
+<td><a href="/produtos-editar.php?id=<?php echo $linha['id'] ?>" class="btn btn-info">Editar</a></td>
+<td><a href="/produtos-excluir-post.php?id=<?php echo $linha['id'] ?>" class="btn btn-danger">Excluir</a></td>
+Feito isso, vamos salvar o arquivo e atualizar a página. Ao passarmos o mouse novamente sobre os botões, desta vez veremos nos links no canto inferior esquerdo o id correspondente aos produtos.
+
+Parece um tanto desorganizado, porque a listagem está seguindo a ordem das categorias, e não dos nomes dos produtos. Vamos alterar isso indo à classe Produto.php, em que acrescentaremos um ORDER BY na $query:
+
+$query = "SELECT p.id, p.nome, preco, quantidade, categoria_id, c.nome as categoria_nome
+          FROM produtos p
+          INNER JOIN categorias c ON p.categoria_id = c.id
+                    ORDER BY p.nome ";
+Tudo certo! E você poderá organizar a listagem da maneira como achar melhor.
+
+Nessa aula fizemos nossa classe Produto e nosso primeiro método Produto::listar(), no qual usamos um INNER JOIN na tabela de categorias para trazer o nome da categoria na listagem dos produtos. Sem isso só conseguíamos mostrar o ID da categoria, que é um campo da tabela de produtos.
+
+Existe uma outra forma.
+
+O que poderíamos ter feito para não usar o INNER JOIN em nosso SELECT é, dentro do foreach, da listagem de produtos, ter usado o método carrega da Classe Categoria para carregar a entidade de cada categoria e, assim, exibido o nome dela a partir da própria entidade. Isso é o que chamamos de Lasy Loading.
+
+Embora para essa situação usar Lazy Loading não seja a melhor escolha, pois vai gerar um excesso grande de processamento, além de deixar nosso código um pouco desorganizado, vamos alterar nosso código de listagem, para ver essa técnica funcionando.
+
+OBS: Mais pra frente em nosso curso, vamos utilizar a técnica de Lazy Loading de uma forma parecida, onde tem sua aplicabilidade muito mais válida. =)
+
+Precisamos alterar o método listar() da classe classes/Produto.php:
+
+public static function listar()
+{
+    $query = "SELECT p.id, p.nome, preco, quantidade, categoria_id, c.nome as categoria_nome
+                FROM produtos p
+                INNER JOIN categorias c ON p.categoria_id = c.id
+                ORDER BY p.nome ";
+    $conexao = Conexao::pegarConexao();
+    $resultado = $conexao->query($query);
+    $lista = $resultado->fetchAll();
+    return $lista;
+}
+E o bloco do foreach() do arquivo produtos.php:
+
+<?php foreach ($lista as $linha): ?>
+<tr>
+    <td><?php echo $linha['id'] ?></td>
+    <td><?php echo $linha['nome'] ?></td>
+    <td>R$ <?php echo $linha['preco'] ?></td>
+    <td><?php echo $linha['quantidade'] ?></td>
+    <td><?php echo $linha['categoria_nome'] ?></td>
+    <td><a href="/produtos-editar.php?id=<?php echo $linha['id'] ?>" class="btn btn-info">Editar</a></td>
+    <td><a href="/produtos-excluir-post.php?id=<?php echo $linha['id'] ?>" class="btn btn-danger">Excluir</a></td>
+</tr>
+<?php endforeach ?>
+
+Para fazer isso, vamos começar tirando todo o bloco do INNER JOIN e suas referências de nosso SELECT dessa forma:
+
+$query = "SELECT p.id, p.nome, preco, quantidade, categoria_id
+                  FROM produtos p
+                  ORDER BY p.nome ";
+Agora, vamos alterar, dentro do bloco do foreach() do arquivo produtos.php, para tirar a refeência ao campo do nome da categoria que vinha em nossa query antes da alteração. Alterando a linha: <td><?php echo $linha['categoria_nome'] ?></td> para <td><?php echo $linha['categoria_id'] ?></td>.
+
+Agora, vamos criar um novo bloco de php logo abaixo da linha do foreach() e colocar o seguinte código:
+
+<?php $categoria = new Categoria($linha['categoria_id']); ?>
+E por fim, vamos usar o comando echo com o atributo nome da classe Categoria em vez de mostrar o ID da categoria na coluna. Alterando a linha <td><?php echo $linha['categoria_id'] ?></td> para <td><?php echo $categoria->nome ?></td>
+
+Teremos o mesmo resultado de antes, mas com uma forma diferente de obter os dados!
+
+
+########## 02. Inserção de produtos ##########
+
+
