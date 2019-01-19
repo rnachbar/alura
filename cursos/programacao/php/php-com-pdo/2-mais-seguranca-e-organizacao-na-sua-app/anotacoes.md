@@ -5,3 +5,9 @@
 * Nome da classe sempre tendo o mesmo nome do arquivo para o `AUTOLOADER` funcionar corretamente e por questão de padronização.
 
 * O método estático é o método que não se relaciona com nada mais da nossa classe/objeto. Ele não faz referencia a outros métodos/objetos ou atributos dos objetos
+
+* O método PREPARE também retorna um PHPStatement, mas mas retorna um PHPStatement preparado para execução, quando o método QUERY retorna o PHPStatement já xecutado.
+
+* Com a utilização do bindValue, já são feitas validações previnindo o SQL Injection.
+
+* `or1=1` - SQL INJECTION

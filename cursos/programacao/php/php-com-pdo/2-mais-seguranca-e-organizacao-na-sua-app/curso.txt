@@ -432,4 +432,261 @@ A lista completa de métodos pode ser encontrada na documentação do php (http:
 ########## 03. Preparando script de banco de dados no PDO ##########
 
 
+Após configurarmos a parte de cadastro de novos produtos, e antes de continuarmos com a edição e exclusão dos mesmos, faremos uma reformulação em nosso código para reforçarmos sua segurança, no sentido de que, da maneira como ele se encontra, principalmente em relação às queries de bancos de dados feitos com PDO, acabamos gerando risco de vulnerabilidade no sistema.
+
+Para demonstrar isso, vamos abrir Produto.php, com o método que acabamos de criar, inserir(). Nele, estamos concatenando os valores inseridos diretamente à query, e isto gera grande risco de segurança por não fazermos nenhum tratamento no valor que o usuário coloca no formulário, após o qual simplesmente fazemos a chamada do método de INSERT.
+
+Existem várias maneiras de prevenirmos SQL Injections, e as mais claras e simples implicam em pegarmos o valor e tratarmos o método inserir() antes de chamá-lo, procurando por padrões que normalmente são utilizados em uma tentativa de SQL Injection - como caracteres especiais como ponto e vírgula, traço duplo (um comentário do SQL), aspas simples, or 1 = 1. Estas normalmente são as técnicas mais usadas.
+
+O PDO, no entanto, traz uma funcionalidade para o tratamento de SQL de uma forma muito mais fácil e que, além disso, deixará as queries do nosso código mais organizadas. Até então, já tínhamos usado os métodos query() e exec(). Desta vez, faremos diferente, preparando esta execução com o método prepare(), e depois usando o execute().
+
+No código de Produto.php, precisaremos alterar basicamente todas as concatenações na parte de values do INSERT, colocando chaves para indicar que um valor será passado de forma dinâmica. Não usaremos aspas simples, e sim dois pontos (:) antes do valor, ainda como string.
+
+O método prepare() é bem parecido com o query(), e ele nos retornará um PHP Statement mas, diferentemente do query(), que devolve o Statement (stmt) já executado, o prepare(), como o próprio nome indica, irá nos devolvê-lo preparado, mas ainda não executado.
+
+É preciso indicar à preparação da query os valores que queremos adicionar em nome, preco, quantidade e categoria_id, por meio do bindValue, sendo que o primeiro será a chave que usamos no formato string, e o segundo será o valor que queremos inserir efetivamente no campo. Este processo faz a validação caso haja algo de SQL Injection, além de deixar o código mais organizado.
+
+Para executar este código, usaremos o método execute(), que não é do objeto de conexão PDO, e sim do PDO Statement da variável stmt. Tecnicamente, isso trará o mesmo resultado que tínhamos antes, porém de forma mais legível e muito mais segura.
+
+public function inserir()
+{
+    $query = "INSERT INTO produtos (nome, preco, quantidade, categoria_id)
+                        VALUES (:nome, :preco, :quantidade, :categoria_id)";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':nome', $this->nome);
+    $stmt->bindValue(':preco', $this->preco);
+    $stmt->bindValue(':quantidade', $this->quantidade);
+    $stmt->bindValue(':categoria_id', $this->categoria_id);
+    $stmt->execute();
+}
+Vamos fazer um teste inserindo um novo produto à tabela: "Bermuda", que custará "25" reais, cuja quantidade será "3" e a categoria, "Roupas". Salvaremos e seremos redirecionados à listagem, que terá a nova categoria adicionada, como esperado. Aproveitando que aprendemos a fazer isso, vamos fazer o mesmo nos métodos que já temos e que fazem consulta ao banco de dados.
+
+Não é estritamente necessário fazê-lo com todos eles, o ideal é usar a preparação de queries quando há dados dinâmicos. Ou seja, quando passamos algum id ou valor passado pelo usuário. Sendo assim, em Produto.php não há nada em que ele possa interferir, portanto não precisaremos realizar alterações.
+
+Na classe Categoria.php, o método listar() não precisa deste tratamento pois seu valor é fixo, e em carregar() concatenamos o valor do id na nossa query. Mas de onde ele vem?
+
+Na página de edição de categoria no navegador, é exibido o valor do id na barra de endereço. Logo, este é um bom lugar para alterarmos. Então, o código ficará da seguinte forma:
+
+public function carregar()
+{
+    $query = "SELECT id, nome FROM categorias WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+    $lista = $stmt->fetchAll();
+    foreach ($lista as $linha) {
+        $this->nome = $linha['nome'];
+    }
+}
+Testaremos o código apertando a tecla "F5" no navegador, e veremos que tudo funciona corretamente. Uma dica para deixarmos o código ainda melhor é que neste caso sabemos que a query retornará apenas uma única linha, e criamos um foreach mesmo sabendo que ele passará por esse loop apenas uma vez.
+
+Por que, mesmo assim, usamos o foreach neste caso?
+
+Por conta do fetchAll(). E para não termos que fazer isso, em vez de lista, usaremos linha, e no lugar de fetchAll() usaremos simplesmente fetch(), que pegará a primeira linha. Daí, não precisaremos mais do foreach, e teremos:
+
+public function carregar()
+{
+    $query = "SELECT id, nome FROM categorias WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+    $linha = $stmt->fetch();
+    $this->nome = $linha['nome'];
+}
+Vamos forçar algo de SQL Injection digitando na barra de endereço 127.0.0.1:8888/categorias-editar.php?id=2or1=1. Não obteremos nenhum resultado inesperado, porém o usuário também ficaria "sem saída". É bem difícil conseguirmos simular isso, mas existem programas que o fazem automaticamente, não importa se você tentar fazer manualmente e não conseguir fazer nenhuma vulnerabilidade. É importante sempre usarmos o prepare() quando formos passar algum valor.
+
+Portanto, da mesma forma, voltaremos ao arquivo Categoria.php para alterar o método inserir(), em que temos um valor engessado:
+
+public function inserir()
+{
+    $query = "INSERT INTO categorias (nome) VALUES (:nome)";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':nome', $this->nome);
+    $stmt->execute();
+}
+Para ver se isto funciona como gostaríamos, vamos adicionar uma nova categoria ao nosso sistema, "Brinquedos", que aparecerá na listagem com id 6. Depois, faremos o mesmo em atualizar():
+
+public function atualizar()
+{
+    $query = "UPDATE categorias set nome = :nome WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':nome', $this->nome);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+}
+Para testarmos, editaremos a categoria recém criada "Brinquedos", alterando-a para "Brinquedo". Salvaremos, e tudo funciona bem. Continuando, excluir() é outro método que poderemos alterar:
+
+public function excluir()
+{
+    $query = "DELETE FROM categorias WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+}
+Feito isso, conseguiremos excluir qualquer uma das categorias com sucesso!
+
+Nosso código está bem mais organizado e seguro para se trabalhar com PDO. Lembrando que o uso do bindValue() para poder usar o prepare() e depois o execute() não é obrigatório.
+
+No entanto, sempre que um parâmetro for passado, para usarmos o bindValue(), é preciso fazer a preparação da query, e isto é muito importante.
+
+Nessa aula, utilizamos o método PDO::prepare() para preparar uma conexão.
+
+Qual das formas abaixo, é a forma correta de se usar o PDO::prepare()?
+
+Criar um script SQL em uma string: $query = "SELECT ....."
+
+Efetuar a conexão: $conexao = Conexao::pegarConexao();
+
+Preparar a query em um Statement: $stmt = $conexao->prepare($query);
+
+Executar o script com o método execute() do Statement: $stmt->execute();
+Quando usamos o método prepare() do PDO, nos é retornado uma variavel do tipo PDOStatement. Mas, esse statement ainda não foi rodado no banco de dados e podemos trabalhar na query para passar parâmetros por exemplo. Alem disso, se fomos executar mais de uma vez a mesma query (mudando ou não os parâmetros), ela acaba sendo otimizada pelo banco de dados que já sabe a estrutura do seu script.
+
+Nessa aula, aprendemos a utilizar o PDO::prepare(), que é um dos pontos mais importantes do php-pdo. Com ele, podemos passar valores para nossos scripts SQL de forma dinâmica. Isso, alem de trazer muito mais segurança para nosso código, deixa as interações com o Banco de Dados mais eficientes.
+
+Vamos elaborar agora, um simples script php que podemos usar, para criar registros em nossa base de dados. Esse tipo de script é bem útil, quando por exemplo, querermos criar "massa de dados" em nosso sistema, para fins de testes por exemplo.
+
+Nosso script, vai ter como objetivo, criar registros de diversos produtos e para isso, vamos seguir os passos a seguir:
+
+Para deixar elegante nosso script, vamos gerar nomes aleatórios de roupas, então, antes de começar, certifique de que você tenha uma categoria Roupas cadastrado no seu banco de dados, e já pegue o ID dessa categoria. No meu caso, criei uma nova categoria Roupas que recebeu o ID 7.
+
+Na raiz do diretório de nosso projeto, vamos criar um novo arquivo em branco chamado robo.php. Ele será responsável pelo nosso script. Não se esqueça de incluir nele o require_once para nosso arquivo global.
+
+Para gerar o nome da roupa, vamos usar o script abaixo. Basicamente, criamos nele, 3 arrays. O primeiro, com tipos de roupas, o segundo, com o sexo a qual é indicado a roupa e o terceiro com a cor da roupa. E depois, usamos a função rand() do php para randomizar um número aleatório de 0 até o total de índices de cada array, assim, cada vez que rodamos esse script, temos um resultado diferente com uma combinação aleatória de cada opção do Array.
+
+O Script ficou assim:
+
+<?php
+$tipo_roupa = ['Blusa', 'Camisa', 'Camiseta', 'Bermuda', 'Calça', 'Jaqueta'];
+$sexo_roupa = ['Masculina', 'Feminina'];
+$cor_roupa  = ['Preta', 'Vermelha', 'Azul', 'Amarela', 'Verde', 'Branca', 'Marrom', 'Rosa'];
+
+$tipo_index = rand(0, 5);
+$sexo_index = rand(0, 1);
+$cor_index  = rand(0, 7);
+
+$roupa = $tipo_roupa[$tipo_index] . ' ' . $sexo_roupa[$sexo_index] . ' ' . $cor_roupa[$cor_index];
+Para testar, vamos só colocar ele em nosso arquivo robo.php. no final, coloque um echo $roupa; e acesse esse arquivo pelo navegador:
+
+Teremos o resultado como: "Bermuda Feminina Azul" ou "Jaqueta Masculina Rosa" ou "Camiseta Feminina Vermelha" e assim por diante.
+
+Agora, vamos continuar, fazendo um laço for que vai terminar quantos registros vamos incluir cada vez que rodamos nosso arquivo robo.php.
+
+Depois, precisamos fazer nossa string com o INSERT do produto, pegar a conexão e passar como parâmetro do bindValue() no nome da roupa, o valor que geramos aleatoriamente no código acima.
+
+Para os outros campos da tabela Produtos, como quantidade e preço, você também pode usar a função rand(); para gerar números aleatórios ;)
+
+A primeira coisa que precisamos fazer, é criar nosso arquivo robo.php na raiz do nosso projeto. Nele, vamos abrir um bloco de php com <?php e fazer o require_once 'global.php';
+
+Em seguida, vamos definir todos os valores gerais de nosso robô que são:
+
+Número de roupas que queremos criar a cada vez que o robô for executado
+
+Colocar uma variável para guardar o valor da categoria roupas, que é a categoria que vamos inserir registros.
+
+Colocar os 3 arrays que foi mostrado acima. Já com seus respectivos valores: $tipo_roupa, $sexo_roupa e $cor_roupa.
+
+Vamos agora, criar um laço for() que vai ser rodado exatamente o número de vezes na qual, especificamos no segundo passo.
+
+Vamos criar todos os valores aleatórios que precisamos:
+
+$tipo_index = rand(0, 5);
+
+$sexo_index = rand(0, 1);
+
+$cor_index = rand(0, 7);
+
+$preco = rand(1, 100);
+
+$quantidade = rand(1, 50);
+
+Vamos criar a variável com nome de nossa roupa: $roupa = $tipo_roupa[$tipo_index] . ' ' . $sexo_roupa[$sexo_index] . ' ' . $cor_roupa[$cor_index];.
+
+Agora, vamos fazer a query de INSERT na tabela de produtos
+
+Vamos criar a variável $conexao com o método Conexao::pegarConexao().
+
+Vamos criar a variável $stmt que recebe o retorno da $conexao->prepare($query);.
+
+Vamos passar todos os valores aleatórios que criamos com o método bindValue().
+
+$stmt->bindValue(':nome', $roupa);
+
+$stmt->bindValue(':preco', $preco);
+
+$stmt->bindValue(':quantidade', $quantidade);
+
+$stmt->bindValue(':categoria_id', $categoria_id);
+
+Vamos executar nossa query com o método $stmt->execute();;
+
+Por fim, vamos aproveitar apenas para imprimir o nome da roupa que acabamos de cadastrar com um echo, ainda dentro do nosso laço for(): echo $roupa . ' Cadastrada com sucesso!<br>';
+
+Nosso código vai ficar desse jeito:
+
+<?php
+
+require_once 'global.php';
+
+$numero_de_roupas = 10;
+$categoria_id = 7;
+$tipo_roupa = ['Blusa', 'Camisa', 'Camiseta', 'Bermuda', 'Calça', 'Jaqueta'];
+$sexo_roupa = ['Mascilona', 'Feminina'];
+$cor_roupa  = ['Preta', 'Vermelha', 'Azul', 'Amarela', 'Verde', 'Branca', 'Marrom', 'Rosa'];
+
+for ($x = 1; $x <= $numero_de_roupas; $x++) {
+
+    $tipo_index = rand(0, 5);
+    $sexo_index = rand(0, 1);
+    $cor_index  = rand(0, 7);
+    $preco      = rand(1, 100);
+    $quantidade = rand(1, 50);
+    $roupa = $tipo_roupa[$tipo_index] . ' ' . $sexo_roupa[$sexo_index] . ' ' . $cor_roupa[$cor_index];
+
+    $query = "INSERT INTO produtos (nome, preco, quantidade, categoria_id)
+    VALUES (:nome, :preco, :quantidade, :categoria_id)";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':nome', $roupa);
+    $stmt->bindValue(':preco', $preco);
+    $stmt->bindValue(':quantidade', $quantidade);
+    $stmt->bindValue(':categoria_id', $categoria_id);
+    $stmt->execute();
+
+    echo $roupa . ' Cadastrada com sucesso!<br>';
+}
+Quando executarmos nossa página no navegador, acessando a URL: http://127.0.0.1:8888/robo.php, teremos o seguinte resultado:
+
+Calça Feminina Amarela Cadastrada com sucesso!
+
+Bermuda Feminina Rosa Cadastrada com sucesso!
+
+Camiseta Mascilona Branca Cadastrada com sucesso!
+
+Jaqueta Mascilona Azul Cadastrada com sucesso!
+
+Blusa Mascilona Azul Cadastrada com sucesso!
+
+Camiseta Mascilona Branca Cadastrada com sucesso!
+
+Camiseta Mascilona Amarela Cadastrada com sucesso!
+
+Calça Feminina Verde Cadastrada com sucesso!
+
+Bermuda Feminina Marrom Cadastrada com sucesso!
+
+Jaqueta Feminina Branca Cadastrada com sucesso!
+
+OBS - O resultado final pode variar para você pois os valores são aleatórios. O importante é que todos os valores tenham sido cadastrados com sucesso! ;)
+
+
+########## 04. Editando e excluindo produtos ##########
+
+
 
