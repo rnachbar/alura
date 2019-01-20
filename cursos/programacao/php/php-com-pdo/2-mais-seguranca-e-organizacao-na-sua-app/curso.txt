@@ -689,4 +689,572 @@ OBS - O resultado final pode variar para você pois os valores são aleatórios.
 ########## 04. Editando e excluindo produtos ##########
 
 
+Feita a refatoração do nosso código para usarmos o prepare() do PDO e conseguirmos ter uma segurança muito maior, além de uma organização considerável no código, continuaremos lidando com a edição de produtos.
+
+Já trabalhamos com o link do botão "Editar", sobre o qual passamos o mouse e vemos o id correspondente sendo exibido no canto inferior esquerdo da tela. Ao clicarmos nele, somos redirecionados a produtos-editar.php.
+
+Clicaremos em qualquer um dos produtos e, da mesma forma como em categorias, há um formulário que vem preenchido com as informações do produto selecionado. No entanto, não é exatamente isto que ocorre, pois independentemente do produto selecionado, as informações são as mesmas, pois trata-se de dados engessados no HTML.
+
+Em Categoria.php, temos o construtor recebendo um id igual a false, isto é, se não for passado nenhum valor no construtor do objeto, o id é considerado falso. Logo em seguida, é feita uma verificação quanto ao id. Lembrando que no PHP tudo que for diferente de false ou 0 é considerado true.
+
+Então, após o if, o atributo id será carregado com o valor passado, e chamaremos o método carregar(), que por sua vez fará um SELECT carregando o id e buscando esta informação. Faremos o mesmo procedimento em Produto.php, em que criaremos o mesmo método:
+
+public function carregar()
+{
+    $query = "SELECT nome, preco, quantidade, categoria_id FROM produtos WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+    $linha = $stmt->fetch();
+    $this->nome = $linha['nome'];
+    $this->preco = $linha['preco'];
+    $this->quantidade = $linha['quantidade'];
+    $this->categoria_id = $linha['categoria_id'];
+}
+Feito isso, precisaremos criar o método construtor, sob a mesma regra do if, verificando se foi passado um valor quando a classe foi instanciada, ou não:
+
+public function __construct($id = false)
+{
+    if ($id) {
+        $this->id = $id;
+        $this->carregar();
+    }
+}
+Para conferir seu funcionamento, vamos mexer no arquivo com o formulário de edição (produtos-editar.php) fazendo a chamada da classe Produtos.php:
+
+<?php require_once 'global.php' ?>
+<?php
+    $id = $_GET['id'];
+    $produto = new Produto($id);
+
+    print_r($produto);
+?>
+Tudo funciona corretamente ao testarmos no navegador. Se usarmos o <pre>, o print será mostrado com quebra de linhas, facilitando sua visualização. Feito isso, poderemos deletar a linha referente à impressão. Continuando, precisaremos dos valores puxados para apresentá-los no formulário. Onde se lê o value do produto, daremos um echo na variável produto, que é o que também faremos com os demais campos:
+
+<div class="form-group">
+    <label for="nome">Nome do Produto</label>
+    <input type="text" value="<?php echo $produto->nome ?>" class="form-control" placeholder="Nome do Produto" required>
+</div>
+<div class="form-group">
+    <label for="preco">Preço do Produto</label>
+    <input type="number" value="<?php echo $produto->preco ?>" step="0.01" min="0" class="form-control" placeholder="Preço do Produto" required>
+</div>
+<div class="form-group">
+    <label for="quantidade">Quantidade do Produto</label>
+    <input type="number" value="<?php echo $produto->quantidade ?>" min="0" class="form-control" placeholder="Quantidade do Produto" required>
+</div>
+<div class="form-group">
+    <label for="nome">Categoria do Produto</label>
+    <select class="form-control">
+        <option value="1" selected>Livros</option>
+        <option value="2">Jogos</option>
+    </select>
+</div>
+Para a parte "Categoria do Produto", precisaremos trazer a lista completa de categorias, comparar linha a linha para sabermos qual é a que está sendo usada no momento, e então forçar o SELECT a marcá-la. O começo do código de produtos-editar.php ficará assim, da mesma maneira que fizemos na tela de inserção de produtos:
+
+<?php require_once 'global.php' ?>
+<?php
+    $id = $_GET['id'];
+    $produto = new Produto($id);
+    $listaCategoria = Categoria::listar();
+?>
+Com isto, deletaremos um dos options e criaremos um foreach, alterando também o valor e o nome da categoria:
+
+<div class="form-group">
+    <label for="nome">Categoria do Produto</label>
+        <select class="form-control">
+            <?php foreach ($listaCategoria as $linha): ?>
+                <option value="<?php echo $linha['id'] ?>" selected><?php echo $linha['nome'] ?></option>
+            <?php endforeach ?>
+        </select>
+</div>
+Ao atualizarmos a página no navegador, veremos que as outras categorias aparecem como opções, como gostaríamos, mas "Batman Arkahan City" está marcado como "Roupas", ou seja, com a última opção dentre as categorias, e não como "Jogos", que é a correta. Isso acontece porque usamos selected, que deletaremos da linha, deixando assim:
+
+<option value="<?php echo $linha['id'] ?>"><?php echo $linha['nome'] ?></option>
+Só que isso faz com que a última categoria fique selecionada, em vez da primeira. Como resolveremos isso? Vamos inspecionar o elemento para analisarmos o input, em que há os valores dos options, ou cada categoria com seu respectivo id. Para nos auxiliar, vamos voltar a imprimir o valor com print_r:
+
+<?php
+    $id = $_GET['id'];
+    $produto = new Produto($id);
+
+    print_r($produto);
+    $listaCategoria = Categoria::listar();
+?>
+É preciso compararmos linha a linha para verificar se a categoria de uma determinada linha é igual àquela a qual o produto pertence. Vamos fazer isso deletando o print_r que acabamos de colocar e criando um bloco PHP com if. E onde temos o value do option, abriremos outro bloco.
+
+Depois, incluiremos mais um bloco com a variável selected, em branco, porque se não for a última, o valor de selected será impresso às linhas seguintes. Assim, apenas uma das linhas do laço ficará com o valor selecionado, aquela na qual esta regra é verdadeira.
+
+<label for="nome">Categoria do Produto</label>
+    <select class="form-control">
+        <?php $selected = '' ?>
+        <?php foreach ($listaCategoria as $linha): ?>
+            <?php
+                if ($linha['id'] == $produto->categoria_id) {
+                    $selected = 'selected';
+                }
+            ?>
+            <option <?php echo $selected ?> value="<?php echo $linha['id'] ?>" selected><?php echo $linha['nome'] ?></option>
+            <?php $selected = '' ?>
+        <?php endforeach ?>
+    </select>
+Testaremos com diversos produtos, que agora aparecem com a categoria correspondente. Para confirmarmos isso, clicaremos no botão "Editar" de um livro, inspecionaremos o elemento, expandiremos o select, e veremos que apenas o option de "Livros", de value 1 possui o selected impresso, que é o que queríamos:
+
+<select class="form-control">
+    <option value="3">Filmes</option>
+    <option value="2">Jogos</option>
+    <option selected value="1">Livros</option>
+    <option value="5">Revistas</option>
+    <option value="4">Roupas</option>
+</select>
+
+Ainda falta efetuarmos a edição de categorias propriamente dita. Antes de fazermos isto, vamos incluir o Try/Catch para tratamento de erro (caso aconteça algum) em produtos-editar.php, algo que esquecemos de fazer anteriormente:
+
+<?php
+    try {
+        $id = $_GET['id'];
+        $produto = new Produto($id);
+        $listaCategoria = Categoria::listar();
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+Conferiremos se tudo permanece funcionando bem na página, e em seguida implementaremos o método de atualizar o produto, em Produto.php:
+
+public function atualizar()
+{
+    $query = "UPDATE produtos SET nome = :nome, preco = :preco, quantidade = :quantidade, categoria_id = :categoria_id WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':nome', $this->nome);
+    $stmt->bindValue(':preco', $this->preco);
+    $stmt->bindValue(':quantidade', $this->quantidade);
+    $stmt->bindValue(':categoria_id', $this->categoria_id);
+    $stmt->bindValue(':id', $this->id);
+    $stmt->execute();
+}
+Com isso, poderemos fazer a página que receberá as informações do formulário, que fará a instância de uma classe de Produto, e a atualização. Em produtos-editar.php, temos <form> contendo o method="post", porém a action não possui nada, não leva a lugar algum. Então, substituiremos # por produtos-editar-post.php, que é o arquivo que iremos criar.
+
+Como se trata da edição de um produto que já existe, precisaremos indicar o que está sendo editado, além das informações em si. Como fazemos o carregamento do objeto via id, é necessário informarmos nesta paǵina qual deles deverá ser carregado.
+
+No começo do <form> em produtos-editar.php, acrescentaremos um input:
+
+<form action="produtos-editar-post.php" method="post">
+<input type="hidden" name="id" value="<?php echo $produto->id ?>">
+    <div class="row">
+        <!-- código omitido -->
+    </div>
+</form>
+Salvaremos tudo e testaremos no navegador, clicando na página com o lado direito do mouse e em "Exibir código fonte da página". Nele, será exibido que o input está com value="4".
+
+No arquivo recém criado, produtos-editar-post.php, pegaremos todos os valores (id, nome, preco e quantidade e categoria_id) provenientes do formulário.
+
+Depois, faremos a instância da classe Produto passando o id que temos, e o nosso construtor será utilizado para chamar o método carregar() automaticamente. Na sequência iremos atualizar todos os valores.
+
+E se a pessoa só quiser atualizar o preço, por exemplo? Por que todos os valores deverão ser indicados?
+
+Tecnicamente, se a pessoa quer editar apenas o preço, este é o único campo a ser alterado no formulário, e os demais permanecerão com os mesmos valores de antes.
+
+Por fim, redirecionamos o usuário por meio do header() para produtos.php, que é a nossa página de listagem dos mesmos.
+
+<?php
+    require_once 'global.php';
+
+    try {
+        $id = $_POST['id'];
+        $nome = $_POST['nome'];
+        $preco = $_POST['preco'];
+        $quantidade = $_POST['quantidade'];
+        $categoria_id = $_POST['categoria_id'];
+
+        $produto = new Produto($id);
+        $produto->nome = $nome;
+        $produto->preco = $preco;
+        $produto->quantidade = $quantidade;
+        $produto->categoria_id = $categoria_id;
+        $produto->atualizar();
+
+        header('Location: produtos.php');
+
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+Vamos testar? Na página de editar categorias, deletaremos "- 5 Livros" de "As Cronicas de Gelo e Fogo - 5 Livros", o preço passará a ser "100", e a quantidade, "3". A categoria será mantida. Clicaremos no botão "Salvar", mas ao atualizarmos a página obteremos um erro por não termos colocado os names em cada campo de produtos-editar.php, o que faremos a seguir:
+
+<div class="form-group">
+    <label for="nome">Nome do Produto</label>
+    <input type="text" name="nome" value="<?php echo $produto->nome ?>" class="form-control" placeholder="Nome do Produto" required>
+</div>
+<div class="form-group">
+    <label for="preco">Preço da Produto</label>
+    <input type="number" name="preco" value="<?php echo $produto->preco ?>" step="0.01" min="0" class="form-control" placeholder="Preço do Produto" required>
+</div>
+<div class="form-group">
+    <label for="quantidade">Quantidade do Produto</label>
+    <input type="number" name="quantidade" value="<?php echo $produto->quantidade ?>" min="0" class="form-control" placeholder="Quantidade do Produto" required>
+</div>
+<div class="form-group">
+    <label for="nome">Categoria do Produto</label>
+    <select class="form-control" name="categoria_id">
+        <!-- blocos de PHP -->
+    </select>
+</div>
+Testando a mesma alteração, tudo funciona corretamente. Poderemos testar a edição de outros produtos, e obteremos o mesmo bom funcionamento!
+
+Conseguimos editar os produtos tranquilamente no nosso projeto! O que falta implementarmos é o botão "Excluir" que, assim como "Editar", também passa os ids direitinho para o arquivo produtos-excluir-post.php via query string. No entanto este arquivo ainda não existe, e aparece em produtos.php.
+
+Também precisaremos criar o método excluir() na classe Produto.php:
+
+public function excluir()
+{
+    $query = "DELETE FROM produtos WHERE id = :id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue('id', $this->id);
+    $stmt->execute();
+}
+O produtos-excluir-post.php, então, ficará da seguinte maneira:
+
+<?php
+    require_once 'global.php';
+
+    try {
+        $id = $_GET['id'];
+        $produto = new Produto($id);
+        $produto->excluir();
+
+        header('Location: produtos.php');
+
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+Vamos testar para ver se funciona? Conseguimos excluir o produto "Bermuda" com sucesso.
+
+No exercício da aula anterior, criamos um script robo.php para gerar registros de Produtos da categoria Roupas.
+
+Nessa aula, fizemos tudo relacionado a edição e exclusão de produtos, agora, usando o método prepare() do PDO.
+
+Vamos agora, alterar nosso robô para deixa-lo um mais completo, permitindo Editar ou Excluir grandes volumes de dados.
+
+Vamos criar dois robôs, um de edição em lote, e outro de exclusão, vamos seguir as seguintes regras para cada um deles:
+
+Edição em Lote:
+
+Arquivo robo_editar.php
+
+Os campos que serão editados serão apenas preço e quantidade
+
+Os nomes dos produtos vão permanecer o mesmo
+
+Os valores alterados (preço e quantidade) devem ser alterados para um valor aleatório
+
+Exclusão em Lote:
+
+Arquivo robo_excluir.php
+
+Só poderemos excluir produtos que tenham uma quantidade igual ou menor a um parâmetro informado no começo do robô
+
+Só poderemos excluir produtos com um preço menor ou igual a um parâmetro informado no começo do robô.
+
+Para lhe ajudar, segue abaixo, o código do robô que fizemos no exercício da aula passada:
+
+<?php
+
+require_once 'global.php';
+
+$numero_de_roupas = 10;
+$categoria_id = 7;
+$tipo_roupa = ['Blusa', 'Camisa', 'Camiseta', 'Bermuda', 'Calça', 'Jaqueta'];
+$sexo_roupa = ['Mascilona', 'Feminina'];
+$cor_roupa  = ['Preta', 'Vermelha', 'Azul', 'Amarela', 'Verde', 'Branca', 'Marrom', 'Rosa'];
+
+for ($x = 1; $x <= $numero_de_roupas; $x++) {
+
+    $tipo_index = rand(0, 5);
+    $sexo_index = rand(0, 1);
+    $cor_index  = rand(0, 7);
+    $preco      = rand(1, 100);
+    $quantidade = rand(1, 50);
+    $roupa = $tipo_roupa[$tipo_index] . ' ' . $sexo_roupa[$sexo_index] . ' ' . $cor_roupa[$cor_index];
+
+    $query = "INSERT INTO produtos (nome, preco, quantidade, categoria_id)
+    VALUES (:nome, :preco, :quantidade, :categoria_id)";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':nome', $roupa);
+    $stmt->bindValue(':preco', $preco);
+    $stmt->bindValue(':quantidade', $quantidade);
+    $stmt->bindValue(':categoria_id', $categoria_id);
+    $stmt->execute();
+
+    echo $roupa . ' Cadastrada com sucesso!<br>';
+}
+
+Vamos começar pelo robô de edição!
+
+Vamos criar um novo arquivo na raiz do projeto chamado robo_editar.php.
+
+Vamos então, começar criando nosso bloco de php com <?php e já, incluir no require_once no nosso arquivo global.
+
+Precisamos de uma lista completa de todos os produtos que temos em nosso Banco de Dados, então, para isso, vamos usar o método Produto::listar(); que já fizemos.
+
+Agora, vamos criar a string com a query de UPDATE da seguinte forma: UPDATE produtos SET preco = :preco, quantidade = :quantidade WHERE id = :id.
+
+E vamos criar nossa variável de conexão a partir do método Conexao::pegarConexao().
+
+Vamos depois disso, usar o foreach() no resultado da listagem de produtos, assim, vamos trabalhar linha a linha para cada retorno.
+
+Dentro do foreach(), vamos criar nossa variável $stmt a partir do método $conexao->prepare($query);.
+
+Agora, vamos usar a função rand() do php para popular duas variáveis $novo_preco e $nova_quantidade respectivamente.
+
+Agora, vamos passar todos os valores necessários em nossa query que são:
+
+$stmt->bindValue(':preco', $novo_preco);
+$stmt->bindValue(':quantidade', $nova_quantidade);
+$stmt->bindValue(':id', $produto['id']);
+Vamos Executar nossa query com $stmt->execute();;
+
+E por fim, vamos imprimir na tela um resultado elegante para conseguirmos validar nosso script:
+
+echo $produto['nome'] . ' Preço alterado de: ' . $produto['preco'] . ' para: ' . $novo_preco . ' Quantidade alterado de: ' . $produto['quantidade'] . ' para: ' . $nova_quantidade . '<br>';
+Nosso código pronto vai ficar da seguinte forma:
+
+<?php
+
+require_once 'global.php';
+
+$lista_produtos = Produto::listar();
+
+$query = "UPDATE produtos SET preco = :preco, quantidade = :quantidade WHERE id = :id";
+$conexao = Conexao::pegarConexao();
+
+foreach ($lista_produtos as $produto) {
+    $stmt = $conexao->prepare($query);
+
+    $novo_preco = rand(0, 100);
+    $nova_quantidade = rand(0, 50);
+
+    $stmt->bindValue(':preco', $novo_preco);
+    $stmt->bindValue(':quantidade', $nova_quantidade);
+    $stmt->bindValue(':id', $produto['id']);
+    $stmt->execute();
+    echo $produto['nome'] . ' Preço alterado de: ' . $produto['preco'] . ' para: ' . $novo_preco . ' Quantidade alterado de: ' . $produto['quantidade'] . ' para: ' . $nova_quantidade . '<br>';
+}
+Quando executo ele, tenho o seguinte resultado na tela chamando a URL http://127.0.0.1:8888/robo_editar.php:
+
+As Cronicas de Gelo e Fogo - 5 Livros Preço alterado de: 49.00 para: 88 Quantidade alterado de: 1 para: 37
+
+Batman Arkahan City Preço alterado de: 76.00 para: 1 Quantidade alterado de: 14 para: 34
+
+Bermuda Feminina Marrom Preço alterado de: 19.00 para: 71 Quantidade alterado de: 6 para: 3
+
+Bermuda Feminina Rosa Preço alterado de: 20.00 para: 11 Quantidade alterado de: 44 para: 32
+
+Blusa Mascilona Azul Preço alterado de: 88.00 para: 3 Quantidade alterado de: 43 para: 10
+
+Calça Feminina Amarela Preço alterado de: 61.00 para: 96 Quantidade alterado de: 26 para: 3
+
+Calça Feminina Verde Preço alterado de: 28.00 para: 24 Quantidade alterado de: 12 para: 27
+
+Camiseta Mascilona Amarela Preço alterado de: 29.00 para: 68 Quantidade alterado de: 13 para: 3
+
+Camiseta Mascilona Branca Preço alterado de: 72.00 para: 93 Quantidade alterado de: 29 para: 24
+
+Camiseta Mascilona Branca Preço alterado de: 79.00 para: 36 Quantidade alterado de: 1 para: 45
+
+Jaqueta Feminina Branca Preço alterado de: 95.00 para: 72 Quantidade alterado de: 26 para: 43
+
+Jaqueta Mascilona Azul Preço alterado de: 18.00 para: 68 Quantidade alterado de: 49 para: 35
+
+Jogador Nº 1 Preço alterado de: 85.00 para: 41 Quantidade alterado de: 40 para: 49
+
+O Poderoso Chefão Preço alterado de: 67.00 para: 89 Quantidade alterado de: 47 para: 37
+
+O Senhor dos Anéis, Trilogia Completa Preço alterado de: 4.00 para: 42 Quantidade alterado de: 39 para: 10
+
+Agora, vamos fazer nosso robô de exclusão. Esse é relativamente mais simples que o anterior.
+
+Vamos criar o arquivo robo_excluir.php na raiz do nosso projeto, abrir um bloco <?php nele e já fazer o require_once do nosso arquivo global.php.
+
+Vamos criar duas variáveis $preco_base e $quantidade_base respectivamente, e nelas, determinar o valor de corte para nossa regra de exclusão.
+
+Vamos fazer nossa string $query com o script SQL de DELETE: DELETE FROM produtos WHERE preco <= :preco AND quantidade <= :quantidade.
+
+Agora, criamos a variável $conexao a partir do método Conexao::pegarConexao()
+
+Passamos os valores usando bindValue():
+
+$stmt->bindValue(':preco', $preco_base);
+
+$stmt->bindValue(':quantidade', $quantidade_base);
+
+Por fim, executamos nosso script com $stmt->execute().
+
+Uma dica, você pode usar o método PDOStatement::rowCount para obter o número de linhas afetadas: echo $stmt->rowCount() . ' excluidos com sucesso!';.
+
+Nosso código ficou da seguinte forma:
+
+<?php
+
+require_once 'global.php';
+
+$preco_base = 50;
+$quantidade_base = 20;
+
+$query = "DELETE FROM produtos WHERE preco <= :preco AND quantidade <= :quantidade";
+$conexao = Conexao::pegarConexao();
+$stmt = $conexao->prepare($query);
+$stmt->bindValue(':preco', $preco_base);
+$stmt->bindValue(':quantidade', $quantidade_base);
+$stmt->execute();
+
+echo $stmt->rowCount() . ' excluidos com sucesso!';
+E ao executa-lo acessando a página pela URL: http://127.0.0.1:8888/robo_excluir.php:
+
+2 excluidos com sucesso!
+
+
+########## 05. Detalhes da Categoria ##########
+
+
+Aparentemente está tudo certo no nosso sistema, e conseguimos fazer tudo aquilo que se relaciona aos produtos e às categorias. Na parte de Produtos, há o botão "Criar novo produto" e, ao clicarmos nele, temos o formulário para preenchimento. Também existem os botões "Editar" e "Excluir", que funcionam perfeitamente.
+
+Na parte de Categorias, conseguimos fazer o mesmo, por meio dos botões "Criar nova categoria", "Editar" e "Excluir". Há, porém, algo que ainda não fizemos: a tela de detalhes da categoria. Diferentemente de produtos, que não possui nenhum link em seus nomes, nesta nova tela teremos cada id e nome do produto apontando para categorias-detalhe.php.
+
+Não passamos nenhum valor da categoria clicada via string ao link, então abriremos categorias.php e, no foreach, o link caregorias-detalhe.php aparece duas vezes. Neles, são exibidos o id e nome, então repetiremos o que foi feito com os botões, deixando o código assim:
+
+<?php foreach ($lista as $linha): ?>
+    <tr>
+        <td><a href="/categorias-detalhe.php?id=<?php echo $linha['id'] ?>" class="btn btn-link"><?php echo $linha['id'] ?></a></td>
+        <td><a href="/categorias-detalhe.php?id=<?php echo $linha['id'] ?>" class="btn btn-link"><?php echo $linha['nome'] ?></a></td>
+        <td><a href="/categorias-editar.php?id=<?php echo $linha['id'] ?>" class="btn btn-info">Editar</a></td>
+        <td><a href="/categorias-excluir-post.php?id=<?php echo $linha['id'] ?>" class="btn btn-danger">Excluir</a></td>
+    </tr>
+<?php endforeach ?>
+Com isso, o id é passado corretamente à nossa página. Clicando em "Filmes", carregamos a categoria que não queremos, no caso, "Livros". Vamos ajustar isto indo à categorias-detalhe.php, em que incluiremos inicialmente o require_once para o arquivo global, e depois o Try/Catch:
+
+<?php require_once 'global.php' ?>
+<?php
+    try {
+        $id = $_GET['id'];
+        $categoria = new Categoria($id);
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+No mesmo arquivo, onde é exibida a tag <dd> com o valor do id da categoria, abriremos um PHP, fazendo o mesmo onde que temos "Livros", com o atributo nome:
+
+<dl>
+    <dt>ID</dt>
+    <dd><?php echo $categoria->id ?></dd>
+    <dt>Nome</dt>
+    <dd><?php echo $categoria->nome ?></dd>
+    <dt>Produtos</dt>
+    <dd>
+        <ul>
+            <li><a href="/produtos-editar.php">Senhor dos Aneis</a></li>
+            <li><a href="/produtos-editar.php">O Guia do Mochileiro das Galaxias</a></li>
+        </ul>
+    </dd>
+</dl>
+Salvaremos tudo e testaremos no navegador. Agora, sim, clicamos na categoria "Filmes" para acessarmos os detalhes, e a categoria exibida é a mesma, isto é, "Filmes", como gostaríamos. Em seguida, testaremos os produtos na página de detalhes da categoria.
+
+Poderíamos fazer o método carregar() trazer as categorias, mas não queremos alterá-lo, pois além dele ser usado na listagem delas, o método aparece nas telas de inserção e edição de produtos.
+
+Na tela em que listamos apenas os valores das categorias, não é interessante saber quais são os produtos. Na página de detalhes, porém, é interessante sim.
+
+Criaremos, portanto, um método que irá carregar um atributo novo para a listagem dos produtos desta categoria. Para isso, acessaremos Categoria.php e incluiremos produtos abaixo de nome:
+
+public $id;
+public $nome;
+public $produtos;
+Feito isto, neste mesmo arquivo, criaremos uma função para carregar estas informações. No entanto, interagir com o banco de dados relacionado a produtos é uma função da classe Produto, portanto criaremos um novo método nela, o qual trará uma listagem baseada na categoria passada como parâmetro.
+
+Esta listagem será devolvida ao método, e ele por sua vez a devolverá à nossa tela:
+
+public function carregarProdutos()
+{
+
+}
+Vamos deixar o código assim por enquanto, e abrir Produto.php para incluirmos o novo método logo abaixo de listar():
+
+public static function listarPorCategoria($categoria_id)
+{
+    $query = "SELECT id, nome, preco, quantidade FROM produtos WHERE categoria_id = :categoria_id";
+    $conexao = Conexao::pegarConexao();
+    $stmt = $conexao->prepare($query);
+    $stmt->bindValue(':categoria_id', $categoria_id);
+    $stmt->execute();
+    return $stmt->fetchAll();
+}
+Usaremos o fetchAll() por retornarmos mais de uma linha, lembrando que categoria_id, neste caso, não é um atributo da classe, e sim o valor que estamos passando via parâmetro.
+
+Voltaremos a Categoria.php e seguiremos preenchendo o método recém criado:
+
+public function carregarProdutos()
+{
+    $this->produtos = Produto::listarPorCategoria($this->id);
+}
+Assim, a partir do momento em que chamamos o método carregarProdutos() o atributo de produtos estará populado com a lista que temos nesta categoria específica. Voltaremos a categorias-detalhe.php, em que fazemos a instância de categoria, e acrescentaremos:
+
+<?php require_once 'global.php' ?>
+<?php
+    try {
+        $id = $_GET['id'];
+        $categoria = new Categoria($id);
+        $categoria->carregarProdutos();
+        $listaProdutos = $categoria->produtos;
+    } catch (Exception $e) {
+        Erro::trataErro($e);
+    }
+?>
+Com isso, na parte em que há <ul> com a listagem de produtos na categoria, faremos o foreach para imprimirmos um nome por vez. Deletaremos uma das linhas da listagem para incluirmos o endforeach.
+
+É preciso mostrar o nome do produto, e fazer a query string passando o id junto ao link que redirecionará o usuário à página de edição:
+
+<dl>
+    <dt>ID</dt>
+    <dd><?php echo $categoria->id ?></dd>
+    <dt>Nome</dt>
+    <dd><?php echo $categoria->nome ?></dd>
+    <dt>Produtos</dt>
+    <dd>
+        <ul>
+            <?php foreach($listaProdutos as $linha): ?>
+                <li><a href="/produtos-editar.php?id=<?php echo $linha['id'] ?>"><?php echo $linha['nome'] ?></a></li>
+            <?php endforeach ?>
+        </ul>
+    </dd>
+</dl>
+Vamos dar uma olhada em outra categoria para confirmar que a listagem está aparecendo direitinho? Clicaremos em "Livros" e seremos redirecionados à página de detalhes correspondente e, ao clicarmos em qualquer um dos produtos, seremos redirecionados à página de edição da categoria.
+
+Porém, na página de detalhes, "Revistas" não lista nenhum produto, isto porque realmente não há nenhum produto nesta categoria. Então, seria legal fazermos o count para estes casos em que não há nenhum produto em determinada categoria, e exibirmos uma mensagem ao usuário.
+
+Então, em categorias-detalhe.php após a tag <dt> de "Produtos", abriremos um PHP com if para quando listaProdutos for maior que 0, e se este for o caso, mostraremos os detalhes:
+
+<dt>ID</dt>
+<dd><?php echo $categoria->id ?></dd>
+<dt>Nome</dt>
+<dd><?php echo $categoria->nome ?></dd>
+<dt>Produtos</dt>
+<?php if (count($listaProdutos) > 0): ?>
+    <dd>
+        <ul>
+            <?php foreach($listaProdutos as $linha): ?>
+                <li><a href="/produtos-editar.php?id=<?php echo $linha['id'] ?>"><?php echo $linha['nome'] ?></a></li>
+            <?php endforeach ?>
+        </ul>
+    </dd>
+<?php else: ?>
+    <dd>Não existem produtos para esta categoria</dd>
+<?php endif ?>
+Ao carregarmos a página de detalhes de "Revistas", exibe-se a mensagem que acabamos de implementar, como gostaríamos, já que não há nenhum produto cadastrado naquela categoria. Nosso sistema está completo.
+
+Chegamos ao fim da segunda parte do curso de PHP com PDO. Conseguimos concluir o sistema de estoque completamente, lidando com a parte de Produtos, sua listagem, adição, edição e exclusão. Fizemos várias melhorias na parte de categorias, e também na integração de uma entidade à outra.
+
+Vimos a preparação de queries que, além de tornar o código mais organizado, deixa-o muito mais seguro, algo que o PDO traz de forma nativa, sendo uma de suas maiores vantagens, além da abstração da conexão, que também vimos.
+
+Espero que tenham gostado, até a próxima!
+
 

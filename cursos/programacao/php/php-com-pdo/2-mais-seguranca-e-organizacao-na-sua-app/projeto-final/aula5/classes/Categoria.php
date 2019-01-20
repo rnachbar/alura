@@ -1,19 +1,22 @@
 <?php
 
-class Categoria {
+class Categoria
+{
 
     public $id;
     public $nome;
     public $produtos;
 
-    public function __construct($id = false) {
+    public function __construct($id = false)
+    {
         if ($id) {
             $this->id = $id;
             $this->carregar();
         }
     }
 
-    public static function listar() {
+    public static function listar()
+    {
         $query = "SELECT id, nome FROM categorias ORDER BY nome";
         $conexao = Conexao::pegarConexao();
         $resultado = $conexao->query($query);
@@ -21,53 +24,47 @@ class Categoria {
         return $lista;
     }
 
-    public function carregar() {
-        /* Tratando SLQ Injection */
+    public function carregar()
+    {
         $query = "SELECT id, nome FROM categorias WHERE id = :id";
-
         $conexao = Conexao::pegarConexao();
         $stmt = $conexao->prepare($query);
-
         $stmt->bindValue(':id', $this->id);
         $stmt->execute();
-
-        $linha = $stmt->fetch(); /* Método featch pega só a primeira linha */
+        $linha = $stmt->fetch();
         $this->nome = $linha['nome'];
     }
 
-    public function inserir() {
+    public function inserir()
+    {
         $query = "INSERT INTO categorias (nome) VALUES (:nome)";
-
         $conexao = Conexao::pegarConexao();
         $stmt = $conexao->prepare($query);
-
         $stmt->bindValue(':nome', $this->nome);
         $stmt->execute();
     }
 
-    public function atualizar() {
+    public function atualizar()
+    {
         $query = "UPDATE categorias set nome = :nome WHERE id = :id";
-
         $conexao = Conexao::pegarConexao();
         $stmt = $conexao->prepare($query);
-
         $stmt->bindValue(':nome', $this->nome);
         $stmt->bindValue(':id', $this->id);
         $stmt->execute();
     }
 
-    public function excluir() {
+    public function excluir()
+    {
         $query = "DELETE FROM categorias WHERE id = :id";
-        
         $conexao = Conexao::pegarConexao();
         $stmt = $conexao->prepare($query);
-
         $stmt->bindValue(':id', $this->id);
         $stmt->execute();
     }
 
-    public static function carregarProdutos() {
-        // $this->produtos = Produto::listarPorCategoria($this->id);
+    public function carregarProdutos()
+    {
+        $this->produtos = Produto::listarPorCategoria($this->id);
     }
-
 }
