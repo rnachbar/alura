@@ -2,6 +2,7 @@
 Desenvolvimento de estudos da plataforma Alura
 
 ## Dependências
+* [Atom](https://atom.io/)
 * [Git](https://git-for-windows.github.io/)
 
 ## Informações
@@ -14,7 +15,7 @@ Desenvolvimento de estudos da plataforma Alura
 
 * Na raíz do projeto, clicar com o botão direito do mouse e abrir o GIT BASH
 * `$ git pull`
-* `$ logout`
+* `$ exit`
 
 ## Rotina de push (Atualizar repositório remoto)
 *Passos que devem ser executados após o desenvolvimento (diário ou a cada alteração no repositório)*
@@ -23,4 +24,4 @@ Desenvolvimento de estudos da plataforma Alura
 * `$ git add .`
 * `$ git commit -m "descricao do commit. SEMPRE DESCREVER O QUE FOI FEITO"`
 * `$ git push origin master`
-* `$ logout`
+* `$ exit`
