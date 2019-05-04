@@ -1,6 +1,6 @@
 # Aula 1 - Introdução e Instalação do Python 3
 
-## Introdução
+## 01 Introdução
 
 Olá, bem vindo à Alura, ao nosso primeiro curso sobre Python na versão 3. Nesse curso introdutório, vamos implementar um jogo para começar a programar com Python. É um jogo de adivinhação, onde o computador vai escolher um número e o usuário precisa adivinhá-lo.
 
@@ -8,7 +8,7 @@ Vamos aprender a trabalhar com variáveis de diversos tipos, como gerar um núme
 
 Enfim, nesse curso teremos vários desafios a resolver e eu convido você a me acompanhar nessas próximas aulas, para aprender essa linguagem fantástica e se divertir muito com Python 3.
 
-## Instalando o Python no Windows
+## 02 Instalando o Python no Windows
 
 Nesse vídeo veremos como instalar o Python no Windows. O primeiro passo é acessar o site do Python: https://www.python.org/. Na sessão de Downloads, automaticamente já será disponibilizado o instalador específico do Windows, portanto é só baixar o Python 3, na sua versão mais atual.
 
@@ -28,7 +28,7 @@ Podemos rodar o Python diretamente do seu próprio Prompt. Podemos procurar pelo
 
 Uma outra forma é abrir a IDLE do Python, que se parece muito com o console, mas com um menu, que possui algumas opções extras
 
-## Instalando em outras plataformas
+## 03. Instalando em outras plataformas
 
 Os sistemas operacionais baseados no Debian já possuem o Python 3 pré-instalado, mas o comandos para instalá-lo pelo terminal é:
 
@@ -55,7 +55,7 @@ python3 -V
 
 E o executamos rodando o comando python3 no terminal.
 
-## Usar o Python sem instalá-lo
+## 04. Usar o Python sem instalá-lo
 
 Também conseguimos utilizar o Python sem instalá-lo na nossa máquina, executando-o através de um serviço na web. Há vários sites que disponibilizam esse serviço, entre eles o repl.it. Nele podemos programar em várias linguagens, para começar basta clicar em Start coding now! e escolher o Python3.
 
@@ -67,7 +67,7 @@ Ao clicar em run, a mensagem é impressa à direita.
 
 É uma boa alternativa caso não tenhamos o Python instalado localmente, mas é bom ter em mente que em algum momento a instalação local será necessária :)
 
-## Função print e variáveis
+## 05. Função print e variáveis
 
 Antes de criarmos um projeto, veremos como trabalhar no console do Python.
 
@@ -128,3 +128,59 @@ Agora a mensagem é impressa no mesmo molde da anterior, só que dessa vez com v
 O valor str significa que a variável é do tipo string, já que o seu valor está entra aspas duplas. E int significa que a variável é do tipo inteiro, já que passamos um valor inteiro para a variável.
 
 Veremos mais sobre os tipos das variáveis no próximo vídeos, até lá!
+
+## 06. Imprimindo uma mensagem na tela
+
+Qual é a função utilizada para imprimir algo na tela?
+print()
+
+A função é a print(). Basta passar a mensagem por parâmetro para a função, que a mensagem será impressa. Ela inclusive apareceu várias vezes no vídeo!
+
+## 07. Personalizando a saída
+
+Veja o código a seguir:
+
+```python
+subst = "Python"
+verbo = "é"
+adjetivo = "fantástico"
+print(subst, verbo, adjetivo, sep="_", end="!\n")
+```
+
+Qual será a saída do comando print?
+Python_é_fantástico!
+
+Repare que usamos o parâmetro `sep="_"` para definir um _ entre cada valor, por isso é impresso:
+
+Python_é_fantástico
+
+Além disso, definimos através do end para imprimir uma exclamação (!), seguida pelo `\n`:
+
+end="!`\n`"
+
+Lembrando que o `\n` é um caractere especial, que faz com que o novo prompt comece em uma nova linha.
+
+Com isso recebemos a saída:
+
+Python_é_fantástico!
+
+## 08. Imprimindo datas
+
+Para representar uma data, temos as variáveis dia, mes e ano:
+
+>>> dia = 15
+>>> mes = 10
+>>> ano = 2015
+
+Sem alterar as variáveis e sem passar nenhuma string adicional à função print(), como faríamos para ter como resultado a impressão, de uma data formatada:
+
+15/10/2015
+
+Podemos alterar o separador entre os valores que a função print() recebe, utilizando o parâmetro sep, que por padrão é um espaço em branco. Basta utilizá-lo, dizendo que seu valor será uma barra (/):
+
+>>> dia = 15
+>>> mes = 10
+>>> ano = 2015
+
+>>> print(dia, mes, ano, sep="/")
+15/10/2015
