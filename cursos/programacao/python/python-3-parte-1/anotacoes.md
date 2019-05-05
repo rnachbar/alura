@@ -21,3 +21,7 @@
 * Em Python, a variável só passa a existir quando atribuímos um valor
 * Snake_Case - `nome_usuario`
 * CamelCase - `nomeUsuario`
+
+## Aula 2 - Lidando com a entrada do usuário
+
+* Baixar e instalar o [PyCharm](https://www.jetbrains.com/pycharm/) que é uma IDE exclusivamente para programar em Python
