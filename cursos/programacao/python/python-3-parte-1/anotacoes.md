@@ -14,3 +14,10 @@
 * `print('hello world')` para imprimir na tela
 * Funções em Python sem com (). Ex: `help()`
 * `Ctrl + C` para sair do console do help no windows. No MAC e Linux aperte `Ctrl + D`
+* String pode ser definida com aspas simples ou duplas
+* No Python você não precisa definir o tipo da variável
+* O tipo da variável é sempre definido através do valor
+* Python é uma `linguagem dinâmica`
+* Em Python, a variável só passa a existir quando atribuímos um valor
+* Snake_Case - `nome_usuario`
+* CamelCase - `nomeUsuario`

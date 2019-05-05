@@ -76,9 +76,11 @@ Já vimos no vídeo anterior como imprimir uma mensagem:
 
 >>> print("ola mundo")
 ola mundo
+
 Vamos analisar mais a fundo essa função. No console do Python temos uma função de ajuda, a função help():
 
 >>> help()
+
 Podemos reparar que um novo console aparece:
 
 help>
@@ -98,10 +100,12 @@ Podemos apertar a tecla Q para sair da documentação da função e CTRL + C ou 
 
 >>> print("Brasil", "ganhou", 5, "titulos mundiais", sep="-")
 Brasil-ganhou-5-titulos mundiais
+
 Como modificamos o separador, agora os valores são separador por um hífen. Vamos testar o end agora, não passando nada para ele:
 
 >>> print("Brasil", "ganhou", 5, "titulos mundiais", end="")
 Brasil ganhou 5 titulos mundiais>>>
+
 Uma nova linha não é criada, ou seja, o que colocarmos dentro do end será impresso ao final da função.
 
 Variáveis
@@ -109,22 +113,26 @@ Variáveis
 Agora queremos flexibilizar a função, queremos poder imprimir outros países, como Itália, Alemanha, Argentina... Para isso teremos que mudar o nome do país e o número de títulos conquistados. Então vamos definir o valor com o nome do país fora da função print. Vamos definir uma variável para o nome do país, já que o seu valor pode variar:
 
 >>> pais = "Italia"
+
 Definimos uma variável e atribuímos a ela um valor. Assim como fizemos com o nome do país, vamos fazer também com a quantidade de títulos:
 
 >>> pais = "Italia"
 >>> quantidade = 4
+
 Com as variáveis definidas, podemos refazer a função print, só que dessa vez passando as variáveis no lugar dos antigos valores:
 
 >>> pais = "Italia"
 >>> quantidade = 4
 >>> print(pais, "ganhou", quantidade, "titulos mundiais")
 Italia ganhou 4 titulos mundiais
+
 Agora a mensagem é impressa no mesmo molde da anterior, só que dessa vez com variáveis! Mas qual é o tipo dessas variáveis? O tipo da variável depende do valor que passarmos para ela. Podemos "perguntar" para a variável qual é o seu tipo, passando-a para a função type:
 
 >>> type(pais)
 <class 'str'>
 >>> type(quantidade)
 <class 'int'>
+
 O valor str significa que a variável é do tipo string, já que o seu valor está entra aspas duplas. E int significa que a variável é do tipo inteiro, já que passamos um valor inteiro para a variável.
 
 Veremos mais sobre os tipos das variáveis no próximo vídeos, até lá!
@@ -184,3 +192,86 @@ Podemos alterar o separador entre os valores que a função print() recebe, util
 
 >>> print(dia, mes, ano, sep="/")
 15/10/2015
+
+## 09. Tipagem do Python
+
+Ainda no console do Python, vimos no vídeo anterior que uma variável sempre terá um tipo associado:
+
+>>> pais = "Brasil"
+>>> type(pais)
+<class 'str'>
+
+Mas em nenhum local definimos explicitamente que a variável pais receberá valores do tipo string. Talvez você já tenha visto isso em outras linguagens, como C, C++, Java, em que definimos o tipo da variável na hora da sua declaração, algo como:
+
+>>> str pais = "Brasil"
+
+Mas isso em Python não funciona. Ou seja, no mundo Python não somos obrigados a definir explicitamente o tipo da variável. Podemos até passar outros tipos de valores para a variável:
+
+>>> pais = "Brasil"
+>>> type(pais)
+<class 'str'>
+>>> pais = 644
+>>> type(pais)
+<class 'int'>
+
+Além de funcionar, o tipo da variável também muda! O tipo da variável mudou dinamicamente, de acordo com o valor que é atribuído a ela, logo, o tipo da variável é definido de acordo com o valor que ela guarda, isso faz parte da tipagem dinâmica do Python.
+
+Agora temos tudo para começar o nosso projeto no próximo capítulo!
+
+## 10. Qual o tipo da variável?
+
+Temos a seguinte variável, que representa o preço de um produto:
+preco = 49.90
+Qual será o tipo da variável preco? Faça o teste!
+
+float
+
+O valor 49.99, é um número decimal, ou seja, com um ponto flutuante, por isso em Python o seu tipo será o float. Podemos verificar isso no console do Python:
+
+>>> preco = 49.99
+>>> type(preco)
+<class 'float'>
+
+## 11. Tipagem de variáveis
+
+Sabendo que o Python usa uma tipagem dinâmica, qual alternativa abaixo é correta?
+
+Uma variável só passa a existir quando atribuímos um valor.
+
+Correto, é preciso atribuir um valor para inicializar uma variável, definindo assim o seu tipo.
+
+Não há declaração de variáveis estáticas em Python, como em linguagens como C, Java ou C#. Nessas linguagens, indicamos o tipo e o nome das variáveis e ela já passa a existir.
+
+Por exemplo:
+
+int idade;
+
+Repare que só declaramos o tipo e o nome da variável, sem ter atribuído o valor.
+
+Em Python, a variável só passa a existir quando atribuímos um valor, como no exemplo abaixo:
+
+idade = 12
+
+Isso faz todo sentido, já que não temos uma declaração explícita do tipo, como na linguagem Java ou C#. O interpretador do Python não tem como assumir um tipo.
+
+## 12. Para saber mais: Snake_Case
+
+O Python utiliza por convenção o padrão Snake_Case para nomes de variáveis (ou identificadores).
+
+Um exemplo de variáveis em Snake_Case são:
+
+``` python
+idade_esposa = 20
+perfil_vip = 'Flávio Almeida'
+recibos_em_atraso = 30
+```
+
+Em outras linguagens também se usa o padrão CamelCase. O mesmo exemplo com CamelCase (que não é o padrão do Python):
+
+``` python
+idadeEsposa = 20
+perfilVip = 'Flávio Almeida'
+recibosEmAtraso = 30
+```
+
+Vamos seguir o padrão do Python nesse curso, que é o Snake_Case!
