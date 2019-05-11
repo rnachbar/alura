@@ -25,3 +25,4 @@
 ## Aula 2 - Lidando com a entrada do usuário
 
 * Baixar e instalar o [PyCharm](https://www.jetbrains.com/pycharm/) que é uma IDE exclusivamente para programar em Python
+* Padrão de identação no Python é de 4 espaços (ou 1 Tab)
