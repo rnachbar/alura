@@ -9,6 +9,7 @@ Desenvolvimento de estudos da plataforma Alura
 * Cursos dividos por categorias
 * Cronagrama.md faz referência aos cursos finalizados ou em andamento daquela categoria
 * Dependências necessárias descritas em cada curso
+* Ao criar nova pasta adicionar o arquivo anotacoes.md na raíz da pasta para anotacoes importantes do curso
 
 ## Rotina de pull (Atualizar repositório local)
 *Passos que devem ser executados antes do desenvolvimento (diário ou cada vez que for utilizar o repositório)*

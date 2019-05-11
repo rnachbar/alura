@@ -1,4 +1,4 @@
-# Anotações do cursoPython 3 parte 1: Introdução à nova versão da linguagem
+# Anotações do curso Python 3 parte 1: Introdução à nova versão da linguagem
 
 ## Aula 1 - Introdução e Instalação do Python 3
 
