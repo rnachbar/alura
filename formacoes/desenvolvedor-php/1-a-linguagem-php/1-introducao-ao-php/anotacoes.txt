@@ -1,0 +1,2 @@
+* PHP é uma linguagem de programação interpretada, ou seja, a cada alteração em nosso código não existe a necessidade de compilar o código para ver essas alterações.
+* PHP pode ser utilizado para IOT, na linha de comando, para criar aplicativos desktop, mas o mais comum é para web
