@@ -1,0 +1,8 @@
+* PHP é uma linguagem de programação interpretada, ou seja, a cada alteração em nosso código não existe a necessidade de compilar o código para ver essas alterações.
+* PHP pode ser utilizado para IOT, na linha de comando, para criar aplicativos desktop, mas o mais comum é para web
+* PHP é dinamicamente tipada, conseguimos saber o tipo da variável pelo seu valor
+* Utilizando aspas duplas ("") o PHP consegue entender variáveis (interpretar o valor da variável dentro da string) sem a necessidade de concatenar com ponto (.)
+* Vimos que há uma diferença entre aspas simples (’) e aspas duplas (”) no PHP. Esta diferença está na forma como ele interpreta os dados presentes no texto. Aspas simples é entendido como string, tudo que está dentro das aspas simples é uma string
+* Operador ternário: $variavel = $condicao ? $valorSeVerdadeiro : $valorSeFalso;
+* Continue pula a interação do for, indo para a próxima interação
+* Break quebra o loop, sai do loop
