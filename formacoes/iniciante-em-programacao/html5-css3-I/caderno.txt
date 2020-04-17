@@ -1,0 +1,17 @@
+- O .html informa que é um arquivo web.
+
+- Ao utilizar a tag (na primeira linha do código) <!DOCTYPE html> estamos informando o navegador que queremos utilizar a última versão disponível do HTML.
+
+- Nós conseguimos enxergar três espectros de cor, e o HTML monta isso. Nós enxergamos o espectro RGB, que quer dizer Red Green Blue. Ou seja, vermelho, verde e azul.
+
+- Montamos a cor seguindo essa mesma característica, usando o dicionário hexadecimal. Para fazer isso, colocamos # e marcamos seis elementos. Os dois primeiros para marcar o vermelho, os dois segundos para marcar o verde e os dois últimos para marcar o azul.
+
+- Como é a representação numérica, ou em hexadecimal, para esses números? O zero é a ausência de cor, e o F é o máximo de cor. Então, se eu quiser representar, por exemplo, o preto, que é a ausência de todas as cores, coloco #000000. Ou seja, 00 para vermelho, 00 para verde e 00 para o azul. Se eu quiser representar o branco, coloco #FFFFFF. FF para o vermelho, FF para o verde e FF para o azul.
+
+- É importante saber também que existe outra forma de representar as cores, além das que já vimos. Temos as cores básicas, a linguagem hexadecimal e a RGB. O mesmo padrão RGB que falamos sobre as cores que conseguimos enxergar, temos um dicionário RGB. Um alfabeto. Ele vai do 0 até 255. Ou seja, ele tem 256 níveis de representação de cada cor.
+
+- Para isso, o 0 também é a ausência e o 255 é o máximo. A representação no CSS é um pouco diferente. Ao invés de colocar #, eu coloco RGB( , , ), separando as cores por vírgula. Antes da primeira vírgula vem o vermelho. Então, se eu quiser representar o branco, coloco RGB(255, 255, 255). Se eu quiser representar só o azul, RGB(0, 0, 255).
+
+- padding é o espaçamento interno do elemento.
+
+- margin é o espaçamento externo do elemento.
