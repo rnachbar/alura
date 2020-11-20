@@ -1,0 +1,165 @@
+header {
+    background: #bbbbbb;
+    padding: 20px 0;
+}
+
+.caixa {
+    position: relative;
+    width: 940px; /* Padrão de largura de uma página */
+    margin: 0 auto; /* TOPO e BAIXO, DIREITA e ESQUERDA */
+}
+
+nav {
+    position: absolute;
+    top: 110px;
+    right: 0;
+}
+
+nav li {
+    display: inline;
+    margin: 0 0 0 15px; /* TOPO, DIREITA, BAIXO, ESQUERDA */
+}
+
+nav a {
+    text-transform: uppercase;
+    color: black;
+    font-weight: bold;
+    font-size: 22px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #C78C19;
+    text-decoration: underline;
+}
+
+.produtos {
+    width: 940px; /* Padrão de largura de uma página */
+    margin: 20px auto; /* TOPO e BAIXO, DIREITA e ESQUERDA */
+}
+
+.produtos li {
+    display: inline-block;
+    text-align: center;
+    width: 30%;
+    vertical-align: top; /* Alinhar pela linha de cima */
+    margin: 0 1.5%;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    border: 2px solid black;
+    /* border-radius: 10px; */
+    border-radius: 10px 20px 30px 40px;
+}
+
+/* :hover funciona com mouse em cima do elemento */
+.produtos li:hover {
+    border-color: #C78C19;
+}
+
+/* :active funciona com o clique do mouse pressionado */
+.produtos li:active {
+    border-color: #088C19;
+}
+
+/* Alterando o h2 quando o mouse estiver sobre .produtos li */
+.produtos li:hover h2 {
+    font-size: 34px;
+}
+
+.produtos h2 {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.produtos .produto-descricao {
+    font-size: 18px;
+}
+
+.produtos .produto-preco {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+footer {
+    text-align: center;
+    background: url('images/bg.jpg');
+    padding: 40px 0;
+}
+
+/* https://unicode-table.com/pt/ */
+footer .copyright {
+    color: white;
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+main {
+    width: 940px;
+    margin: 0 auto;
+}
+
+form {
+    margin: 40px 0;
+}
+
+form label, form legend {
+    display: block;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.input-padrao { 
+    display: block;
+    margin-bottom: 20px;
+    padding: 10px 25px;
+    width: 50%;
+}
+
+.checkbox {
+    margin: 20px 0;
+}
+
+/*
+ * TAGS tem forção de marcação 1
+ * CLASSES tem forção de marcação 10
+ * IDENTIFICADORES tem forção de marcação 100
+ * Ao usar um identificador (#) para marcar estilo, ele terá mais forção que classes e tags e será exibido
+ * p (tag) = 1 / form p (tags) 1 + 1 = 2 / .teste (classe) = 10 / #teste (identificador) = 100
+ * Para sobrescrever identificadores seria necessário usar css inline
+ */
+
+.enviar {
+    width: 40%;
+    padding: 15px 0;
+    background: orange;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+    /* transition: 1s background; // Fazendo transição de 1 segundo da propriedade background no ato de hover */
+    transition: 1s all; /* Fazendo transição de 1 de todos os elementos */
+    cursor: pointer;
+}
+
+.enviar:hover {
+    background: darkorange;
+    transform: scale(1.2);
+    /* transform: rotate(70deg) scale(1.2); */
+}
+
+table {
+    margin: 20px 40px;
+}
+
+thead {
+    background: #555555;
+    color: white;
+    font-weight: bold;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px 15px;
+}
