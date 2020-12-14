@@ -5,7 +5,7 @@ class Musica {
     private $nome;
     private $vezesTocada;
 
-    public function _construct($nome) {
+    public function __construct($nome) {
         $this->nome = $nome;
         $this->vezesTocada = 0;
     }

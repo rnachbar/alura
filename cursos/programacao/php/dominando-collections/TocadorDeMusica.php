@@ -4,7 +4,7 @@ class TocadorDeMusica {
 
     private $musicas;
 
-    public function _construct() {
+    public function __construct() {
         /**
          * SplDoublyLinkedList inicia uma lista ligada.
          * Serve quando precisamos utilizar o elemento anterior e o elemente seguinte em nosso array.
