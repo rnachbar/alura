@@ -15,6 +15,7 @@ class TocadorDeMusica {
         $this->historico = new SplStack();
         $this->filaDeDownloads = new SplQueue();
         $this->musicas->rewind();
+        $this->ranking = new Ranking();
     }
 
     /**
@@ -49,8 +50,8 @@ class TocadorDeMusica {
         if ($this->musicas->count() === 0) :
             echo 'Erro, nenhuma música no tocador';
         else :
-            echo 'Tocando música: ' . $this->musicas->current() . '<br>';
             $this->historico->push($this->musicas->current());
+            $this->musicas->current()->tocar();
         endif;
     }
 
@@ -150,6 +151,19 @@ class TocadorDeMusica {
         else :
             echo 'Nenhuma música encontrada para baixar.';
         endif;
+    }
+
+    /**
+     * Exibindo ranking.
+     */
+    public function exibeRanking() {
+        foreach ($this->musicas as $musica) :
+            $this->ranking->insert($musica);
+        endforeach;
+
+        foreach ($this->ranking as $musica) :
+            echo $musica->getNome() . ' - ' . $musica->getVezesTocada() . '<br>';
+        endforeach;
     }
 
 }
