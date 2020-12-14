@@ -9,9 +9,11 @@ class TocadorDeMusica {
          * SplDoublyLinkedList inicia uma lista ligada.
          * Serve quando precisamos utilizar o elemento anterior e o elemente seguinte em nosso array.
          * SplStack é para fazer uma pilha.
+         * SplQueue é para fazer uma fila.
          */
         $this->musicas = new SplDoublyLinkedList();
         $this->historico = new SplStack();
+        $this->filaDeDownloads = new SplQueue();
         $this->musicas->rewind();
     }
 
@@ -128,6 +130,26 @@ class TocadorDeMusica {
      */
     public function removerMusicaNoFinalDaPlaylist() {
         $this->musicas->pop();
+    }
+
+    /**
+     * Fazendo download de músicas.
+     */
+    public function baixarMusicas() {
+        if ($this->musicas->count > 0) :
+            for ($musicas->rewind(); $musicas->valid(); $musicas->next()) :
+                $this->filaDeDownloads->push($this->musicas->current());
+            endfor;
+    
+            /**
+             * Interação em collections.
+             */
+            for ($this->filaDeDownloads->rewind(); $this->filaDeDownloads->valid(); $this->filaDeDownloads->next()) :
+                echo "Baixando: " . $this->filaDeDownloads->current() . '...<br>';
+            endfor;
+        else :
+            echo 'Nenhuma música encontrada para baixar.';
+        endif;
     }
 
 }
