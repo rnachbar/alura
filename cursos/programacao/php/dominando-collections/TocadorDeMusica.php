@@ -8,8 +8,10 @@ class TocadorDeMusica {
         /**
          * SplDoublyLinkedList inicia uma lista ligada.
          * Serve quando precisamos utilizar o elemento anterior e o elemente seguinte em nosso array.
+         * SplStack é para fazer uma pilha.
          */
         $this->musicas = new SplDoublyLinkedList();
+        $this->historico = new SplStack();
         $this->musicas->rewind();
     }
 
@@ -46,7 +48,15 @@ class TocadorDeMusica {
             echo 'Erro, nenhuma música no tocador';
         else :
             echo 'Tocando música: ' . $this->musicas->current() . '<br>';
+            $this->historico->push($this->musicas->current());
         endif;
+    }
+
+    /**
+     * Tocando a últuma música que foi tocada.
+     */
+    public function tocarUltimaMusicaTocada() {
+        echo 'Tocando do histórico: ' . $this->historico->pop() . '<br>';
     }
 
     /**
