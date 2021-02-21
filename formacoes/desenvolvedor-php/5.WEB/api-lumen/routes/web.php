@@ -1,7 +1,5 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,6 +11,19 @@
 |
 */
 
+/**
+ * @var \Laravel\Lumen\Routing\Router $router
+ */
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+
+/**
+ * Criando grupo de rotas no Lumen com a função group.
+ */
+$router->group(['prefix' => '/api'], function () use ($router) {
+    /**
+     * Definindo rotas da aplicação.
+     */
+    $router->get('/series', 'SeriesController@index');
 });
