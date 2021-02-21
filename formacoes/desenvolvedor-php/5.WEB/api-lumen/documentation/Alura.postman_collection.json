@@ -44,7 +44,13 @@
 					"name": "Read",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "{{lumen}}/series",
 							"host": [
@@ -85,6 +91,39 @@
 							"path": [
 								"series",
 								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{lumen}}/series/6",
+							"host": [
+								"{{lumen}}"
+							],
+							"path": [
+								"series",
+								"6"
 							]
 						}
 					},

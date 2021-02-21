@@ -40,4 +40,14 @@ class SeriesController extends BaseController {
         return $serie;
     }
 
+    public function destroy(int $id) {
+        $quantidadeRecursosRemovidos = Serie::destroy($id);
+
+        if ($quantidadeRecursosRemovidos === 0) :
+            return response()->json(['erro' => 'Recurso não encontrada'], 404);
+        endif;
+
+        return response()->json('', 204);
+    }
+
 }
