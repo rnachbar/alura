@@ -21,9 +21,10 @@ $router->get('/', function () use ($router) {
 /**
  * Criando grupo de rotas no Lumen com a função group.
  */
-$router->group(['prefix' => '/api'], function () use ($router) {
+$router->group(['prefix' => 'api'], function () use ($router) {
     /**
      * Definindo rotas da aplicação.
      */
-    $router->get('/series', 'SeriesController@index');
+    $router->post('series', 'SeriesController@store');
+    $router->get('series', 'SeriesController@index');
 });
