@@ -17,7 +17,7 @@ class SeriesController extends BaseController {
             ->json(Serie::create(['nome' => $request->nome]), 201);
     }
 
-    public function get(int $id) {
+    public function show(int $id) {
         $serie = Serie::find($id);
 
         if (is_null($serie)) :
