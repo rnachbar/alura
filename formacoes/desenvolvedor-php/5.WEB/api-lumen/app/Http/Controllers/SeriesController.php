@@ -14,7 +14,7 @@ class SeriesController extends BaseController {
 
     public function store(Request $request) {
         return response()
-            ->json(Serie::create(['nome' => $request->nome]), 201);
+            ->json(Serie::create($request->all()), 201);
     }
 
     public function show(int $id) {
@@ -25,6 +25,19 @@ class SeriesController extends BaseController {
         endif;
 
         return response()->json($serie, 200);
+    }
+
+    public function update(int $id, Request $request) {
+        $serie = Serie::find($id);
+
+        if (is_null($serie)) :
+            return response()->json(['erro' => 'Recurso não encontrada'], 404);
+        endif;
+
+        $serie->fill($request->all());
+        $serie->save();
+
+        return $serie;
     }
 
 }

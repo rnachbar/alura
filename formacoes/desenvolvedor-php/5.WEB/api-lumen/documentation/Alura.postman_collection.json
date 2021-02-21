@@ -21,7 +21,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"Friends\"\r\n}",
+							"raw": "{\r\n    \"nome\": \"Teste\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -46,13 +46,45 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{lumen}}/series/1",
+							"raw": "{{lumen}}/series",
+							"host": [
+								"{{lumen}}"
+							],
+							"path": [
+								"series"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Agent's of S.H.I.E.L.D.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{lumen}}/series/4",
 							"host": [
 								"{{lumen}}"
 							],
 							"path": [
 								"series",
-								"1"
+								"4"
 							]
 						}
 					},
