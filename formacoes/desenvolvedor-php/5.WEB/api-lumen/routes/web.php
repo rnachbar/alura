@@ -31,6 +31,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('{id}', 'SeriesController@show');
         $router->put('{id}', 'SeriesController@update');
         $router->delete('{id}', 'SeriesController@destroy');
+
+        /**
+         * sub-recurso de series.
+         * Um episodio sempre vai pertencer a uma série, então usamos isso como um sub-recurso.
+         */
+        $router->get('{serieId}/episodios', 'EpisodiosController@buscaPorSerie');
     });
 
     /**
