@@ -13,4 +13,12 @@ class Episodio extends Model {
         return $this->belongsTo(Serie::class);
     }
 
+    /**
+     * Retornando atributo assistido como boolean através do metodo Accessor.
+     * https://laravel.com/docs/8.x/eloquent-mutators
+     */
+    public function getAssistidoAttribute ($value) : bool {
+        return $value;
+    }
+
 }

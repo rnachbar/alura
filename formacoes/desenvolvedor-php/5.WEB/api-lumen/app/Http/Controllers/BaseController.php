@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 
+/**
+ * Uma classe abstrata não pode ser instanciada.
+ */
 abstract class BaseController extends Controller {
 
     protected $classe;
