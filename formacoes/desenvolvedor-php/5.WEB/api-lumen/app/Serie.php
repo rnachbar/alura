@@ -15,7 +15,7 @@ class Serie extends Model {
         return $this->hasMany(Episodio::class);
     }
 
-    public function getLinksAttribute($links): array {
+    public function getLinksAttribute(): array {
         return [
             'self' => '/series/' . $this->id,
             'episodios' => '/series/' . $this->id . '/episodios'

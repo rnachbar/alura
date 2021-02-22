@@ -22,7 +22,7 @@ class Episodio extends Model {
         return $value;
     }
 
-    public function getLinksAttribute($links): array {
+    public function getLinksAttribute(): array {
         return [
             'self' => '/episodios/' . $this->id,
             'serie' => '/series/' . $this->serie_id
