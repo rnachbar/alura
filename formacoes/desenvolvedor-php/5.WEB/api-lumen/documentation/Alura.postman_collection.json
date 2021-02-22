@@ -150,7 +150,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"nome\": \"Teste\"\r\n}",
+									"raw": "{\r\n    \"nome\": \"Brooklyn Nine-Nine\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -181,12 +181,22 @@
 									}
 								],
 								"url": {
-									"raw": "{{lumen}}/series",
+									"raw": "{{lumen}}/series?page=2&per_page=3",
 									"host": [
 										"{{lumen}}"
 									],
 									"path": [
 										"series"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "2"
+										},
+										{
+											"key": "per_page",
+											"value": "3"
+										}
 									]
 								}
 							},

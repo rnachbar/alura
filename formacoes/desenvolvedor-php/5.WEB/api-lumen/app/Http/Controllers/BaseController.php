@@ -13,8 +13,22 @@ abstract class BaseController extends Controller {
     protected $classe;
     // protected $classe: string; # No php 7.4
 
-    public function index() {
-        return $this->classe::all();
+    public function index(Request $request) {
+        /**
+         * offset busca a partir daquele elemento.
+         * Estou na página 1, faço 1 - 1 que é 0, multiplicado por qualquer coisa é 0, então buscamos do início, do elemento 0.
+         */
+        // $offset = ($request->page - 1) * $request->per_page;
+
+        // return $this->classe::query()
+        //     ->offset($offset)
+        //     ->limit($request->per_page)
+        //     ->get();
+
+        /**
+         * Fazendo paginação com o Lumen.
+         */
+        return $this->classe::paginate($request->per_page);
     }
 
     public function store(Request $request) {
