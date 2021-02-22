@@ -10,7 +10,129 @@
 			"item": [
 				{
 					"name": "Episodios",
-					"item": []
+					"item": [
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"temporada\": 1,\r\n    \"numero\": 1,\r\n    \"assistido\": false,\r\n    \"serie_id\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{lumen}}/episodios",
+									"host": [
+										"{{lumen}}"
+									],
+									"path": [
+										"episodios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Read",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{lumen}}/episodios",
+									"host": [
+										"{{lumen}}"
+									],
+									"path": [
+										"episodios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"temporada\": 1,\r\n    \"numero\": 1,\r\n    \"assistido\": false,\r\n    \"serie_id\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{lumen}}/episodios/5",
+									"host": [
+										"{{lumen}}"
+									],
+									"path": [
+										"episodios",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{lumen}}/episodios/6",
+									"host": [
+										"{{lumen}}"
+									],
+									"path": [
+										"episodios",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				},
 				{
 					"name": "Series",
@@ -28,7 +150,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"nome\": \"Stranger Things\"\r\n}",
+									"raw": "{\r\n    \"nome\": \"Teste\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -91,13 +213,13 @@
 									}
 								},
 								"url": {
-									"raw": "{{lumen}}/series/4",
+									"raw": "{{lumen}}/series/5",
 									"host": [
 										"{{lumen}}"
 									],
 									"path": [
 										"series",
-										"4"
+										"5"
 									]
 								}
 							},
