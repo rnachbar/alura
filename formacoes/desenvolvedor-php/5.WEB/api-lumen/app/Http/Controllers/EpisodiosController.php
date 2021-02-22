@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Episodio;
+// use Illuminate\Support\Facades\Auth;
 
 class EpisodiosController extends BaseController {
 
@@ -16,6 +17,7 @@ class EpisodiosController extends BaseController {
             // ->get();
             ->paginate();
 
+        // Auth::user();
         return $episodios;
     }
 
