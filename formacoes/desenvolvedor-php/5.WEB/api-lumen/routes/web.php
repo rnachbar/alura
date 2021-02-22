@@ -21,7 +21,7 @@ $router->get('/', function () use ($router) {
 /**
  * Criando grupo de rotas no Lumen com a função group.
  */
-$router->group(['prefix' => 'api'], function () use ($router) {
+$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
     /**
      * Definindo agrupamento de rotas de series da aplicação.
      */
