@@ -11,20 +11,12 @@
 |
 */
 
-/**
- * @var \Laravel\Lumen\Routing\Router $router
- */
+/** @var \Laravel\Lumen\Routing\Router $router */
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-/**
- * Criando grupo de rotas no Lumen com a função group.
- */
-$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
-    /**
-     * Definindo agrupamento de rotas de series da aplicação.
-     */
+$router->group(['prefix' => 'api', 'middleware' => 'autenticador'], function () use ($router) {
     $router->group(['prefix' => 'series'], function () use ($router) {
         $router->post('', 'SeriesController@store');
         $router->get('', 'SeriesController@index');
@@ -32,16 +24,9 @@ $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($ro
         $router->put('{id}', 'SeriesController@update');
         $router->delete('{id}', 'SeriesController@destroy');
 
-        /**
-         * sub-recurso de series.
-         * Um episodio sempre vai pertencer a uma série, então usamos isso como um sub-recurso.
-         */
         $router->get('{serieId}/episodios', 'EpisodiosController@buscaPorSerie');
     });
 
-    /**
-     * Definindo agrupamento de rotas de episodios da aplicação.
-     */
     $router->group(['prefix' => 'episodios'], function () use ($router) {
         $router->post('', 'EpisodiosController@store');
         $router->get('', 'EpisodiosController@index');
@@ -51,4 +36,4 @@ $router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($ro
     });
 });
 
-$router->post('api/login', 'TokenController@gerarToken');
+$router->post('/api/login', 'TokenController@gerarToken');
