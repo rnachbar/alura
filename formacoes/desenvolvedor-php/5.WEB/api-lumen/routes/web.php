@@ -23,11 +23,24 @@ $router->get('/', function () use ($router) {
  */
 $router->group(['prefix' => 'api'], function () use ($router) {
     /**
-     * Definindo rotas da aplicação.
+     * Definindo agrupamento de rotas de series da aplicação.
      */
-    $router->post('series', 'SeriesController@store');
-    $router->get('series', 'SeriesController@index');
-    $router->get('series/{id}', 'SeriesController@show');
-    $router->put('series/{id}', 'SeriesController@update');
-    $router->delete('series/{id}', 'SeriesController@destroy');
+    $router->group(['prefix' => 'series'], function () use ($router) {
+        $router->post('', 'SeriesController@store');
+        $router->get('', 'SeriesController@index');
+        $router->get('{id}', 'SeriesController@show');
+        $router->put('{id}', 'SeriesController@update');
+        $router->delete('{id}', 'SeriesController@destroy');
+    });
+
+    /**
+     * Definindo agrupamento de rotas de episodios da aplicação.
+     */
+    $router->group(['prefix' => 'episodios'], function () use ($router) {
+        $router->post('', 'EpisodiosController@store');
+        $router->get('', 'EpisodiosController@index');
+        $router->get('{id}', 'EpisodiosController@show');
+        $router->put('{id}', 'EpisodiosController@update');
+        $router->delete('{id}', 'EpisodiosController@destroy');
+    });
 });
