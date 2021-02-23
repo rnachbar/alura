@@ -2,8 +2,8 @@
 
 /**
  * Iniciando servidor PHP
- * Rodar comando `php -S 0.0.0.0:300` no terminal.
- * Acessar em http://localhost:3000/
+ * Rodar comando `php -S 0.0.0.0:3000` || `php -S localhost:8000` no terminal.
+ * Acessar em http://localhost:3000/extrair_funcao
  */
 
 declare(strict_types=1);
