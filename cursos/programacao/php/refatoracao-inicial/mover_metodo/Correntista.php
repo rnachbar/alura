@@ -2,24 +2,24 @@
 
 namespace Alura\MoverMetodo;
 
-class Correntista
-{
+class Correntista {
     private $nome;
     private $sobrenome;
 
-    public function __construct(string $nome, string $sobrenome)
-    {
+    public function __construct(string $nome, string $sobrenome) {
         $this->nome = $nome;
         $this->sobrenome = $sobrenome;
     }
 
-    public function getNome(): string
-    {
+    public function getNome(): string {
         return $this->nome;
     }
 
-    public function getSobrenome(): string
-    {
+    public function getSobrenome(): string {
         return $this->sobrenome;
+    }
+
+    public function getNomeCompleto(): string {
+        return $this->nome . " " . $this->sobrenome;
     }
 }
