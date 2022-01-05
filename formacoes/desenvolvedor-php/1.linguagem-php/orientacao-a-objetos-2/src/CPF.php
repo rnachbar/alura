@@ -12,10 +12,11 @@ class CPF
             ]
         ]);
 
-        if ($numero === false) {
+        if ($numero === false) :
             echo "Cpf inválido";
             exit();
-        }
+        endif;
+
         $this->numero = $numero;
     }
 

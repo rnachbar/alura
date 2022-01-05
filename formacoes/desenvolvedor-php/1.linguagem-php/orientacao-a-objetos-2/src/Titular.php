@@ -24,9 +24,9 @@ class Titular
 
     private function validaNomeTitular(string $nomeTitular)
     {
-        if (strlen($nomeTitular) < 5) {
+        if (strlen($nomeTitular) < 5) :
             echo "Nome precisa ter pelo menos 5 caracteres";
             exit();
-        }
+        endif;
     }
 }
