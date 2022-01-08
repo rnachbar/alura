@@ -2,10 +2,8 @@
 
 require_once 'autoload.php';
 
-use Alura\Banco\Modelo\Conta\Conta;
-use Alura\Banco\Modelo\Endereco;
-use Alura\Banco\Modelo\Conta\Titular;
-use Alura\Banco\Modelo\CPF;
+use Alura\Banco\Modelo\Conta\{Conta, Titular};
+use Alura\Banco\Modelo\{Endereco, CPF};
 
 $endereco = new Endereco('Campinas', 'SP', 'Rua Teste', '123');
 
