@@ -7,7 +7,7 @@ use Symfony\Component\HttpClient\HttpClient;
 
 require_once 'vendor/autoload.php';
 
-class CSS 
+class Attr 
 {
     private const URL = 'https://vitormattos.github.io/poc-lineageos-cellphone-list-statics/';
 
@@ -18,16 +18,16 @@ class CSS
 
         $crawler = $browser->request('GET', self::URL);
 
-        $titles = $crawler->filter($selector)
+        $attr = $crawler->filter($selector)
             ->each(function ($node) {
-                return $node->text();
+                return $node->attr('src') ?: $node->attr('href');
             });
 
-        return $titles;
+        return $attr;
     }
 }
 
-$scrap = new CSS;
-$title = $scrap->getContent('article .title');
+$scrap = new Attr;
+$attr = $scrap->getContent('link[rel="stylesheet"], script[src]');
 
-var_dump($title);
+var_dump($attr);exit;

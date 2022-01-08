@@ -7,7 +7,7 @@ use Symfony\Component\HttpClient\HttpClient;
 
 require_once 'vendor/autoload.php';
 
-class CSS 
+class Images 
 {
     private const URL = 'https://vitormattos.github.io/poc-lineageos-cellphone-list-statics/';
 
@@ -18,16 +18,25 @@ class CSS
 
         $crawler = $browser->request('GET', self::URL);
 
-        $titles = $crawler->filter($selector)
-            ->each(function ($node) {
-                return $node->text();
-            });
+        $images = $crawler->filter($selector)
+            ->images();
 
-        return $titles;
+        return $images;
     }
 }
 
-$scrap = new CSS;
-$title = $scrap->getContent('article .title');
+$scrap = new Images;
+$images = $scrap->getContent('article .img-thumbnail');
 
-var_dump($title);
+if (!is_dir('images')) :
+    mkdir('images');
+endif;
+
+foreach ($images as $value) :
+    $uri = $value->getUri();
+    $filename = basename($uri);
+    
+    \file_put_contents("images/$filename", $uri);
+endforeach;
+
+echo 'Salvou';
