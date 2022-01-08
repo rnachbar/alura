@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'f5ea59d9d6ed6ae82da04b87f0d98a5353d946ce',
+        'reference' => 'fd5c836702f6fa39be967216f30704724e4d0cfc',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'f5ea59d9d6ed6ae82da04b87f0d98a5353d946ce',
+            'reference' => 'fd5c836702f6fa39be967216f30704724e4d0cfc',
             'dev_requirement' => false,
         ),
         'php-http/async-client-implementation' => array(
@@ -62,6 +62,15 @@
             'install_path' => __DIR__ . '/../symfony/browser-kit',
             'aliases' => array(),
             'reference' => '1fb93b0aab42392aa0a742db205173b49afaf80f',
+            'dev_requirement' => false,
+        ),
+        'symfony/css-selector' => array(
+            'pretty_version' => 'v5.4.2',
+            'version' => '5.4.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/css-selector',
+            'aliases' => array(),
+            'reference' => 'cfcbee910e159df402603502fe387e8b677c22fd',
             'dev_requirement' => false,
         ),
         'symfony/deprecation-contracts' => array(
