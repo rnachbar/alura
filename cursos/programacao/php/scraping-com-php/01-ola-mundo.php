@@ -1,9 +1,11 @@
 <?php
 
+namespace Raphael\Scrap;
+
 use Symfony\Component\HttpClient\HttpClient;
 require_once 'vendor/autoload.php';
 
-class Scraping 
+class Scraping
 {
     private const OK = 200;
     private const URL = 'https://vitormattos.github.io/poc-lineageos-cellphone-list-statics/about/';
@@ -26,4 +28,4 @@ class Scraping
 $scrap = new Scraping;
 $result = $scrap->get();
 
-var_dump($result);exit;
+var_dump($result);
