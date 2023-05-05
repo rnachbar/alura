@@ -1,0 +1,5 @@
+No nosso primeiro passo, vamos entender a linguagem PHP, conhecendo alguns mitos e dando os primeiros passos com ela. Além disso, vamos conhecer o que são arrays, strings e funções.
+
+- https://www.youtube.com/watch?v=AqDj3OSV0mM
+- https://www.alura.com.br/artigos/php-instalacao-primeiro-codigo
+- https://www.youtube.com/watch?v=6vEspHqjrkI
